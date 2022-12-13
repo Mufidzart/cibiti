@@ -2,7 +2,7 @@
 $page_title = "Detail Tugas";
 require('frontend/layouts/headlayout.php');
 require('backend/connection.php');
-$data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel where atc.id='" . $_GET['tgs'] . "'");
+$data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel WHERE atc.id='" . $_GET['tgs'] . "' AND tgl_hapus IS NULL");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -86,7 +86,7 @@ $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt
                     <div id="soal_baru">
 
                     </div>
-                    <a class="btn btn-circle green" data-toggle="modal" href="#large">Tambah Soal <i class="fa fa-plus"></i></a>
+                    <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
                   </div>
                 </div>
               </form>
@@ -106,7 +106,7 @@ $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt
 </div>
 <!-- END CONTENT -->
 <!-- MODAL TAMBAH SOAL -->
-<div class="modal fade bs-modal-lg" id="large" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade bs-modal-lg" id="modal-tambah-soal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">

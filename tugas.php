@@ -74,7 +74,7 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                       <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
                         <div class="mt-action-info ">
                           <div class="mt-action-details ">
-                            <span class="mt-action-author"><?= $tugas['judul'] ?></span>
+                            <span class="mt-action-author" id="judul-<?= $tugas['id'] ?>"><?= $tugas['judul'] ?></span>
                             <p class="mt-action-desc"><?= $tugas['deskripsi'] ?></p>
                           </div>
                         </div>
@@ -92,7 +92,7 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                       <div class="mt-action-buttons ">
                         <div class="btn-group btn-group-circle">
                           <a class="btn btn-outline green btn-sm" href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
-                          <button type="button" class="btn btn-outline red btn-sm">Hapus</button>
+                          <button type="button" class="btn btn-outline red btn-sm btn-hapus" id="btn-hapus" data-id="<?= $tugas['id'] ?>">Hapus</button>
                         </div>
                       </div>
                     </div>
@@ -159,6 +159,37 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<!-- MODAL HAPUS TUGAS -->
+<div class="modal fade bs-modal-md" id="hapus-tugas" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Hapus Tugas</h4>
+      </div>
+      <form role="form" id="form-hapus-tugas">
+        <div class="modal-body">
+          <div class="form-body">
+            <div class="form-group">
+              <input class="form-control spinner" type="hidden" id="id-tugas" name="id-tugas" value="">
+              <div class="note note-danger">
+                <h4 class="block">Peringatan Hapus!</h4>
+                <p> Apakah anda yakin menghapus data ini? </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn red">Hapus</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL EDIT TUGAS -->
 <?php
 require('frontend/layouts/bodylayout.php');
 ?>
@@ -181,6 +212,28 @@ require('frontend/layouts/bodylayout.php');
             html += '</div>';
             $('#pesan').html(html)
           }
+        }
+      });
+    });
+
+    $('.btn-hapus').on('click', function() {
+      var id_tugas = $(this).attr('data-id');
+      var judul = $('#judul-' + id_tugas).html();
+      $('#id-tugas').val(id_tugas);
+      $('#hapus-tugas').modal('show');
+    });
+
+    $("#form-hapus-tugas").on("submit", function(e) {
+      e.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=hapus_data_tugas',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          $('#hapus-tugas').modal('hide');
+          window.location.reload();
         }
       });
     });

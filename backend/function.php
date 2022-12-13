@@ -2,7 +2,6 @@
 require 'connection.php';
 
 switch ($_GET['action']) {
-
     case 'simpan_data_tugas':
         $id_staff = "197211012007011009";
         $judul = $_POST['judul-tugas'];
