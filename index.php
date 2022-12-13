@@ -1,5 +1,5 @@
 <?php
-require('backend/function.php');
+require('backend/connection.php');
 $page_title = "Learning Management System (LMS)";
 require('frontend/layouts/headlayout.php');
 ?>

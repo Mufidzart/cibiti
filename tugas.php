@@ -2,7 +2,8 @@
 require('backend/connection.php');
 $page_title = "Tugas Learning Management System (LMS)";
 require('frontend/layouts/headlayout.php');
-$data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='197211012007011009' AND id_mapel='47'");
+$data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='197211012007011009' AND id_mapel='47' AND tgl_hapus IS NULL");
+$getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='197211012007011009' AND agm.id_thajaran=4");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -58,11 +59,11 @@ $data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='1
                     <div class="mt-action-img">
                       <?php
                       if ($tugas['jenis'] == "Tugas Harian") {
-                        $img = "tugas-1.webp";
+                        $img = "tugas-3.webp";
                       } elseif ($tugas['jenis'] == "UTS") {
                         $img = "tugas-2.webp";
                       } else {
-                        $img = "tugas-3.webp";
+                        $img = "tugas-1.webp";
                       }
                       ?>
                       <img src="../assets/images/<?= $img ?>" width="45px" />
@@ -81,7 +82,7 @@ $data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='1
                       <div class="mt-action-info ">
                         <div class="mt-action-details ">
                           <span class="mt-action-author">Jumlah Soal</span>
-                          <p class="mt-action-desc">30 Soal</p>
+                          <p class="mt-action-desc">0 Soal</p>
                         </div>
                       </div>
                       <div class="mt-action-datetime ">
@@ -90,7 +91,7 @@ $data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='1
                       </div>
                       <div class="mt-action-buttons ">
                         <div class="btn-group btn-group-circle">
-                          <button type="button" class="btn btn-outline green btn-sm">Lihat</button>
+                          <a class="btn btn-outline green btn-sm" href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
                           <button type="button" class="btn btn-outline red btn-sm">Hapus</button>
                         </div>
                       </div>
@@ -119,10 +120,19 @@ $data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='1
       </div>
       <form role="form" id="form-tambah-tugas">
         <div class="modal-body">
+          <div id="pesan"></div>
           <div class="form-body">
             <div class="form-group">
               <label>Judul Tugas</label>
               <input class="form-control spinner" type="text" id="judul-tugas" name="judul-tugas" placeholder="Judul tugas">
+            </div>
+            <div class="form-group">
+              <label>Mata Pelajaran</label>
+              <select class="form-control" id="mapel-tugas" name="mapel-tugas">
+                <?php while ($data_mapel = mysqli_fetch_array($getmapel)) : ?>
+                  <option value="<?= $data_mapel['id'] ?>"><?= $data_mapel['nama_mapel'] ?></option>
+                <?php endwhile; ?>
+              </select>
             </div>
             <div class="form-group">
               <label>Jenis Tugas</label>
@@ -163,7 +173,14 @@ require('frontend/layouts/bodylayout.php');
         data: formdata,
         dataType: 'json',
         success: function(data) {
-          window.location.href = "tambah_tugas.php?tgs=" + data;
+          if (data.acc == true) {
+            window.location.href = "tambah_tugas.php?tgs=" + data.last_id;
+          } else {
+            var html = '<div class="note note-danger">';
+            html += '<p> ' + data.errors + ' </p>';
+            html += '</div>';
+            $('#pesan').html(html)
+          }
         }
       });
     });

@@ -1,8 +1,8 @@
 <?php
-$page_title = "Tambah Tugas";
+$page_title = "Detail Tugas";
 require('frontend/layouts/headlayout.php');
 require('backend/connection.php');
-$data_tugas = mysqli_query($conn, "select * from arf_tugas_cbt where id='" . $_GET['tgs'] . "'");
+$data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel where atc.id='" . $_GET['tgs'] . "'");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -57,6 +57,12 @@ $data_tugas = mysqli_query($conn, "select * from arf_tugas_cbt where id='" . $_G
                   <div class="form-group">
                     <label>Judul Tugas</label>
                     <input class="form-control spinner" type="text" id="judul-show" name="judul-show" placeholder="Judul tugas" value="<?= $tugas['judul'] ?>" disabled>
+                  </div>
+                  <div class="form-group">
+                    <label>Mata Pelajaran</label>
+                    <select class="form-control" id="mapel-show" name="mapel-show" disabled>
+                      <option value="<?= $tugas['nama_mapel'] ?>"><?= $tugas['nama_mapel'] ?></option>
+                    </select>
                   </div>
                   <div class="form-group">
                     <label>Jenis Tugas</label>
@@ -161,6 +167,37 @@ $data_tugas = mysqli_query($conn, "select * from arf_tugas_cbt where id='" . $_G
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL EDIT TUGAS -->
+<!-- MODAL HAPUS TUGAS -->
+<div class="modal fade bs-modal-md" id="hapus-tugas" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Hapus Tugas</h4>
+      </div>
+      <form role="form" id="form-hapus-tugas">
+        <div class="modal-body">
+          <div class="form-body">
+            <div class="form-group">
+              <input class="form-control spinner" type="hidden" id="id-tugas" name="id-tugas" value="<?= $tugas['id'] ?>">
+              <div class="note note-danger">
+                <h4 class="block">Peringatan Hapus!</h4>
+                <p> Apakah anda yakin menghapus data ini? </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn red">Hapus</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL EDIT TUGAS -->
 <?php
 require('frontend/layouts/bodylayout.php');
 ?>
@@ -190,6 +227,20 @@ require('frontend/layouts/bodylayout.php');
           $('#deskripsi-tugas').val(data.deskripsi);
           $('#deskripsi-show').val(data.deskripsi);
           $('#edit-tugas').modal('hide');
+        }
+      });
+    });
+    $("#form-hapus-tugas").on("submit", function(e) {
+      e.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=hapus_data_tugas',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          $('#hapus-tugas').modal('hide');
+          window.location.href = "tugas.php";
         }
       });
     });
