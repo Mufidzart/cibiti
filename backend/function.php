@@ -9,9 +9,9 @@ switch ($_GET['action']) {
         $jenis = $_POST['jenis-tugas'];
         $deskripsi = $_POST['deskripsi-tugas'];
         // Generate Kode
-        $kode = bin2hex(random_bytes(5));
+        $kode = strtoupper(bin2hex(random_bytes(3)));
         // Insert data
-        $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(kode_tugas, id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$kode',$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
+        $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(kode_tugas, id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$kode','$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
         if ($query) {
             $last_id = $conn->insert_id;
             $data = [
@@ -76,5 +76,79 @@ switch ($_GET['action']) {
             $data = "Hapus Data Gagal: " . mysqli_error($conn);
             echo json_encode($data);
         }
+        break;
+
+    case 'simpan_data_soal':
+        // Validation
+        $data['errors'] = [];
+        $data['success'] = [];
+        if (empty($_POST['pertanyaan'])) {
+            $validation = ["input" => "pertanyaan", "message" => "Pertanyaan tidak boleh kosong."];
+            array_push($data['errors'], $validation);
+        } else {
+            array_push($data['success'], "pertanyaan");
+        }
+        if (empty($_POST['radio-pilihan'])) {
+            $validation = ["input" => "radio-pilihan", "message" => "Pilih salahsatu pilihan sebagai kunci jawaban."];
+            array_push($data['errors'], $validation);
+        } else {
+            array_push($data['success'], "radio-pilihan");
+        }
+        if (empty($_POST['pilihan-1'])) {
+            $validation = ["input" => "pilihan-1", "message" => "Pilihan ke-1 tidak boleh kosong."];
+            array_push($data['errors'], $validation);
+        } else {
+            array_push($data['success'], "pilihan-1");
+        }
+        if (empty($_POST['pilihan-2'])) {
+            $validation = ["input" => "pilihan-2", "message" => "Pilihan ke-2 tidak boleh kosong."];
+            array_push($data['errors'], $validation);
+        } else {
+            array_push($data['success'], "pilihan-2");
+        }
+        if (empty($_POST['pilihan-3'])) {
+            $validation = ["input" => "pilihan-3", "message" => "Pilihan ke-3 tidak boleh kosong."];
+            array_push($data['errors'], $validation);
+        } else {
+            array_push($data['success'], "pilihan-3");
+        }
+        if (empty($_POST['pilihan-4'])) {
+            $validation = ["input" => "pilihan-4", "message" => "Pilihan ke-4 tidak boleh kosong."];
+            array_push($data['errors'], $validation);
+        } else {
+            array_push($data['success'], "pilihan-4");
+        }
+        if (!empty($data['errors'])) {
+            $data['acc'] = false;
+            echo json_encode($data);
+        } else {
+
+            // Inputan Soal
+            $id_staff = "197211012007011009";
+            $id_mapel = $_POST['id-mapel-soal'];
+            $kode_tugas = $_POST['kode-tugas-soal'];
+            $radio_pilih = $_POST['radio-pilihan'];
+            $pertanyaan = $_POST['pertanyaan'];
+
+            // Inputan Kunci Jawaban
+
+            // Insert data
+            $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(kode_tugas, id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$kode','$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
+            if ($query) {
+                $last_id = $conn->insert_id;
+                $data = [
+                    "acc" => true,
+                    "last_id" => $last_id
+                ];
+                echo json_encode($data);
+            } else {
+                $data = [
+                    "acc" => false,
+                    "errors" => mysqli_error($conn)
+                ];
+                echo json_encode($data);
+            }
+        }
+
         break;
 }

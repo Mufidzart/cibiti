@@ -5,6 +5,7 @@ require('backend/connection.php');
 $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel WHERE atc.id='" . $_GET['tgs'] . "' AND tgl_hapus IS NULL");
 $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='197211012007011009' AND agm.id_thajaran=4");
 $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
+$tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -57,23 +58,23 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
               <form role="form">
                 <div class="form-body">
                   <div class="form-group">
-                    <label>Judul Tugas</label>
+                    <label class="control-label">Judul Tugas</label>
                     <input class="form-control spinner" type="text" id="judul-show" name="judul-show" placeholder="Judul tugas" value="<?= $tugas['judul'] ?>" disabled>
                   </div>
                   <div class="form-group">
-                    <label>Mata Pelajaran</label>
+                    <label class="control-label">Mata Pelajaran</label>
                     <select class="form-control" id="mapel-show" name="mapel-show" disabled>
                       <option value="<?= $tugas['nama_mapel'] ?>"><?= $tugas['nama_mapel'] ?></option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Jenis Tugas</label>
+                    <label class="control-label">Jenis Tugas</label>
                     <select class="form-control" id="jenis-show" name="jenis-show" disabled>
                       <option value="<?= $tugas['jenis'] ?>"><?= $tugas['jenis'] ?></option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label>Deskripsi Tugas</label>
+                    <label class="control-label">Deskripsi Tugas</label>
                     <textarea class="form-control" id="deskripsi-show" name="deskripsi-show" rows="3" disabled><?= $tugas['deskripsi'] ?></textarea>
                   </div>
                 </div>
@@ -86,7 +87,6 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
                   </div>
                   <div class="portlet-body">
                     <div id="soal_baru">
-
                     </div>
                     <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
                   </div>
@@ -115,11 +115,82 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h4 class="modal-title">Tambah Soal</h4>
       </div>
-      <div class="modal-body"> Modal body goes here </div>
-      <div class="modal-footer">
-        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
-        <button type="button" class="btn green">Save changes</button>
-      </div>
+      <form role="form" id="form-tambah-soal">
+        <div class="modal-body">
+          <div class="portlet light bordered">
+            <div class="portlet-body">
+              <div class="form-body">
+                <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
+                <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
+                <div class="form-group" id="form-tipe-soal">
+                  <label class="control-label">Tipe Pertanyaan</label>
+                  <select class="form-control" id="tipe-soal" name="tipe-soal">
+                    <?php while ($row = mysqli_fetch_array($tipe_soal)) : ?>
+                      <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
+                    <?php endwhile; ?>
+                  </select>
+                  <div id="pesan-tipe-soal"></div>
+                </div>
+                <div class="form-group" id="form-pertanyaan">
+                  <label class="control-label">Pertanyaan</label>
+                  <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3"></textarea>
+                  <div id="pesan-pertanyaan"></div>
+                </div>
+                <div id="jawaban" style="padding: 10px;">
+                  <div class="form-group">
+                    <label class="control-label">Pilihan Jawaban</label>
+                  </div>
+                  <div class="form-group" id="form-pilihan-1">
+                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                      <span class="input-group-addon">
+                        <input type="radio" name="radio-pilihan" value="Test Radio 1">
+                        <span></span>
+                      </span>
+                      <input type="text" class="form-control" name="pilihan-1">
+                    </div>
+                    <div id="pesan-pilihan-1"></div>
+                  </div>
+                  <div class="form-group" id="form-pilihan-2">
+                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                      <span class="input-group-addon has-error">
+                        <input type="radio" name="radio-pilihan" value="Test Radio 2">
+                        <span></span>
+                      </span>
+                      <input type="text" class="form-control" name="pilihan-2">
+                    </div>
+                    <div id="pesan-pilihan-2"></div>
+                  </div>
+                  <div class="form-group" id="form-pilihan-3">
+                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                      <span class="input-group-addon">
+                        <input type="radio" name="radio-pilihan" value="Test Radio 3">
+                        <span></span>
+                      </span>
+                      <input type="text" class="form-control" name="pilihan-3">
+                    </div>
+                    <div id="pesan-pilihan-3"></div>
+                  </div>
+                  <div class="form-group" id="form-pilihan-4">
+                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                      <span class="input-group-addon">
+                        <input type="radio" name="radio-pilihan" value="Test Radio 4">
+                        <span></span>
+                      </span>
+                      <input type="text" class="form-control" name="pilihan-4">
+                    </div>
+                    <div id="pesan-pilihan-4"></div>
+                    <div id="pesan-radio-pilihan"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn green">Simpan</button>
+        </div>
+      </form>
     </div>
     <!-- /.modal-content -->
   </div>
@@ -138,12 +209,12 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
         <div class="modal-body">
           <div class="form-body">
             <div class="form-group">
-              <label>Judul Tugas</label>
+              <label class="control-label">Judul Tugas</label>
               <input class="form-control spinner" type="hidden" id="id-tugas" name="id-tugas" value="<?= $tugas['id'] ?>">
               <input class="form-control spinner" type="text" id="judul-tugas" name="judul-tugas" placeholder="Judul tugas" value="<?= $tugas['judul'] ?>">
             </div>
             <div class="form-group">
-              <label>Mata Pelajaran</label>
+              <label class="control-label">Mata Pelajaran</label>
               <select class="form-control" id="mapel-tugas" name="mapel-tugas">
                 <?php while ($data_mapel = mysqli_fetch_array($getmapel)) :
                   $select = ($data_mapel['id'] == $tugas['id_mapel']) ? "selected" : ""; ?>
@@ -152,7 +223,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
               </select>
             </div>
             <div class="form-group">
-              <label>Jenis Tugas</label>
+              <label class="control-label">Jenis Tugas</label>
               <select class="form-control" id="jenis-tugas" name="jenis-tugas">
                 <?php while ($jenis = mysqli_fetch_array($jenis_tugas)) :
                   $select = ($jenis['jenis_tugas'] == $tugas['jenis']) ? "selected" : ""; ?>
@@ -161,7 +232,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
               </select>
             </div>
             <div class="form-group">
-              <label>Deskripsi Tugas</label>
+              <label class="control-label">Deskripsi Tugas</label>
               <textarea class="form-control" id="deskripsi-tugas" name="deskripsi-tugas" rows="3"><?= $tugas['deskripsi'] ?></textarea>
             </div>
           </div>
@@ -222,7 +293,6 @@ require('frontend/layouts/bodylayout.php');
         data: formdata,
         dataType: 'json',
         success: function(data) {
-          console.log(data.jenis_tugas);
           var html_jenis = '';
           var jenis = ['Tugas Harian', 'UTS', 'UAS']
           jenis.forEach(element => {
@@ -243,6 +313,7 @@ require('frontend/layouts/bodylayout.php');
         }
       });
     });
+
     $("#form-hapus-tugas").on("submit", function(e) {
       e.preventDefault();
       var formdata = $(this).serialize();
@@ -257,5 +328,50 @@ require('frontend/layouts/bodylayout.php');
         }
       });
     });
+
+    $("#form-tambah-soal").on("submit", function(e) {
+      e.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=simpan_data_soal',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            console.log(data);
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#pesan-' + data.errors[i].input).html('<span class="help-block">' + data.errors[i].message + '</span>')
+              $('#form-' + data.errors[i].input).addClass('has-error');
+              if (data.errors[i].input == "radio-pilihan") {
+                $('#jawaban').addClass('alert-danger');
+              }
+            }
+
+          }
+          for (i = 0; i < data.success.length; i++) {
+            $('#pesan-' + data.success[i]).html('')
+            $('#form-' + data.success[i]).removeClass('has-error');
+            if (data.success[i] == "radio-pilihan") {
+              $('#jawaban').removeClass('alert-danger');
+            }
+          }
+        }
+      });
+    });
+
+    $('#modal-tambah-soal').on('hidden.bs.modal', function() {
+      var input = ["pertanyaan", "pilihan-1", "pilihan-2", "pilihan-3", "pilihan-4"];
+      input.forEach(element => {
+        $('[name=' + element + ']').val("");
+        $('#pesan-' + element).html('')
+        $('#form-' + element).removeClass('has-error');
+      });
+      $("[name=radio-pilihan]").attr("checked", false);
+      $('#pesan-radio-pilihan').html('')
+      $('#jawaban').removeClass('alert-danger');
+    });
+
   })
 </script>

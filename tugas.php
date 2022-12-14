@@ -92,7 +92,8 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                       </div>
                       <div class="mt-action-datetime">
                         <span class="mt-action-date">Dibuat: </span>
-                        <span class="mt=action-time"><?= $tugas['tgl_input'] ?></span>
+                        <?php $date = date("d-m-Y H:i", strtotime($tugas['tgl_input'])) ?>
+                        <span class="mt=action-time"><?= $date ?></span>
                       </div>
                       <div class="mt-action-buttons">
                         <div class="btn-group btn-group-circle">
