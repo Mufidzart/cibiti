@@ -58,6 +58,10 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
               <form role="form">
                 <div class="form-body">
                   <div class="form-group">
+                    <label class="control-label">Kode Tugas</label>
+                    <input class="form-control spinner" type="text" id="kode-show" name="kode-show" placeholder="Kode tugas" value="<?= $tugas['kode_tugas'] ?>" disabled>
+                  </div>
+                  <div class="form-group">
                     <label class="control-label">Judul Tugas</label>
                     <input class="form-control spinner" type="text" id="judul-show" name="judul-show" placeholder="Judul tugas" value="<?= $tugas['judul'] ?>" disabled>
                   </div>
@@ -86,9 +90,10 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                     </div>
                   </div>
                   <div class="portlet-body">
-                    <div id="soal_baru">
-                    </div>
                     <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
+                    <div id="tampil_soal" style="margin-top: 12px;">
+
+                    </div>
                   </div>
                 </div>
               </form>
@@ -115,82 +120,78 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
         <h4 class="modal-title">Tambah Soal</h4>
       </div>
-      <form role="form" id="form-tambah-soal">
-        <div class="modal-body">
-          <div class="portlet light bordered">
-            <div class="portlet-body">
-              <div class="form-body">
-                <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
-                <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
-                <div class="form-group" id="form-tipe-soal">
-                  <label class="control-label">Tipe Pertanyaan</label>
-                  <select class="form-control" id="tipe-soal" name="tipe-soal">
-                    <?php while ($row = mysqli_fetch_array($tipe_soal)) : ?>
-                      <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
-                    <?php endwhile; ?>
-                  </select>
-                  <div id="pesan-tipe-soal"></div>
+      <div class="modal-body form">
+        <form role="form" id="form-tambah-soal">
+          <div class="form-body">
+            <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
+            <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
+            <div class="form-group" id="form-tipe-soal">
+              <label class="control-label">Tipe Pertanyaan</label>
+              <select class="form-control" id="tipe-soal" name="tipe-soal">
+                <?php while ($row = mysqli_fetch_array($tipe_soal)) : ?>
+                  <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
+                <?php endwhile; ?>
+              </select>
+              <div id="pesan-tipe-soal"></div>
+            </div>
+            <div class="form-group" id="form-pertanyaan">
+              <label class="control-label">Pertanyaan</label>
+              <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3" style="margin-bottom: 20px;"></textarea>
+              <div id="pesan-pertanyaan"></div>
+            </div>
+            <div id="jawaban" style="padding: 20px;">
+              <div class="form-group">
+                <label class="control-label">Pilihan Jawaban</label>
+              </div>
+              <div class="form-group" id="form-pilihan-1">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon">
+                    <input type="radio" name="radio-pilihan" value="1">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-1">
                 </div>
-                <div class="form-group" id="form-pertanyaan">
-                  <label class="control-label">Pertanyaan</label>
-                  <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3"></textarea>
-                  <div id="pesan-pertanyaan"></div>
+                <div id="pesan-pilihan-1"></div>
+              </div>
+              <div class="form-group" id="form-pilihan-2">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon has-error">
+                    <input type="radio" name="radio-pilihan" value="2">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-2">
                 </div>
-                <div id="jawaban" style="padding: 10px;">
-                  <div class="form-group">
-                    <label class="control-label">Pilihan Jawaban</label>
-                  </div>
-                  <div class="form-group" id="form-pilihan-1">
-                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                      <span class="input-group-addon">
-                        <input type="radio" name="radio-pilihan" value="1">
-                        <span></span>
-                      </span>
-                      <input type="text" class="form-control" name="pilihan-1">
-                    </div>
-                    <div id="pesan-pilihan-1"></div>
-                  </div>
-                  <div class="form-group" id="form-pilihan-2">
-                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                      <span class="input-group-addon has-error">
-                        <input type="radio" name="radio-pilihan" value="2">
-                        <span></span>
-                      </span>
-                      <input type="text" class="form-control" name="pilihan-2">
-                    </div>
-                    <div id="pesan-pilihan-2"></div>
-                  </div>
-                  <div class="form-group" id="form-pilihan-3">
-                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                      <span class="input-group-addon">
-                        <input type="radio" name="radio-pilihan" value="3">
-                        <span></span>
-                      </span>
-                      <input type="text" class="form-control" name="pilihan-3">
-                    </div>
-                    <div id="pesan-pilihan-3"></div>
-                  </div>
-                  <div class="form-group" id="form-pilihan-4">
-                    <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                      <span class="input-group-addon">
-                        <input type="radio" name="radio-pilihan" value="4">
-                        <span></span>
-                      </span>
-                      <input type="text" class="form-control" name="pilihan-4">
-                    </div>
-                    <div id="pesan-pilihan-4"></div>
-                    <div id="pesan-radio-pilihan"></div>
-                  </div>
+                <div id="pesan-pilihan-2"></div>
+              </div>
+              <div class="form-group" id="form-pilihan-3">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon">
+                    <input type="radio" name="radio-pilihan" value="3">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-3">
                 </div>
+                <div id="pesan-pilihan-3"></div>
+              </div>
+              <div class="form-group" id="form-pilihan-4">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon">
+                    <input type="radio" name="radio-pilihan" value="4">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-4">
+                </div>
+                <div id="pesan-pilihan-4"></div>
+                <div id="pesan-radio-pilihan"></div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn green">Simpan</button>
-        </div>
-      </form>
+          <div class="form-actions right">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn green">Simpan</button>
+          </div>
+        </form>
+      </div>
     </div>
     <!-- /.modal-content -->
   </div>
@@ -283,7 +284,34 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
 require('frontend/layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
+  function get_soal() {
+    var kode_tugas = $('#kode-show').val();
+    $.ajax({
+      url: 'backend/function.php?action=get_data&get=data_soal',
+      type: 'post',
+      data: {
+        kode_tugas: kode_tugas,
+      },
+      success: function(data) {
+        $('#tampil_soal').html(data);
+        $('#modal-tambah-soal').modal('hide');
+      }
+    });
+  }
   $(document).ready(function() {
+    get_soal();
+
+    $('#tipe-soal').on('click', function() {
+      var tipe_soal = $(this).val();
+      if (tipe_soal == "Pilihan Ganda") {
+        $("#jawaban :input").attr("disabled", false);
+        $("#jawaban").css("display", "block");
+      } else {
+        $("#jawaban :input").attr("disabled", true);
+        $("#jawaban").css("display", "none");
+      }
+    });
+
     $("#form-edit-tugas").on("submit", function(e) {
       e.preventDefault();
       var formdata = $(this).serialize();
@@ -339,7 +367,7 @@ require('frontend/layouts/bodylayout.php');
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
-            console.log(data);
+            get_soal();
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block">' + data.errors[i].message + '</span>')
