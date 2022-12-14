@@ -3,7 +3,7 @@ require 'connection.php';
 
 switch ($_GET['action']) {
   case 'simpan_data_tugas':
-    $id_staff = "197211012007011009";
+    $id_staff = $session_id_staf;
     $judul = $_POST['judul-tugas'];
     $mapel = $_POST['mapel-tugas'];
     $jenis = $_POST['jenis-tugas'];
@@ -42,7 +42,7 @@ switch ($_GET['action']) {
       $select = ($jenis == $row['jenis_tugas']) ? "selected" : "";
       $html_jenis_tugas .= '<option value="' . $row['jenis_tugas'] . '" ' . $select . '>' . $row['jenis_tugas'] . '</option>';
     }
-    $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='197211012007011009' AND agm.id_thajaran=4");
+    $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=4");
     $html_mapel = '';
     while ($row = mysqli_fetch_assoc($getmapel)) {
       $select = ($mapel == $row['id']) ? "selected" : "";
@@ -128,7 +128,7 @@ switch ($_GET['action']) {
       echo json_encode($data);
     } else {
       // Inputan Soal
-      $id_staff = "197211012007011009";
+      $id_staff = $session_id_staf;
       $id_mapel = $_POST['id-mapel-soal'];
       $kode_tugas = $_POST['kode-tugas-soal'];
       $jenis_soal = $tipe_soal;

@@ -119,7 +119,7 @@ require('frontend/layouts/headlayout.php');
     <div class="row widget-row">
       <?php
       $thn_ajaran = 5;
-      $getkelasmapel = $conn->query("select ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel from arf_guru_mapel agm join arf_mapel am on am.id=agm.id_mapel join arf_kelas ak on ak.id=agm.id_subkelas where agm.id_staf='197211012007011009' and agm.id_thajaran=4");
+      $getkelasmapel = $conn->query("select ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel from arf_guru_mapel agm join arf_mapel am on am.id=agm.id_mapel join arf_kelas ak on ak.id=agm.id_subkelas where agm.id_staf='$session_id_staf' and agm.id_thajaran=4");
       $colorbg = ["bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red"];
       $i = 0;
       while ($datakelas = mysqli_fetch_array($getkelasmapel)) {

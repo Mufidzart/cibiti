@@ -2,8 +2,8 @@
 require('backend/connection.php');
 $page_title = "Tugas Learning Management System (LMS)";
 require('frontend/layouts/headlayout.php');
-$data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='197211012007011009' AND id_mapel='47' AND tgl_hapus IS NULL");
-$getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='197211012007011009' AND agm.id_thajaran=4");
+$data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$session_id_staf' AND id_mapel='47' AND tgl_hapus IS NULL");
+$getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=4");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
