@@ -8,8 +8,10 @@ switch ($_GET['action']) {
         $mapel = $_POST['mapel-tugas'];
         $jenis = $_POST['jenis-tugas'];
         $deskripsi = $_POST['deskripsi-tugas'];
-
-        $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
+        // Generate Kode
+        $kode = bin2hex(random_bytes(5));
+        // Insert data
+        $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(kode_tugas, id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$kode',$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
         if ($query) {
             $last_id = $conn->insert_id;
             $data = [

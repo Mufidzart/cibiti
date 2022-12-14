@@ -79,17 +79,22 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                           </div>
                         </div>
                       </a>
-                      <div class="mt-action-info ">
+                      <div class="mt-action-info">
                         <div class="mt-action-details ">
                           <span class="mt-action-author">Jumlah Soal</span>
                           <p class="mt-action-desc">0 Soal</p>
                         </div>
                       </div>
-                      <div class="mt-action-datetime ">
+                      <div class="mt-action-info">
+                        <div class="mt-action-details ">
+                          <a href="javascript:;" class="btn btn-circle default green-stripe">KODE: <?= $tugas['kode_tugas'] ?></a>
+                        </div>
+                      </div>
+                      <div class="mt-action-datetime">
                         <span class="mt-action-date">Dibuat: </span>
                         <span class="mt=action-time"><?= $tugas['tgl_input'] ?></span>
                       </div>
-                      <div class="mt-action-buttons ">
+                      <div class="mt-action-buttons">
                         <div class="btn-group btn-group-circle">
                           <a class="btn btn-outline green btn-sm" href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
                           <button type="button" class="btn btn-outline red btn-sm btn-hapus" id="btn-hapus" data-id="<?= $tugas['id'] ?>">Hapus</button>
