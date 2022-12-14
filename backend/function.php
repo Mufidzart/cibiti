@@ -138,18 +138,20 @@ switch ($_GET['action']) {
       $query = mysqli_query($conn, "INSERT INTO arf_soal(id_staff, id_mapel, kode_tugas, tipe_soal, pertanyaan) VALUES('$id_staff','$id_mapel','$kode_tugas','$tipe_soal', '$pertanyaan')");
       $last_id = $conn->insert_id;
       // End Input Soal
-      // Inputan Kunci Jawaban
-      $radio_pilih = $_POST['radio-pilihan'];
-      $jawaban_1 = $_POST['pilihan-1'];
-      $kunci_jawaban_1 = ($radio_pilih == 1) ? 1 : 0;
-      $jawaban_2 = $_POST['pilihan-2'];
-      $kunci_jawaban_2 = ($radio_pilih == 2) ? 1 : 0;
-      $jawaban_3 = $_POST['pilihan-3'];
-      $kunci_jawaban_3 = ($radio_pilih == 3) ? 1 : 0;
-      $jawaban_4 = $_POST['pilihan-4'];
-      $kunci_jawaban_4 = ($radio_pilih == 4) ? 1 : 0;
-      $query = mysqli_query($conn, "INSERT INTO arf_kunci_soal(id_soal, jawaban, kunci) VALUES ('$last_id','$jawaban_1','$kunci_jawaban_1'), ('$last_id','$jawaban_2','$kunci_jawaban_2'), ('$last_id','$jawaban_3','$kunci_jawaban_3'), ('$last_id','$jawaban_4','$kunci_jawaban_4')");
-      // End Inputan Kunci Jawaban
+      if ($tipe_soal == "Pilihan Ganda") {
+        // Inputan Kunci Jawaban
+        $radio_pilih = $_POST['radio-pilihan'];
+        $jawaban_1 = $_POST['pilihan-1'];
+        $kunci_jawaban_1 = ($radio_pilih == 1) ? 1 : 0;
+        $jawaban_2 = $_POST['pilihan-2'];
+        $kunci_jawaban_2 = ($radio_pilih == 2) ? 1 : 0;
+        $jawaban_3 = $_POST['pilihan-3'];
+        $kunci_jawaban_3 = ($radio_pilih == 3) ? 1 : 0;
+        $jawaban_4 = $_POST['pilihan-4'];
+        $kunci_jawaban_4 = ($radio_pilih == 4) ? 1 : 0;
+        $query = mysqli_query($conn, "INSERT INTO arf_kunci_soal(id_soal, jawaban, kunci) VALUES ('$last_id','$jawaban_1','$kunci_jawaban_1'), ('$last_id','$jawaban_2','$kunci_jawaban_2'), ('$last_id','$jawaban_3','$kunci_jawaban_3'), ('$last_id','$jawaban_4','$kunci_jawaban_4')");
+        // End Inputan Kunci Jawaban
+      }
 
       if ($query) {
         $data = [
