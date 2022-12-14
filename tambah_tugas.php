@@ -143,7 +143,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                   <div class="form-group" id="form-pilihan-1">
                     <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
                       <span class="input-group-addon">
-                        <input type="radio" name="radio-pilihan" value="Test Radio 1">
+                        <input type="radio" name="radio-pilihan" value="1">
                         <span></span>
                       </span>
                       <input type="text" class="form-control" name="pilihan-1">
@@ -153,7 +153,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                   <div class="form-group" id="form-pilihan-2">
                     <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
                       <span class="input-group-addon has-error">
-                        <input type="radio" name="radio-pilihan" value="Test Radio 2">
+                        <input type="radio" name="radio-pilihan" value="2">
                         <span></span>
                       </span>
                       <input type="text" class="form-control" name="pilihan-2">
@@ -163,7 +163,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                   <div class="form-group" id="form-pilihan-3">
                     <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
                       <span class="input-group-addon">
-                        <input type="radio" name="radio-pilihan" value="Test Radio 3">
+                        <input type="radio" name="radio-pilihan" value="3">
                         <span></span>
                       </span>
                       <input type="text" class="form-control" name="pilihan-3">
@@ -173,7 +173,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                   <div class="form-group" id="form-pilihan-4">
                     <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
                       <span class="input-group-addon">
-                        <input type="radio" name="radio-pilihan" value="Test Radio 4">
+                        <input type="radio" name="radio-pilihan" value="4">
                         <span></span>
                       </span>
                       <input type="text" class="form-control" name="pilihan-4">

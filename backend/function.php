@@ -118,22 +118,36 @@ switch ($_GET['action']) {
         } else {
             array_push($data['success'], "pilihan-4");
         }
+        // End Validation
         if (!empty($data['errors'])) {
             $data['acc'] = false;
             echo json_encode($data);
         } else {
-
             // Inputan Soal
             $id_staff = "197211012007011009";
             $id_mapel = $_POST['id-mapel-soal'];
             $kode_tugas = $_POST['kode-tugas-soal'];
-            $radio_pilih = $_POST['radio-pilihan'];
+            $tipe_soal = $_POST['tipe-soal'];
             $pertanyaan = $_POST['pertanyaan'];
-
+            // End Inputan Soal
+            // Input Soal
+            $query = mysqli_query($conn, "INSERT INTO arf_soal(id_staff, id_mapel, kode_tugas, tipe_soal, pertanyaan) VALUES('$id_staff','$id_mapel','$kode_tugas','$tipe_soal', '$pertanyaan')");
+            $last_id = $conn->insert_id;
+            // End Input Soal
             // Inputan Kunci Jawaban
-
-            // Insert data
-            $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(kode_tugas, id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$kode','$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
+            if ($tipe_soal = "Pilihan Ganda") {
+                $radio_pilih = $_POST['radio-pilihan'];
+                $pilihan_1 = $_POST['pilihan-1'];
+                $kunci_pilihan_1 = ($radio_pilih == 1) ? 1 : 0;
+                $pilihan_2 = $_POST['pilihan-2'];
+                $kunci_pilihan_2 = ($radio_pilih == 2) ? 1 : 0;
+                $pilihan_3 = $_POST['pilihan-3'];
+                $kunci_pilihan_3 = ($radio_pilih == 3) ? 1 : 0;
+                $pilihan_4 = $_POST['pilihan-4'];
+                $kunci_pilihan_4 = ($radio_pilih == 4) ? 1 : 0;
+                $query = mysqli_query($conn, "INSERT INTO arf_tugas_cbt(kode_tugas, id_staff, id_mapel, judul, jenis, deskripsi) VALUES('$kode','$id_staff','$mapel','$judul', '$jenis', '$deskripsi')");
+            }
+            // End Inputan Kunci Jawaban
             if ($query) {
                 $last_id = $conn->insert_id;
                 $data = [
