@@ -3,6 +3,8 @@ $page_title = "Detail Tugas";
 require('frontend/layouts/headlayout.php');
 require('backend/connection.php');
 $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel WHERE atc.id='" . $_GET['tgs'] . "' AND tgl_hapus IS NULL");
+$getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='197211012007011009' AND agm.id_thajaran=4");
+$jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -141,13 +143,21 @@ $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt
               <input class="form-control spinner" type="text" id="judul-tugas" name="judul-tugas" placeholder="Judul tugas" value="<?= $tugas['judul'] ?>">
             </div>
             <div class="form-group">
+              <label>Mata Pelajaran</label>
+              <select class="form-control" id="mapel-tugas" name="mapel-tugas">
+                <?php while ($data_mapel = mysqli_fetch_array($getmapel)) :
+                  $select = ($data_mapel['id'] == $tugas['id_mapel']) ? "selected" : ""; ?>
+                  <option value="<?= $data_mapel['id'] ?>" <?= $select ?>><?= $data_mapel['nama_mapel'] ?></option>
+                <?php endwhile; ?>
+              </select>
+            </div>
+            <div class="form-group">
               <label>Jenis Tugas</label>
               <select class="form-control" id="jenis-tugas" name="jenis-tugas">
-                <?php $jenis = ["Tugas Harian", "UTS", "UAS"];
-                foreach ($jenis as $jns) :
-                  $select = ($jns == $tugas['jenis']) ? "selected" : ""; ?>
-                  <option value="<?= $jns ?>" <?= $select ?>><?= $jns ?></option>
-                <?php endforeach; ?>
+                <?php while ($jenis = mysqli_fetch_array($jenis_tugas)) :
+                  $select = ($jenis['jenis_tugas'] == $tugas['jenis']) ? "selected" : ""; ?>
+                  <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
+                <?php endwhile; ?>
               </select>
             </div>
             <div class="form-group">
@@ -212,18 +222,21 @@ require('frontend/layouts/bodylayout.php');
         data: formdata,
         dataType: 'json',
         success: function(data) {
-          var html = '';
+          console.log(data.jenis_tugas);
+          var html_jenis = '';
           var jenis = ['Tugas Harian', 'UTS', 'UAS']
           jenis.forEach(element => {
             var select = (element == data.jenis) ? "selected" : "";
-            html += '<option value="' + element + '" ' + select + '>' + element + '</option>'
+            html_jenis += '<option value="' + element + '" ' + select + '>' + element + '</option>'
           });
           $('#body-title').html('Detail Soal ' + data.jenis);
           $('#id-tugas').val(data.id);
           $('#judul-tugas').val(data.judul);
           $('#judul-show').val(data.judul);
-          $('#jenis-tugas').html(html);
-          $('#jenis-show').html(html);
+          $('#mapel-tugas').html(data.mapel);
+          $('#mapel-show').html(data.mapel);
+          $('#jenis-tugas').html(data.jenis_tugas);
+          $('#jenis-show').html(data.jenis_tugas);
           $('#deskripsi-tugas').val(data.deskripsi);
           $('#deskripsi-show').val(data.deskripsi);
           $('#edit-tugas').modal('hide');
