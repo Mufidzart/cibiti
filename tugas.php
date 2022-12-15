@@ -2,9 +2,10 @@
 require('backend/connection.php');
 $page_title = "Tugas Learning Management System (LMS)";
 require('frontend/layouts/headlayout.php');
-$data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$session_id_staf' AND id_mapel='47' AND tgl_hapus IS NULL");
+$data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$session_id_staf' AND tgl_hapus IS NULL");
 $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=4");
 ?>
+
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
   <!-- BEGIN CONTENT BODY -->
@@ -52,59 +53,83 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
             </div>
           </div>
           <div class="portlet-body">
-            <div class="mt-actions">
-              <?php while ($tugas = mysqli_fetch_array($data_tugas)) : ?>
-                <div class="mt-action">
-                  <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
-                    <div class="mt-action-img">
-                      <?php
-                      if ($tugas['jenis'] == "Tugas Harian") {
-                        $img = "tugas-3.webp";
-                      } elseif ($tugas['jenis'] == "UTS") {
-                        $img = "tugas-2.webp";
-                      } else {
-                        $img = "tugas-1.webp";
-                      }
-                      ?>
-                      <img src="../assets/images/<?= $img ?>" width="45px" />
-                    </div>
-                  </a>
-                  <div class="mt-action-body">
-                    <div class="mt-action-row">
-                      <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
-                        <div class="mt-action-info ">
-                          <div class="mt-action-details ">
-                            <span class="mt-action-author" id="judul-<?= $tugas['id'] ?>"><?= $tugas['judul'] ?></span>
-                            <p class="mt-action-desc"><?= $tugas['deskripsi'] ?></p>
-                          </div>
-                        </div>
-                      </a>
-                      <div class="mt-action-info">
-                        <div class="mt-action-details ">
-                          <span class="mt-action-author">Jumlah Soal</span>
-                          <p class="mt-action-desc">0 Soal</p>
-                        </div>
-                      </div>
-                      <div class="mt-action-info">
-                        <div class="mt-action-details ">
-                          <a href="javascript:;" class="btn btn-circle default green-stripe">KODE: <?= $tugas['kode_tugas'] ?></a>
-                        </div>
-                      </div>
-                      <div class="mt-action-datetime">
-                        <span class="mt-action-date">Dibuat: </span>
-                        <?php $date = date("d-m-Y H:i", strtotime($tugas['tgl_input'])) ?>
-                        <span class="mt=action-time"><?= $date ?></span>
-                      </div>
-                      <div class="mt-action-buttons">
-                        <div class="btn-group btn-group-circle">
-                          <a class="btn btn-outline green btn-sm" href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
-                          <button type="button" class="btn btn-outline red btn-sm btn-hapus" id="btn-hapus" data-id="<?= $tugas['id'] ?>">Hapus</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+
+
+            <div class="portlet light bordered">
+              <div class="portlet-title">
+                <div class="caption font-dark">
+                  <i class="icon-settings font-dark"></i>
+                  <span class="caption-subject bold uppercase">List Tugas</span>
                 </div>
-              <?php endwhile; ?>
+                <div class="tools"> </div>
+              </div>
+              <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="sample_1">
+                  <thead>
+                    <tr>
+                      <th class="text-center vcenter"></th>
+                      <th class="text-center vcenter">Tugas</th>
+                      <th class="text-center vcenter">Jumlah Soal</th>
+                      <th class="text-center vcenter">Kode</th>
+                      <th class="text-center vcenter">Tanggal Dibuat</th>
+                      <th class="text-center vcenter">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <div class="mt-actions">
+                      <?php while ($tugas = mysqli_fetch_array($data_tugas)) : ?>
+                        <?php
+                        if ($tugas['jenis'] == "Tugas Harian") {
+                          $img = "tugas-3.webp";
+                        } elseif ($tugas['jenis'] == "UTS") {
+                          $img = "tugas-2.webp";
+                        } else {
+                          $img = "tugas-1.webp";
+                        }
+                        ?>
+                        <tr>
+                          <td class="text-center vcenter">
+                            <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
+                              <div class="mt-action-img">
+                                <img src="../assets/images/<?= $img ?>" width="45px" />
+                              </div>
+                            </a>
+                          </td>
+                          <td class="vcenter">
+                            <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
+                              <b><?= $tugas['judul'] ?></b>
+                              <p class="mt-action-desc"><?= $tugas['deskripsi'] ?></p>
+                            </a>
+                          </td>
+                          <td class="text-center vcenter">0 Soal</td>
+                          <td class="text-center vcenter">
+                            <div class="mt-action-info">
+                              <div class="mt-action-details ">
+                                <a href="javascript:;" class="btn btn-circle default green-stripe"><?= $tugas['kode_tugas'] ?></a>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="text-center vcenter">
+                            <div class="mt-action-datetime">
+                              <span class="mt-action-date">Dibuat: </span>
+                              <?php $date = date("d-m-Y H:i", strtotime($tugas['tgl_input'])) ?>
+                              <span class="mt=action-time"><?= $date ?></span>
+                            </div>
+                          </td>
+                          <td class="text-center vcenter">
+                            <div class="mt-action-buttons">
+                              <div class="btn-group btn-group-circle">
+                                <a class="btn btn-outline green btn-sm" href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
+                                <button type="button" class="btn btn-outline red btn-sm btn-hapus" id="btn-hapus" data-id="<?= $tugas['id'] ?>">Hapus</button>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      <?php endwhile; ?>
+                    </div>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

@@ -48,11 +48,14 @@ switch ($_GET['action']) {
       $select = ($mapel == $row['id']) ? "selected" : "";
       $html_mapel .= '<option value="' . $row['id'] . '" ' . $select . '>' . $row['nama_mapel'] . '</option>';
     }
+    $getnamamape = mysqli_query($conn, "SELECT nama_mapel FROM arf_mapel WHERE id=$mapel");
+    $data = mysqli_fetch_assoc($getnamamape);
     if ($query) {
       $data = [
         "id" => $id,
         "judul" => $judul,
         "jenis" => $jenis,
+        "nama_mapel" => $data['nama_mapel'],
         "deskripsi" => $deskripsi,
         "jenis_tugas" => $html_jenis_tugas,
         "mapel" => $html_mapel

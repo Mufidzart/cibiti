@@ -47,7 +47,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
             <div class="portlet-title">
               <div class="caption">
                 <i class="fa fa-plus-square"></i>
-                <span class="caption-subject font-dark bold uppercase" id="body-title">Detail Soal <?= $tugas['jenis'] ?></span>
+                <span class="caption-subject font-dark bold uppercase"><?= $page_title ?></span>
               </div>
               <div class="actions">
                 <a class="btn btn-circle green" data-toggle="modal" href="#edit-tugas">Edit <i class="icon-wrench"></i></a>
@@ -55,48 +55,38 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
               </div>
             </div>
             <div class="portlet-body">
-              <form role="form">
-                <div class="form-body">
-                  <div class="form-group">
-                    <label class="control-label">Kode Tugas</label>
-                    <input class="form-control spinner" type="text" id="kode-show" name="kode-show" placeholder="Kode tugas" value="<?= $tugas['kode_tugas'] ?>" disabled>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Judul Tugas</label>
-                    <input class="form-control spinner" type="text" id="judul-show" name="judul-show" placeholder="Judul tugas" value="<?= $tugas['judul'] ?>" disabled>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Mata Pelajaran</label>
-                    <select class="form-control" id="mapel-show" name="mapel-show" disabled>
-                      <option value="<?= $tugas['nama_mapel'] ?>"><?= $tugas['nama_mapel'] ?></option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Jenis Tugas</label>
-                    <select class="form-control" id="jenis-show" name="jenis-show" disabled>
-                      <option value="<?= $tugas['jenis'] ?>"><?= $tugas['jenis'] ?></option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label class="control-label">Deskripsi Tugas</label>
-                    <textarea class="form-control" id="deskripsi-show" name="deskripsi-show" rows="3" disabled><?= $tugas['deskripsi'] ?></textarea>
-                  </div>
+              <div class="row">
+                <div class="col-md-12 profile-info" style="padding-right: 50px;padding-left: 50px;margin-bottom: 50px;">
+                  <input type="hidden" id="kode-show" value="<?= $tugas['kode_tugas'] ?>">
+                  <a href="javascript:;" class="btn btn-circle default green-stripe" id="text-kode">KODE: <?= $tugas['kode_tugas'] ?></a>
+                  <h2 class="font-green sbold uppercase" id="text-judul"><?= $tugas['judul'] ?></h2>
+                  <p id="text-deskripsi"><?= $tugas['deskripsi'] ?></p>
+                  <ul class="list-inline">
+                    <li id="text-jenis">
+                      <i class="fa fa-briefcase"></i> <?= $tugas['jenis'] ?>
+                    </li>
+                    <li id="text-mapel">
+                      <i class="fa fa-book"></i> <?= $tugas['nama_mapel'] ?>
+                    </li>
+                  </ul>
                 </div>
-                <div class="portlet light bordered">
-                  <div class="portlet-title">
-                    <div class="caption">
-                      <i class="icon-bubble font-green-sharp"></i>
-                      <span class="caption-subject font-green-sharp bold uppercase">SOAL</span>
-                    </div>
+              </div>
+              <div class="portlet light bordered">
+                <div class="portlet-title">
+                  <div class="caption">
+                    <i class="icon-bubble font-green-sharp"></i>
+                    <span class="caption-subject font-green-sharp bold uppercase">SOAL</span>
                   </div>
-                  <div class="portlet-body">
+                  <div class="actions">
                     <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
-                    <div id="tampil_soal" style="margin-top: 12px;">
-
-                    </div>
                   </div>
                 </div>
-              </form>
+                <div class="portlet-body">
+                  <div id="tampil_soal" style="margin-top: 12px;">
+
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- END SAMPLE FORM PORTLET-->
@@ -321,22 +311,22 @@ require('frontend/layouts/bodylayout.php');
         data: formdata,
         dataType: 'json',
         success: function(data) {
+          console.log(data.judul);
           var html_jenis = '';
           var jenis = ['Tugas Harian', 'UTS', 'UAS']
           jenis.forEach(element => {
             var select = (element == data.jenis) ? "selected" : "";
             html_jenis += '<option value="' + element + '" ' + select + '>' + element + '</option>'
           });
-          $('#body-title').html('Detail Soal ' + data.jenis);
+          $('#text-judul').html(data.judul);
+          $('#text-deskripsi').html(data.deskripsi);
+          $('#text-jenis').html('<i class="fa fa-briefcase"></i> ' + data.jenis);
+          $('#text-mapel').html('<i class="fa fa-book"></i> ' + data.nama_mapel);
           $('#id-tugas').val(data.id);
           $('#judul-tugas').val(data.judul);
-          $('#judul-show').val(data.judul);
           $('#mapel-tugas').html(data.mapel);
-          $('#mapel-show').html(data.mapel);
           $('#jenis-tugas').html(data.jenis_tugas);
-          $('#jenis-show').html(data.jenis_tugas);
           $('#deskripsi-tugas').val(data.deskripsi);
-          $('#deskripsi-show').val(data.deskripsi);
           $('#edit-tugas').modal('hide');
         }
       });
