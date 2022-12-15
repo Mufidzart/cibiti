@@ -89,14 +89,14 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                         ?>
                         <tr>
                           <td class="text-center vcenter">
-                            <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
+                            <a href="detail_tugas.php?tgs=<?= $tugas['id'] ?>">
                               <div class="mt-action-img">
                                 <img src="../assets/images/<?= $img ?>" width="45px" />
                               </div>
                             </a>
                           </td>
                           <td class="vcenter">
-                            <a href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">
+                            <a href="detail_tugas.php?tgs=<?= $tugas['id'] ?>">
                               <b><?= $tugas['judul'] ?></b>
                               <p class="mt-action-desc"><?= $tugas['deskripsi'] ?></p>
                             </a>
@@ -119,7 +119,7 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                           <td class="text-center vcenter">
                             <div class="mt-action-buttons">
                               <div class="btn-group btn-group-circle">
-                                <a class="btn btn-outline green btn-sm" href="tambah_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
+                                <a class="btn btn-outline green btn-sm" href="detail_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
                                 <button type="button" class="btn btn-outline red btn-sm btn-hapus" id="btn-hapus" data-id="<?= $tugas['id'] ?>">Hapus</button>
                               </div>
                             </div>
@@ -236,7 +236,7 @@ require('frontend/layouts/bodylayout.php');
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
-            window.location.href = "tambah_tugas.php?tgs=" + data.last_id;
+            window.location.href = "detail_tugas.php?tgs=" + data.last_id;
           } else {
             var html = '<div class="note note-danger">';
             html += '<p> ' + data.errors + ' </p>';
