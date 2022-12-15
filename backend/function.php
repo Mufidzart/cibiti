@@ -177,17 +177,59 @@ switch ($_GET['action']) {
     if ($_GET['get'] == 'data_soal') {
       $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='" . $_POST['kode_tugas'] . "'");
       if ($getsoal) {
-        $html_soal = '<div class="scroller" style="height: 339px;" data-always-visible="1" data-rail-visible="0"><ul class="feeds">';
         $no = 1;
         while ($row = mysqli_fetch_assoc($getsoal)) {
-          $html_soal .= "<li><a href='javascript:;'><div class='col1'><div class='cont'>";
-          $html_soal .= "<div class='cont-col1 bg-green text-center' style='width: 20px; height: max-content; color:white;'>" . $no . "</div>";
-          $html_soal .= "<div class='cont-col2'><div class='desc'>" . $row['pertanyaan'] . "</div>";
-          $html_soal .= "</div></div></div></a></li>";
+?>
+          <li>
+            <div class="col1">
+              <div class="cont">
+                <div class="cont-col1">
+                  <div class="label label-sm label-success" style="width: 20px; height: max-content; color:white;">
+                    <?= $no ?>
+                  </div>
+                </div>
+                <div class="cont-col2">
+                  <div class="desc" style="color:black;">
+                    <?= $row['pertanyaan'] ?>
+                  </div>
+                  <div class="desc" style="color:black;">
+                    <?php
+                    $id_soal = $row['id'];
+                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal'");
+                    if ($getjawaban) : ?>
+                      <div class="form-group">
+                        <div class="mt-radio-list">
+                          <?php while ($kunci_row = mysqli_fetch_array($getjawaban)) :
+                            if ($kunci_row['kunci'] == "1") {
+                              $check = "checked";
+                              $after = "<span style='left:6px; top:6px; height:6px; width:6px; border-radius:50%; background:#666;'</span>";
+                            } else {
+                              $check = "";
+                              $after = "";
+                            }
+                          ?>
+                            <label class="mt-radio">
+                              <input type="radio" name="kunci" id="jawaban_<?= $kunci_row['id'] ?>" value="<?= $kunci_row['jawaban'] ?>" disabled <?= $check ?>>
+                              <?= $kunci_row['jawaban'] ?>
+                              <span></span>
+                              <?= $after ?>
+                            </label>
+                          <?php endwhile; ?>
+                        </div>
+                      </div>
+                    <?php endif; ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col2">
+              <a href="javascript:;" class="btn btn-circle btn-icon-only green edit-soal" data-id="' . $row['id'] . '"><i class="fa fa-edit"></i></a>
+              <a href="javascript:;" class="btn btn-circle btn-icon-only red hapus-soal" data-id="' . $row['id'] . '"><i class="fa fa-trash"></i></a>
+            </div>
+          </li>
+<?php
           $no++;
         }
-        $html_soal .= "</ul></div>";
-        echo $html_soal;
       } else {
         $data = "Gagal Mengambil Data :" . mysqli_error($conn);
         echo $data;

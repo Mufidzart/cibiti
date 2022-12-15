@@ -71,19 +71,34 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                   </ul>
                 </div>
               </div>
-              <div class="portlet light bordered">
-                <div class="portlet-title">
-                  <div class="caption">
-                    <i class="icon-bubble font-green-sharp"></i>
-                    <span class="caption-subject font-green-sharp bold uppercase">SOAL</span>
-                  </div>
-                  <div class="actions">
-                    <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
-                  </div>
-                </div>
-                <div class="portlet-body">
-                  <div id="tampil_soal" style="margin-top: 12px;">
 
+              <div class="row">
+                <div class="col-md-12 col-sm-12">
+                  <div class="portlet light bordered">
+                    <div class="portlet-title">
+                      <div class="caption">
+                        <i class="icon-bubble font-green-sharp"></i>
+                        <span class="caption-subject font-green-sharp bold uppercase">SOAL</span>
+                      </div>
+                      <div class="actions">
+                        <div class="btn-group">
+                          <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="portlet-body">
+                      <div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible="0">
+                        <ul class="feeds" id="tampil_soal">
+
+                        </ul>
+                      </div>
+                      <!-- <div class="scroller-footer">
+                        <div class="btn-arrow-link pull-right">
+                          <a href="javascript:;">See All Records</a>
+                          <i class="icon-arrow-right"></i>
+                        </div>
+                      </div> -->
+                    </div>
                   </div>
                 </div>
               </div>
@@ -188,6 +203,92 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH SOAL -->
+<!-- MODAL EDIT SOAL -->
+<div class="modal fade bs-modal-lg" id="modal-edit-soal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Tambah Soal</h4>
+      </div>
+      <div class="modal-body form">
+        <form role="form" id="form-tambah-soal">
+          <div class="form-body">
+            <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
+            <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
+            <div class="form-group" id="form-tipe-soal">
+              <label class="control-label">Tipe Pertanyaan</label>
+              <select class="form-control" id="tipe-soal" name="tipe-soal">
+                <?php while ($row = mysqli_fetch_array($tipe_soal)) : ?>
+                  <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
+                <?php endwhile; ?>
+              </select>
+              <div id="pesan-tipe-soal"></div>
+            </div>
+            <div class="form-group" id="form-pertanyaan">
+              <label class="control-label">Pertanyaan</label>
+              <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3" style="margin-bottom: 20px;"></textarea>
+              <div id="pesan-pertanyaan"></div>
+            </div>
+            <div id="jawaban" style="padding: 20px;">
+              <div class="form-group">
+                <label class="control-label">Pilihan Jawaban</label>
+              </div>
+              <div class="form-group" id="form-pilihan-1">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon">
+                    <input type="radio" name="radio-pilihan" value="1">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-1">
+                </div>
+                <div id="pesan-pilihan-1"></div>
+              </div>
+              <div class="form-group" id="form-pilihan-2">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon has-error">
+                    <input type="radio" name="radio-pilihan" value="2">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-2">
+                </div>
+                <div id="pesan-pilihan-2"></div>
+              </div>
+              <div class="form-group" id="form-pilihan-3">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon">
+                    <input type="radio" name="radio-pilihan" value="3">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-3">
+                </div>
+                <div id="pesan-pilihan-3"></div>
+              </div>
+              <div class="form-group" id="form-pilihan-4">
+                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                  <span class="input-group-addon">
+                    <input type="radio" name="radio-pilihan" value="4">
+                    <span></span>
+                  </span>
+                  <input type="text" class="form-control" name="pilihan-4">
+                </div>
+                <div id="pesan-pilihan-4"></div>
+                <div id="pesan-radio-pilihan"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions right">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn green">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL EDIT SOAL -->
 <!-- MODAL EDIT TUGAS -->
 <div class="modal fade bs-modal-md" id="edit-tugas" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md">
@@ -360,7 +461,7 @@ require('frontend/layouts/bodylayout.php');
             get_soal();
           } else {
             for (i = 0; i < data.errors.length; i++) {
-              $('#pesan-' + data.errors[i].input).html('<span class="help-block">' + data.errors[i].message + '</span>')
+              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
               $('#form-' + data.errors[i].input).addClass('has-error');
               if (data.errors[i].input == "radio-pilihan") {
                 $('#jawaban').addClass('alert-danger');
@@ -389,6 +490,12 @@ require('frontend/layouts/bodylayout.php');
       $("[name=radio-pilihan]").attr("checked", false);
       $('#pesan-radio-pilihan').html('')
       $('#jawaban').removeClass('alert-danger');
+    });
+
+    $('#tampil_soal').on('click', '.edit-soal', function(event) {
+      var id_soal = $(this).attr('data-id');
+      console.log(id_soal)
+      $('#modal-edit-soal').modal('show');
     });
 
   })

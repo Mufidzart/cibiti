@@ -5,7 +5,6 @@ require('frontend/layouts/headlayout.php');
 $data_tugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$session_id_staf' AND tgl_hapus IS NULL");
 $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=4");
 ?>
-
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
   <!-- BEGIN CONTENT BODY -->
@@ -53,8 +52,6 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
             </div>
           </div>
           <div class="portlet-body">
-
-
             <div class="portlet light bordered">
               <div class="portlet-title">
                 <div class="caption font-dark">
@@ -64,44 +61,33 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                 <div class="tools"> </div>
               </div>
               <div class="portlet-body">
-                <table class="table table-striped table-bordered table-hover" id="sample_1">
+                <table class="table table-striped table-bordered table-hover dt-responsive" width="100%" id="sample_2">
                   <thead>
                     <tr>
                       <th class="text-center vcenter"></th>
+                      <th class="text-center vcenter">No</th>
                       <th class="text-center vcenter">Tugas</th>
                       <th class="text-center vcenter">Jumlah Soal</th>
                       <th class="text-center vcenter">Kode</th>
                       <th class="text-center vcenter">Tanggal Dibuat</th>
-                      <th class="text-center vcenter">Aksi</th>
+                      <th class="text-center vcenter" style="width: 20px;">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     <div class="mt-actions">
-                      <?php while ($tugas = mysqli_fetch_array($data_tugas)) : ?>
-                        <?php
-                        if ($tugas['jenis'] == "Tugas Harian") {
-                          $img = "tugas-3.webp";
-                        } elseif ($tugas['jenis'] == "UTS") {
-                          $img = "tugas-2.webp";
-                        } else {
-                          $img = "tugas-1.webp";
-                        }
-                        ?>
+                      <?php $no = 1;
+                      while ($tugas = mysqli_fetch_array($data_tugas)) :
+                        $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='" . $tugas['kode_tugas'] . "'")->num_rows;
+                      ?>
                         <tr>
-                          <td class="text-center vcenter">
-                            <a href="detail_tugas.php?tgs=<?= $tugas['id'] ?>">
-                              <div class="mt-action-img">
-                                <img src="../assets/images/<?= $img ?>" width="45px" />
-                              </div>
-                            </a>
-                          </td>
+                          <td class="text-center vcenter"></td>
+                          <td class="text-center vcenter"><?= $no; ?></td>
                           <td class="vcenter">
                             <a href="detail_tugas.php?tgs=<?= $tugas['id'] ?>">
-                              <b><?= $tugas['judul'] ?></b>
-                              <p class="mt-action-desc"><?= $tugas['deskripsi'] ?></p>
+                              <b><?= $tugas['judul'] ?></b><br><?= $tugas['deskripsi'] ?>
                             </a>
                           </td>
-                          <td class="text-center vcenter">0 Soal</td>
+                          <td class="text-center vcenter"><?= $getsoal ?> Soal</td>
                           <td class="text-center vcenter">
                             <div class="mt-action-info">
                               <div class="mt-action-details ">
@@ -118,14 +104,19 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                           </td>
                           <td class="text-center vcenter">
                             <div class="mt-action-buttons">
-                              <div class="btn-group btn-group-circle">
-                                <a class="btn btn-outline green btn-sm" href="detail_tugas.php?tgs=<?= $tugas['id'] ?>">Lihat</a>
-                                <button type="button" class="btn btn-outline red btn-sm btn-hapus" id="btn-hapus" data-id="<?= $tugas['id'] ?>">Hapus</button>
+                              <div class="btn-group">
+                                <a class="btn btn-circle btn-sm green" style="width:100%;margin-top: 5px; margin-bottom:5px;" href="detail_tugas.php?tgs=<?= $tugas['id'] ?>"> Lihat
+                                  <i class="fa fa-search"></i>
+                                </a>
+                                <button class="btn btn-circle btn-sm red btn-hapus" style="width:100%;margin-top: 5px; margin-bottom:5px;" data-id="<?= $tugas['id'] ?>"> Hapus
+                                  <i class="fa fa-trash"></i>
+                                </button>
                               </div>
                             </div>
                           </td>
                         </tr>
-                      <?php endwhile; ?>
+                      <?php $no++;
+                      endwhile; ?>
                     </div>
                   </tbody>
                 </table>
