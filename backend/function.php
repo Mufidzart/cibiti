@@ -202,17 +202,16 @@ switch ($_GET['action']) {
                           <?php while ($kunci_row = mysqli_fetch_array($getjawaban)) :
                             if ($kunci_row['kunci'] == "1") {
                               $check = "checked";
-                              $after = "<span style='left:6px; top:6px; height:6px; width:6px; border-radius:50%; background:#666;'</span>";
+                              $label = "<b style='background-color:#32c5d254;padding:5px;'>" . $kunci_row['jawaban'] . "</b>";
                             } else {
                               $check = "";
-                              $after = "";
+                              $label = $kunci_row['jawaban'];
                             }
                           ?>
                             <label class="mt-radio">
-                              <input type="radio" name="kunci" id="jawaban_<?= $kunci_row['id'] ?>" value="<?= $kunci_row['jawaban'] ?>" disabled <?= $check ?>>
-                              <?= $kunci_row['jawaban'] ?>
+                              <input type="radio" name="kunci_<?= $kunci_row['id'] ?>" id="kunci_<?= $kunci_row['id'] ?>" value="<?= $kunci_row['jawaban'] ?>" disabled <?= $check ?>>
+                              <?= $label ?>
                               <span></span>
-                              <?= $after ?>
                             </label>
                           <?php endwhile; ?>
                         </div>
@@ -223,8 +222,8 @@ switch ($_GET['action']) {
               </div>
             </div>
             <div class="col2">
-              <a href="javascript:;" class="btn btn-circle btn-icon-only green edit-soal" data-id="' . $row['id'] . '"><i class="fa fa-edit"></i></a>
-              <a href="javascript:;" class="btn btn-circle btn-icon-only red hapus-soal" data-id="' . $row['id'] . '"><i class="fa fa-trash"></i></a>
+              <a href="javascript:;" class="btn btn-circle btn-icon-only green edit-soal" data-id="<?= $row['id'] ?>"><i class="fa fa-edit"></i></a>
+              <a href="javascript:;" class="btn btn-circle btn-icon-only red hapus-soal" data-id="<?= $row['id'] ?>"><i class="fa fa-trash"></i></a>
             </div>
           </li>
 <?php
