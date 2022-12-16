@@ -1,164 +1,123 @@
 <?php
-require('backend/connection.php');
-$page_title = "Learning Management System (LMS)";
-require('frontend/layouts/headlayout.php');
+session_start();
+if (isset($_SESSION['username'])) {
+  header("location:kelas.php");
+}
 ?>
-<!-- BEGIN CONTENT -->
-<div class="page-content-wrapper">
-  <!-- BEGIN CONTENT BODY -->
-  <div class="page-content">
-    <!-- BEGIN PAGE HEAD-->
-    <div class="page-head">
-      <!-- BEGIN PAGE TITLE -->
-      <div class="page-title">
-        <h1><?= $page_title ?>
-          <small>dashboard & statistics</small>
-        </h1>
-      </div>
-      <!-- END PAGE TITLE -->
-      <!-- BEGIN PAGE TOOLBAR -->
-      <div class="page-toolbar">
-        <div id="dashboard-report-range" data-display-range="0" class="pull-right tooltips btn btn-fit-height green" data-placement="left" data-original-title="Change dashboard date range">
-          <i class="icon-calendar"></i>&nbsp;
-          <span class="thin uppercase hidden-xs"></span>&nbsp;
-          <i class="fa fa-angle-down"></i>
-        </div>
-        <!-- BEGIN THEME PANEL -->
-        <div class="btn-group btn-theme-panel">
-          <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
-            <i class="icon-settings"></i>
-          </a>
-          <div class="dropdown-menu theme-panel pull-right dropdown-custom hold-on-click">
-            <div class="row">
-              <div class="col-md-4 col-sm-4 col-xs-12">
-                <h3>HEADER</h3>
-                <ul class="theme-colors">
-                  <li class="theme-color theme-color-default active" data-theme="default">
-                    <span class="theme-color-view"></span>
-                    <span class="theme-color-name">Dark Header</span>
-                  </li>
-                  <li class="theme-color theme-color-light " data-theme="light">
-                    <span class="theme-color-view"></span>
-                    <span class="theme-color-name">Light Header</span>
-                  </li>
-                </ul>
-              </div>
-              <div class="col-md-8 col-sm-8 col-xs-12 seperator">
-                <h3>LAYOUT</h3>
-                <ul class="theme-settings">
-                  <li> Theme Style
-                    <select class="layout-style-option form-control input-small input-sm">
-                      <option value="square">Square corners</option>
-                      <option value="rounded" selected="selected">Rounded corners</option>
-                    </select>
-                  </li>
-                  <li> Layout
-                    <select class="layout-option form-control input-small input-sm">
-                      <option value="fluid" selected="selected">Fluid</option>
-                      <option value="boxed">Boxed</option>
-                    </select>
-                  </li>
-                  <li> Header
-                    <select class="page-header-option form-control input-small input-sm">
-                      <option value="fixed" selected="selected">Fixed</option>
-                      <option value="default">Default</option>
-                    </select>
-                  </li>
-                  <li> Top Dropdowns
-                    <select class="page-header-top-dropdown-style-option form-control input-small input-sm">
-                      <option value="light">Light</option>
-                      <option value="dark" selected="selected">Dark</option>
-                    </select>
-                  </li>
-                  <li> Sidebar Mode
-                    <select class="sidebar-option form-control input-small input-sm">
-                      <option value="fixed">Fixed</option>
-                      <option value="default" selected="selected">Default</option>
-                    </select>
-                  </li>
-                  <li> Sidebar Menu
-                    <select class="sidebar-menu-option form-control input-small input-sm">
-                      <option value="accordion" selected="selected">Accordion</option>
-                      <option value="hover">Hover</option>
-                    </select>
-                  </li>
-                  <li> Sidebar Position
-                    <select class="sidebar-pos-option form-control input-small input-sm">
-                      <option value="left" selected="selected">Left</option>
-                      <option value="right">Right</option>
-                    </select>
-                  </li>
-                  <li> Footer
-                    <select class="page-footer-option form-control input-small input-sm">
-                      <option value="fixed">Fixed</option>
-                      <option value="default" selected="selected">Default</option>
-                    </select>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- END THEME PANEL -->
-      </div>
-      <!-- END PAGE TOOLBAR -->
-    </div>
-    <!-- END PAGE HEAD-->
-    <!-- BEGIN PAGE BREADCRUMB -->
-    <ul class="page-breadcrumb breadcrumb">
-      <li>
-        <a href="index.php">Home</a>
-        <i class="fa fa-circle"></i>
-      </li>
-      <li>
-        <span class="active">Dashboard</span>
-      </li>
-    </ul>
-    <!-- END PAGE BREADCRUMB -->
-    <!-- BEGIN PAGE BASE CONTENT -->
-    <div class="row widget-row">
-      <?php
-      $thn_ajaran = 5;
-      $getkelasmapel = $conn->query("select ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel from arf_guru_mapel agm join arf_mapel am on am.id=agm.id_mapel join arf_kelas ak on ak.id=agm.id_subkelas where agm.id_staf='$session_id_staf' and agm.id_thajaran=4");
-      $colorbg = ["bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red"];
-      $i = 0;
-      while ($datakelas = mysqli_fetch_array($getkelasmapel)) {
-        $no = substr($i, -1);
-        $bg = $colorbg[$no];
-        if ($datakelas['parent_id'] == 1) {
-          $grade = "X";
-        } elseif ($datakelas['parent_id'] == 2) {
-          $grade = "XI";
-        } elseif ($datakelas['parent_id'] == 3) {
-          $grade = "XII";
-        }
-        $kelas = $grade . " " . $datakelas['nama_kelas'];
-        $getsiswa = $conn->query("select * from arf_siswa where id_kelasaktif='" . $kelas . "'");
-        $countsiswa = $getsiswa->num_rows;
-      ?>
-        <div class="col-md-3">
-          <!-- BEGIN WIDGET THUMB -->
-          <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-            <h4 class="widget-thumb-heading"><?= $datakelas['nama_mapel'] ?></h4>
-            <div class="widget-thumb-wrap">
-              <i class="widget-thumb-icon <?= $bg ?> icon-layers" style="margin-top: 10px;"></i>
-              <div class="widget-thumb-body">
-                <span class="widget-thumb-subtitle"><?= $kelas ?></span>
-                <span class="widget-thumb-body-stat" data-counter="counterup" data-value="<?= $countsiswa ?>">0</span> Siswa
-              </div>
-            </div>
-          </div>
-          <!-- END WIDGET THUMB -->
-        </div>
-      <?php
-        $i++;
-      }; ?>
-    </div>
-    <!-- END PAGE BASE CONTENT -->
+<!DOCTYPE html>
+<!-- 
+Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
+Version: 4.6
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+Renew Support: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+
+<head>
+  <meta charset="utf-8" />
+  <title>LMS | User Login 1</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <meta content="" name="description" />
+  <meta content="" name="author" />
+  <!-- BEGIN GLOBAL MANDATORY STYLES -->
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+  <link href="../assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <link href="../assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+  <link href="../assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <link href="../assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+  <!-- END GLOBAL MANDATORY STYLES -->
+  <!-- BEGIN PAGE LEVEL PLUGINS -->
+  <link href="../assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+  <link href="../assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+  <!-- END PAGE LEVEL PLUGINS -->
+  <!-- BEGIN THEME GLOBAL STYLES -->
+  <link href="../assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+  <link href="../assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+  <!-- END THEME GLOBAL STYLES -->
+  <!-- BEGIN PAGE LEVEL STYLES -->
+  <link href="../assets/pages/css/login.min.css" rel="stylesheet" type="text/css" />
+  <!-- END PAGE LEVEL STYLES -->
+  <!-- BEGIN THEME LAYOUT STYLES -->
+  <!-- END THEME LAYOUT STYLES -->
+  <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<!-- END HEAD -->
+
+<body class=" login">
+  <!-- BEGIN LOGO -->
+  <div class="logo">
+    <a href="index.html">
+      <img src="../assets/pages/img/logo-big.png" alt="" /> </a>
   </div>
-  <!-- END CONTENT BODY -->
-</div>
-<!-- END CONTENT -->
-<?php
-require('frontend/layouts/bodylayout.php');
-?>
+  <!-- END LOGO -->
+  <!-- BEGIN LOGIN -->
+  <div class="content">
+    <!-- BEGIN LOGIN FORM -->
+    <form class="login-form" action="auth.php?action=login" method="post">
+      <h3 class="form-title font-green">Sign In</h3>
+      <div class="alert alert-danger display-hide">
+        <button class="close" data-close="alert"></button>
+        <span> Enter any username and password. </span>
+      </div>
+      <div class="form-group">
+        <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+        <label class="control-label visible-ie8 visible-ie9">Username</label>
+        <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" />
+      </div>
+      <div class="form-group">
+        <label class="control-label visible-ie8 visible-ie9">Password</label>
+        <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" />
+      </div>
+      <div class="form-actions text-center">
+        <button type="submit" class="btn green uppercase" id="btn_login">Login</button>
+      </div>
+      <div class="create-account">
+        <p>
+          <a href="javascript:;" id="register-btn" class="uppercase">Learning Management System</a>
+        </p>
+      </div>
+    </form>
+    <!-- END LOGIN FORM -->
+  </div>
+  <div class="copyright"> 2023 © Goweb Indonesia. </div>
+  <!--[if lt IE 9]>
+<script src="../assets/global/plugins/respond.min.js"></script>
+<script src="../assets/global/plugins/excanvas.min.js"></script> 
+<![endif]-->
+  <!-- BEGIN CORE PLUGINS -->
+  <script src="../assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+  <!-- END CORE PLUGINS -->
+  <!-- BEGIN PAGE LEVEL PLUGINS -->
+  <script src="../assets/global/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/jquery-validation/js/additional-methods.min.js" type="text/javascript"></script>
+  <script src="../assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+  <!-- END PAGE LEVEL PLUGINS -->
+  <!-- BEGIN THEME GLOBAL SCRIPTS -->
+  <script src="../assets/global/scripts/app.min.js" type="text/javascript"></script>
+  <!-- END THEME GLOBAL SCRIPTS -->
+  <!-- BEGIN PAGE LEVEL SCRIPTS -->
+  <script src="../assets/pages/scripts/login.min.js" type="text/javascript"></script>
+  <!-- END PAGE LEVEL SCRIPTS -->
+  <!-- BEGIN THEME LAYOUT SCRIPTS -->
+  <!-- END THEME LAYOUT SCRIPTS -->
+</body>
+
+</html>

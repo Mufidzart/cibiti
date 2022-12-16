@@ -50,7 +50,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="../assets/layouts/layout4/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
     <link href="../assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
-    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="shortcut icon" href="favicon.png" />
 </head>
 </head>
 <!-- END HEAD -->

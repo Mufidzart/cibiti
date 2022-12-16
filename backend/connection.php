@@ -1,4 +1,8 @@
 <?php
+session_start();
+if (!isset($_SESSION['username'])) {
+  header("location:index.php");
+}
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -13,4 +17,4 @@ $conn = new mysqli($servername, $username, $password, $database);
 // }
 // echo "Connected successfully";
 
-$session_id_staf = "197211012007011009";
+$session_id_staf = $_SESSION['username'];
