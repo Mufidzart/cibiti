@@ -209,80 +209,41 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h4 class="modal-title">Tambah Soal</h4>
+        <h4 class="modal-title">Edit Soal</h4>
       </div>
-      <div class="modal-body form">
-        <form role="form" id="form-tambah-soal">
+      <div class="modal-body form" id="tampil-edit-soal">
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL EDIT SOAL -->
+<!-- MODAL HAPUS SOAL -->
+<div class="modal fade bs-modal-md" id="modal-hapus-soal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Hapus Soal</h4>
+      </div>
+      <form role="form" id="form-hapus-soal">
+        <div class="modal-body">
           <div class="form-body">
-            <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
-            <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
-            <div class="form-group" id="form-tipe-soal">
-              <label class="control-label">Tipe Pertanyaan</label>
-              <select class="form-control" id="tipe-soal" name="tipe-soal">
-                <?php while ($row = mysqli_fetch_array($tipe_soal)) : ?>
-                  <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
-                <?php endwhile; ?>
-              </select>
-              <div id="pesan-tipe-soal"></div>
-            </div>
-            <div class="form-group" id="form-pertanyaan">
-              <label class="control-label">Pertanyaan</label>
-              <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3" style="margin-bottom: 20px;"></textarea>
-              <div id="pesan-pertanyaan"></div>
-            </div>
-            <div id="jawaban" style="padding: 20px;">
-              <div class="form-group">
-                <label class="control-label">Pilihan Jawaban</label>
-              </div>
-              <div class="form-group" id="form-pilihan-1">
-                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                  <span class="input-group-addon">
-                    <input type="radio" name="radio-pilihan" value="1">
-                    <span></span>
-                  </span>
-                  <input type="text" class="form-control" name="pilihan-1">
-                </div>
-                <div id="pesan-pilihan-1"></div>
-              </div>
-              <div class="form-group" id="form-pilihan-2">
-                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                  <span class="input-group-addon has-error">
-                    <input type="radio" name="radio-pilihan" value="2">
-                    <span></span>
-                  </span>
-                  <input type="text" class="form-control" name="pilihan-2">
-                </div>
-                <div id="pesan-pilihan-2"></div>
-              </div>
-              <div class="form-group" id="form-pilihan-3">
-                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                  <span class="input-group-addon">
-                    <input type="radio" name="radio-pilihan" value="3">
-                    <span></span>
-                  </span>
-                  <input type="text" class="form-control" name="pilihan-3">
-                </div>
-                <div id="pesan-pilihan-3"></div>
-              </div>
-              <div class="form-group" id="form-pilihan-4">
-                <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                  <span class="input-group-addon">
-                    <input type="radio" name="radio-pilihan" value="4">
-                    <span></span>
-                  </span>
-                  <input type="text" class="form-control" name="pilihan-4">
-                </div>
-                <div id="pesan-pilihan-4"></div>
-                <div id="pesan-radio-pilihan"></div>
+            <div class="form-group">
+              <input class="form-control spinner" type="hidden" id="id-hapus-soal" name="id-hapus-soal" value="">
+              <div class="note note-danger">
+                <h4 class="block">Peringatan Hapus!</h4>
+                <p> Apakah anda yakin menghapus soal ini? </p>
               </div>
             </div>
           </div>
-          <div class="form-actions right">
-            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-            <button type="submit" class="btn green">Simpan</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn red">Hapus</button>
+        </div>
+      </form>
     </div>
     <!-- /.modal-content -->
   </div>
@@ -385,7 +346,6 @@ require('frontend/layouts/bodylayout.php');
       },
       success: function(data) {
         $('#tampil_soal').html(data);
-        $('#modal-tambah-soal').modal('hide');
       }
     });
   }
@@ -412,7 +372,6 @@ require('frontend/layouts/bodylayout.php');
         data: formdata,
         dataType: 'json',
         success: function(data) {
-          console.log(data.judul);
           var html_jenis = '';
           var jenis = ['Tugas Harian', 'UTS', 'UAS']
           jenis.forEach(element => {
@@ -459,6 +418,7 @@ require('frontend/layouts/bodylayout.php');
         success: function(data) {
           if (data.acc == true) {
             get_soal();
+            $('#modal-tambah-soal').modal('hide');
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
@@ -494,8 +454,75 @@ require('frontend/layouts/bodylayout.php');
 
     $('#tampil_soal').on('click', '.edit-soal', function(event) {
       var id_soal = $(this).attr('data-id');
-      console.log(id_soal)
-      $('#modal-edit-soal').modal('show');
+      $.ajax({
+        url: 'backend/function.php?action=get_data&get=data_soal_id',
+        type: 'post',
+        data: {
+          id_soal: id_soal
+        },
+        success: function(data) {
+          $('#tampil-edit-soal').html(data);
+          $('#modal-edit-soal').modal('show');
+        }
+      });
+    });
+
+    $('#modal-edit-soal').on('hidden.bs.modal', function() {
+      $('#tampil-edit-soal').html("");
+    });
+
+    $("#tampil-edit-soal").on("submit", ".form-edit-soal", function(event) {
+      event.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=edit_data_soal',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            get_soal();
+            $('#modal-edit-soal').modal('hide');
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#pesan-edit-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-edit-' + data.errors[i].input).addClass('has-error');
+              if (data.errors[i].input == "radio-pilihan") {
+                $('#jawaban-edit').addClass('alert-danger');
+              }
+            }
+
+          }
+          for (i = 0; i < data.success.length; i++) {
+            $('#pesan-edit-' + data.success[i]).html('')
+            $('#form-edit-' + data.success[i]).removeClass('has-error');
+            if (data.success[i] == "radio-pilihan") {
+              $('#jawaban-edit').removeClass('alert-danger');
+            }
+          }
+        }
+      });
+    });
+
+    $('#tampil_soal').on('click', '.hapus-soal', function(event) {
+      var id_soal = $(this).attr('data-id');
+      $('#id-hapus-soal').val(id_soal);
+      $('#modal-hapus-soal').modal('show');
+    });
+
+    $("#form-hapus-soal").on("submit", function(e) {
+      e.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=hapus_data_soal',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          get_soal();
+          $('#modal-hapus-soal').modal('hide');
+        }
+      });
     });
 
   })

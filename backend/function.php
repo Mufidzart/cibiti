@@ -175,7 +175,8 @@ switch ($_GET['action']) {
 
   case 'get_data':
     if ($_GET['get'] == 'data_soal') {
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='" . $_POST['kode_tugas'] . "'");
+      $kode_tugas = $_POST['kode_tugas'];
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
       if ($getsoal) {
         $no = 1;
         while ($row = mysqli_fetch_assoc($getsoal)) {
@@ -195,11 +196,11 @@ switch ($_GET['action']) {
                   <div class="desc" style="color:black;">
                     <?php
                     $id_soal = $row['id'];
-                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal'");
+                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
                     if ($getjawaban) : ?>
                       <div class="form-group">
                         <div class="mt-radio-list">
-                          <?php while ($kunci_row = mysqli_fetch_array($getjawaban)) :
+                          <?php while ($kunci_row = mysqli_fetch_assoc($getjawaban)) :
                             if ($kunci_row['kunci'] == "1") {
                               $check = "checked";
                               $label = "<b style='background-color:#32c5d254;padding:5px;'>" . $kunci_row['jawaban'] . "</b>";
@@ -226,13 +227,178 @@ switch ($_GET['action']) {
               <a href="javascript:;" class="btn btn-circle btn-icon-only red hapus-soal" data-id="<?= $row['id'] ?>"><i class="fa fa-trash"></i></a>
             </div>
           </li>
-<?php
+        <?php
           $no++;
         }
       } else {
         $data = "Gagal Mengambil Data :" . mysqli_error($conn);
         echo $data;
       }
+    } elseif ($_GET['get'] == 'data_soal_id') {
+      $id_soal = $_POST['id_soal'];
+      $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$id_soal'");
+      $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal'");
+      if ($getsoal) {
+        $soal = mysqli_fetch_assoc($getsoal);
+        ?>
+        <form role="form" class="form-edit-soal" id="form-edit-soal">
+          <input type="hidden" class="form-control" name="id_soal" value="<?= $soal['id'] ?>">
+          <div class="form-body">
+            <div class="form-group" id="form-edit-tipe-soal">
+              <label class="control-label">Tipe Pertanyaan</label>
+              <select class="form-control" id="tipe-soal" name="tipe-soal">
+                <?php while ($row = mysqli_fetch_assoc($tipe_soal)) :
+                  $select = ($row['tipe_soal'] == $soal['tipe_soal']) ? "selected" : ""; ?>
+                  <option value="<?= $row['tipe_soal'] ?>" <?= $select ?>><?= $row['tipe_soal'] ?></option>
+                <?php endwhile; ?>
+              </select>
+              <div id="pesan-edit-tipe-soal"></div>
+            </div>
+            <div class="form-group" id="form-edit-pertanyaan">
+              <label class="control-label">Pertanyaan</label>
+              <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3" style="margin-bottom: 20px;"><?= $soal['pertanyaan'] ?></textarea>
+              <div id="pesan-edit-pertanyaan"></div>
+            </div>
+            <div id="jawaban-edit" style="padding: 20px;">
+              <div class="form-group">
+                <label class="control-label">Pilihan Jawaban</label>
+              </div>
+              <?php $no = 1;
+              while ($row = mysqli_fetch_assoc($getjawaban)) :
+                $check = ($row['kunci'] == "1") ? "checked" : ""; ?>
+                <div class="form-group" id="form-edit-pilihan-<?= $no ?>">
+                  <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+                    <span class="input-group-addon">
+                      <input type="radio" name="radio-pilihan" value="<?= $no ?>" <?= $check ?>>
+                      <span></span>
+                    </span>
+                    <input type="text" class="form-control" name="pilihan-<?= $no ?>" value="<?= $row['jawaban'] ?>">
+                  </div>
+                  <div id="pesan-edit-pilihan-<?= $no ?>"></div>
+                  <?php if ($no == 4) : ?>
+                    <div id="pesan-edit-radio-pilihan"></div>
+                  <?php endif; ?>
+                </div>
+              <?php $no++;
+              endwhile; ?>
+            </div>
+          </div>
+          <div class="form-actions right">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn green">Simpan</button>
+          </div>
+        </form>
+<?php
+      } else {
+        $data = "Gagal Mengambil Data :" . mysqli_error($conn);
+        echo $data;
+      }
+    }
+    break;
+
+  case 'edit_data_soal':
+    // Validation
+    $data['errors'] = [];
+    $data['success'] = [];
+    if (empty($_POST['pertanyaan'])) {
+      $validation = ["input" => "pertanyaan", "message" => "Pertanyaan tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "pertanyaan");
+    }
+    $tipe_soal = $_POST['tipe-soal'];
+    // Validation
+    if ($tipe_soal == "Pilihan Ganda") {
+      if (empty($_POST['radio-pilihan'])) {
+        $validation = ["input" => "radio-pilihan", "message" => "Pilih salahsatu pilihan sebagai kunci jawaban."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "radio-pilihan");
+      }
+      if (empty($_POST['pilihan-1'])) {
+        $validation = ["input" => "pilihan-1", "message" => "Pilihan ke-1 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "pilihan-1");
+      }
+      if (empty($_POST['pilihan-2'])) {
+        $validation = ["input" => "pilihan-2", "message" => "Pilihan ke-2 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "pilihan-2");
+      }
+      if (empty($_POST['pilihan-3'])) {
+        $validation = ["input" => "pilihan-3", "message" => "Pilihan ke-3 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "pilihan-3");
+      }
+      if (empty($_POST['pilihan-4'])) {
+        $validation = ["input" => "pilihan-4", "message" => "Pilihan ke-4 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "pilihan-4");
+      }
+    }
+    // End Validation
+    if (!empty($data['errors'])) {
+      $data['acc'] = false;
+      echo json_encode($data);
+    } else {
+      // Inputan Soal
+      $id_soal = $_POST['id_soal'];
+      $jenis_soal = $tipe_soal;
+      $pertanyaan = $_POST['pertanyaan'];
+      $today = date("Y-m-d h:i:s");
+      // End Inputan Soal
+      // Update Soal
+      $query = mysqli_query($conn, "UPDATE arf_soal SET tipe_soal='$jenis_soal', pertanyaan='$pertanyaan', tgl_edit='$today' WHERE id='$id_soal'");
+      // End Update Soal
+      if ($tipe_soal == "Pilihan Ganda") {
+        // Inputan Kunci Jawaban
+        $delete_old_jawaban = mysqli_query($conn, "UPDATE arf_kunci_soal SET tgl_hapus='$today' WHERE id_soal='$id_soal'");
+        $radio_pilih = $_POST['radio-pilihan'];
+        $jawaban_1 = $_POST['pilihan-1'];
+        $kunci_jawaban_1 = ($radio_pilih == 1) ? 1 : 0;
+        $jawaban_2 = $_POST['pilihan-2'];
+        $kunci_jawaban_2 = ($radio_pilih == 2) ? 1 : 0;
+        $jawaban_3 = $_POST['pilihan-3'];
+        $kunci_jawaban_3 = ($radio_pilih == 3) ? 1 : 0;
+        $jawaban_4 = $_POST['pilihan-4'];
+        $kunci_jawaban_4 = ($radio_pilih == 4) ? 1 : 0;
+        // End Inputan Kunci Jawaban
+        $query = mysqli_query($conn, "INSERT INTO arf_kunci_soal(id_soal, jawaban, kunci) VALUES ('$id_soal','$jawaban_1','$kunci_jawaban_1'), ('$id_soal','$jawaban_2','$kunci_jawaban_2'), ('$id_soal','$jawaban_3','$kunci_jawaban_3'), ('$id_soal','$jawaban_4','$kunci_jawaban_4')");
+      }
+
+      if ($query) {
+        $data = [
+          "acc" => true,
+          "last_id" => $id_soal
+        ];
+        echo json_encode($data);
+      } else {
+        $data = [
+          "acc" => false,
+          "errors" => mysqli_error($conn)
+        ];
+        echo json_encode($data);
+      }
+    }
+
+    break;
+
+  case 'hapus_data_soal';
+    $id_soal = $_POST['id-hapus-soal'];
+    $today = date("Y-m-d h:i:s");
+    $query = mysqli_query($conn, "UPDATE arf_soal SET tgl_hapus='$today' WHERE id='$id_soal'");
+    // $query = mysqli_query($conn, "UPDATE arf_kunci_soal SET tgl_hapus='$today' WHERE id_soal='$id_soal'");
+    if ($query) {
+      $data = "Hapus Data Sukses";
+      echo json_encode($data);
+    } else {
+      $data = "Hapus Data Gagal: " . mysqli_error($conn);
+      echo json_encode($data);
     }
     break;
 }

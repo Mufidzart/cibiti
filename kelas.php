@@ -119,10 +119,10 @@ require('frontend/layouts/headlayout.php');
     <div class="row widget-row">
       <?php
       $thn_ajaran = 5;
-      $getkelasmapel = $conn->query("select ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel from arf_guru_mapel agm join arf_mapel am on am.id=agm.id_mapel join arf_kelas ak on ak.id=agm.id_subkelas where agm.id_staf='$session_id_staf' and agm.id_thajaran=4");
+      $getkelasmapel = $conn->query("select ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel from arf_guru_mapel agm join arf_mapel am on am.id=agm.id_mapel join arf_kelas ak on ak.id=agm.id_subkelas where agm.id_staf='$session_id_staf' and agm.id_thajaran=$id_thajaran");
       $colorbg = ["bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red"];
       $i = 0;
-      while ($datakelas = mysqli_fetch_array($getkelasmapel)) {
+      while ($datakelas = mysqli_fetch_array($getkelasmapel)) :
         $no = substr($i, -1);
         $bg = $colorbg[$no];
         if ($datakelas['parent_id'] == 1) {
@@ -136,23 +136,25 @@ require('frontend/layouts/headlayout.php');
         $getsiswa = $conn->query("select * from arf_siswa where id_kelasaktif='" . $kelas . "'");
         $countsiswa = $getsiswa->num_rows;
       ?>
-        <div class="col-md-3">
-          <!-- BEGIN WIDGET THUMB -->
-          <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
-            <h4 class="widget-thumb-heading"><?= $datakelas['nama_mapel'] ?></h4>
-            <div class="widget-thumb-wrap">
-              <i class="widget-thumb-icon <?= $bg ?> icon-layers" style="margin-top: 10px;"></i>
-              <div class="widget-thumb-body">
-                <span class="widget-thumb-subtitle"><?= $kelas ?></span>
-                <span class="widget-thumb-body-stat" data-counter="counterup" data-value="<?= $countsiswa ?>">0</span> Siswa
+        <a href="detail_kelas.php?kelas=<?= $datakelas['id'] ?>">
+          <div class="col-md-3">
+            <!-- BEGIN WIDGET THUMB -->
+            <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+              <h4 class="widget-thumb-heading"><?= $datakelas['nama_mapel'] ?></h4>
+              <div class="widget-thumb-wrap">
+                <i class="widget-thumb-icon <?= $bg ?> icon-layers" style="margin-top: 10px;"></i>
+                <div class="widget-thumb-body">
+                  <span class="widget-thumb-subtitle"><?= $kelas ?></span>
+                  <span class="widget-thumb-body-stat" data-counter="counterup" data-value="<?= $countsiswa ?>">0</span> Siswa
+                </div>
               </div>
             </div>
+            <!-- END WIDGET THUMB -->
           </div>
-          <!-- END WIDGET THUMB -->
-        </div>
+        </a>
       <?php
         $i++;
-      }; ?>
+      endwhile; ?>
     </div>
     <!-- END PAGE BASE CONTENT -->
   </div>

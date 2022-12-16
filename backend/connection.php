@@ -18,3 +18,4 @@ $conn = new mysqli($servername, $username, $password, $database);
 // echo "Connected successfully";
 
 $session_id_staf = $_SESSION['username'];
+$id_thajaran = 4;
