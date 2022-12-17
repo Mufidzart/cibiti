@@ -237,8 +237,8 @@ switch ($_GET['action']) {
     } elseif ($_GET['get'] == 'data_soal_id') {
       $id_soal = $_POST['id_soal'];
       $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$id_soal'");
-      $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal'");
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$id_soal' AND tgl_hapus IS NULL");
+      $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
       if ($getsoal) {
         $soal = mysqli_fetch_assoc($getsoal);
         ?>
