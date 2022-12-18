@@ -64,7 +64,7 @@ $countsiswa = $getsiswa->num_rows;
                   <div class="portlet light profile-sidebar-portlet">
                     <!-- SIDEBAR USERPIC -->
                     <div class="profile-userpic">
-                      <img src="../assets/pages/media/profile/profile_user.jpg" class="img-responsive" alt="">
+                      <img src="../assets/images/admin_avatar.png" class="img-responsive" alt="">
                     </div>
                     <!-- END SIDEBAR USERPIC -->
                     <!-- SIDEBAR USER TITLE -->
@@ -117,7 +117,7 @@ $countsiswa = $getsiswa->num_rows;
               <?php while ($datasiswa = mysqli_fetch_array($getsiswa)) : ?>
                 <div class="mt-comment">
                   <div class="mt-comment-img">
-                    <img src="../assets/pages/media/users/avatar1.jpg">
+                    <img src="../assets/images/person_avatar.png" style="width:100%;">
                   </div>
                   <div class="mt-comment-body">
                     <div class="mt-comment-info">
