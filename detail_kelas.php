@@ -3,7 +3,7 @@ require('backend/connection.php');
 $page_title = "Detail Kelas";
 require('frontend/layouts/headlayout.php');
 $id_kelas = $_GET['kelas'];
-$getkelasmapel = mysqli_query($conn, "SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel,ak.program_keahlian,stf.nama_lengkap,stf.email FROM arf_guru_mapel agm JOIN arf_staf stf ON stf.nip=agm.id_staf JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE ak.id=$id_kelas AND agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
+$getkelasmapel = mysqli_query($conn, "SELECT ak.id AS id_kelas,ak.nama_kelas,ak.parent_id,am.id AS id_mapel,am.nama_mapel,ak.program_keahlian,stf.nama_lengkap,stf.email FROM arf_guru_mapel agm JOIN arf_staf stf ON stf.nip=agm.id_staf JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE ak.id=$id_kelas AND agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
 $datakelas = mysqli_fetch_assoc($getkelasmapel);
 if ($datakelas['parent_id'] == 1) {
   $grade = "X";
@@ -12,10 +12,15 @@ if ($datakelas['parent_id'] == 1) {
 } elseif ($datakelas['parent_id'] == 3) {
   $grade = "XII";
 }
+$id_mapel = $datakelas['id_mapel'];
 $kelas = $grade . " " . $datakelas['nama_kelas'];
-$getsiswa = $conn->query("select * from arf_siswa where id_kelasaktif='" . $kelas . "'");
+$getsiswa = $conn->query("SELECT * FROM arf_siswa WHERE id_kelasaktif='" . $kelas . "'");
 $countsiswa = $getsiswa->num_rows;
 $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
+$getsoal = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$session_id_staf' AND id_mapel='$id_mapel' AND tgl_hapus IS NULL");
+$get_date = date('Y-m-d');
+$get_time = date('H:i:s');
+$current_date = $get_date . 'T' . $get_time . 'Z';
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -59,7 +64,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
         <div class="tab-content">
           <div class="tab-pane active" id="tab_overview">
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-12">
                 <div class="profile-sidebar">
                   <!-- PORTLET MAIN -->
                   <div class="portlet light profile-sidebar-portlet">
@@ -87,28 +92,22 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
                   </div>
                   <!-- END PORTLET MAIN -->
                 </div>
-              </div>
-              <div class="col-md-9">
-                <div class="row">
-                  <div class="col-md-12 profile-info">
-                    <h1 class="font-green sbold uppercase"><?= $datakelas['nama_mapel'] ?></h1>
-                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet dolore magna aliquam tincidunt erat volutpat laoreet dolore magna aliquam tincidunt erat volutpat.
-                    </p>
-                    <p>
-                      <a href="javascript:;"> www.mywebsite.com </a>
-                    </p>
-                    <ul class="list-inline">
-                      <li>
-                        <i class="fa fa-map-marker"></i> <?= $grade . " " . $datakelas['nama_kelas'] ?>
-                      </li>
-                      <li>
-                        <i class="fa fa-users"></i> <?= $countsiswa ?> Siswa
-                      </li>
-                    </ul>
-                  </div>
-                  <!--end col-md-8-->
+                <div class="profile-info">
+                  <h1 class="font-green sbold uppercase"><?= $datakelas['nama_mapel'] ?></h1>
+                  <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet dolore magna aliquam tincidunt erat volutpat laoreet dolore magna aliquam tincidunt erat volutpat.
+                  </p>
+                  <p>
+                    <a href="javascript:;"> www.mywebsite.com </a>
+                  </p>
+                  <ul class="list-inline">
+                    <li>
+                      <i class="fa fa-map-marker"></i> <?= $grade . " " . $datakelas['nama_kelas'] ?>
+                    </li>
+                    <li>
+                      <i class="fa fa-users"></i> <?= $countsiswa ?> Siswa
+                    </li>
+                  </ul>
                 </div>
-                <!--end row-->
               </div>
             </div>
           </div>
@@ -125,7 +124,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
                       <span class="mt-comment-author"><?= $datasiswa['nama_siswa'] ?></span>
                       <!-- <span class="mt-comment-date">26 Feb, 10:30AM</span> -->
                     </div>
-                    <div class="mt-comment-text">NIS: <?= $datasiswa['nis'] ?> <?= (!empty($datasiswa['email_siswa'])) ? "- EMAIL : " . $datasiswa['email_siswa'] : "" ?></div>
+                    <div class="mt-comment-text">NIS: <?= $datasiswa['nis'] ?> <?= (!empty($datasiswa['email_siswa'])) ? "- EMAIL : " . $datasiswa['email_siswa'] : "" ?> Kelas: <?= $datasiswa['id_kelasaktif'] ?></div>
                   </div>
                 </div>
               <?php endwhile; ?>
@@ -133,8 +132,8 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
           </div>
           <!--end tab-pane-->
           <div class="tab-pane" id="tab_penugasan">
-            <div class="row todo-ui">
-              <div class="col-md-3 todo-sidebar">
+            <div class="todo-ui">
+              <div class="todo-sidebar">
                 <div class="portlet light bordered">
                   <div class="portlet-title">
                     <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
@@ -152,7 +151,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
                               Tidak ada tugas berjalan!
                             <?php else : ?>
                               <a href="javascript:;">
-                                <strong>26 Feb 2022, 10:30AM</strong> <br>
+                                <b style="margin-left: -10px;">26 Feb 2022, 10:30AM</b><br>
                                 (BE02BF) Tugas Pertama
                               </a>
                             <?php endif; ?>
@@ -164,7 +163,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
                   </div>
                 </div>
               </div>
-              <div class="col-md-9 todo-content">
+              <div class="todo-content">
                 <form class="form-horizontal" role="form" id="form-edit-tugas">
                   <div class="form-body">
                     <div class="form-group">
@@ -172,6 +171,7 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
                         <img alt="" class="img-circle bg-white" style="padding:2px;width:40px;" src="../assets/images/admin_avatar.png" />
                       </label>
                       <div class="col-md-9 vcenter" style="padding-top:7px;">
+                        <input class="form-control" type="hidden" id="id_tugas" name="id_tugas" value="">
                         <input class="form-control spinner input-circle" type="text" id="tambah-penugasan" name="tambah-penugasan" placeholder="Tambah penugasan..." value="">
                       </div>
                     </div>
@@ -240,15 +240,18 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
           <div class="form-body">
             <div class="form-group">
               <label class="control-label">Judul Penugasan</label>
-              <input class="form-control spinner input-circle" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
+              <input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="<?= $datakelas['id_mapel'] ?>">
+              <input class="form-control" type="hidden" id="id-kelas" name="id-kelas" value="<?= $datakelas['id_kelas'] ?>">
+              <input class="form-control spinner" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
             </div>
             <div class="form-group">
               <label class="control-label">Deskripsi penugasan</label>
-              <textarea class="form-control input-circle" id="deskripsi-penugasan" name="deskripsi-penugasan" rows="3" placeholder="Deskripsi penugasan..."></textarea>
+              <textarea class="form-control" id="deskripsi-penugasan" name="deskripsi-penugasan" rows="3" placeholder="Deskripsi penugasan..."></textarea>
             </div>
             <div class="form-group">
               <label class="control-label">Jenis Tugas</label>
               <select class="form-control select2" id="jenis-tugas" name="jenis-tugas">
+                <option></option>
                 <?php while ($jenis = mysqli_fetch_array($jenis_tugas)) :
                   $select = ($jenis['jenis_tugas'] == $tugas['jenis']) ? "selected" : ""; ?>
                   <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
@@ -256,20 +259,44 @@ $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hap
               </select>
             </div>
             <div class="form-group">
-              <label for="single" class="control-label">Select2 single select</label>
-              <select id="single" class="form-control select2">
+              <label for="kode_soal" class="control-label">Tugas</label>
+              <select class="form-control select2" id="kode_soal" name="kode_soal">
                 <option></option>
-                <optgroup label="Alaskan">
-                  <option value="AK">Alaska</option>
-                  <option value="HI" disabled="disabled">Hawaii</option>
-                </optgroup>
-                <optgroup label="Pacific Time Zone">
-                  <option value="CA">California</option>
-                  <option value="NV">Nevada</option>
-                  <option value="OR">Oregon</option>
-                  <option value="WA">Washington</option>
-                </optgroup>
               </select>
+            </div>
+            <div class="note note-info">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="control-label"><strong>Batas akhir penugasan</strong></label><br>
+                    <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
+                      <input type="text" class="form-control">
+                      <span class="input-group-btn">
+                        <button class="btn default date-reset" type="button">
+                          <i class="fa fa-times"></i>
+                        </button>
+                        <button class="btn default date-set" type="button">
+                          <i class="fa fa-calendar"></i>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="control-label"><strong>Waktu pengerjaan</strong></label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          menit
+                        </button>
+                      </span>
+                    </div>
+                    <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -291,6 +318,37 @@ require('frontend/layouts/bodylayout.php');
   $(document).ready(function() {
     $('#tambah-penugasan').on('click', function() {
       $('#modal-tambah-penugasan').modal('show');
+    });
+    $('#jenis-tugas').on('select2:select', function(e) {
+      var id_mapel = $('#id-mapel').val();
+      var jenis_tugas = $(this).val();
+      $.ajax({
+        url: 'backend/function.php?action=get_data&get=data_tugas',
+        type: 'post',
+        data: {
+          jenis_tugas: jenis_tugas,
+          id_mapel: id_mapel
+        },
+        dataType: 'json',
+        success: function(data) {
+          var html = '';
+          for (i = 0; i < data.length; i++) {
+            html += '<option value="' + data[i].kode_tugas + '">(' + data[i].kode_tugas + ') ' + data[i].judul + '</option>';
+          }
+          $('#kode_soal').html(html);
+          $('#kode_soal').trigger('change');
+        }
+      });
+    });
+    $("#jenis-tugas").select2({
+      placeholder: "Pilih jenis tugas..",
+      allowClear: true,
+      width: "100%"
+    });
+    $("#kode_soal").select2({
+      placeholder: "Pilih tugas..",
+      allowClear: true,
+      width: "100%"
     });
   });
 </script>

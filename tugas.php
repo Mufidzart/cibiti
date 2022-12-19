@@ -67,6 +67,7 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                       <th class="text-center vcenter"></th>
                       <th class="text-center vcenter">No</th>
                       <th class="text-center vcenter">Tugas</th>
+                      <th class="text-center vcenter">Jenis Tugas</th>
                       <th class="text-center vcenter">Jumlah Soal</th>
                       <th class="text-center vcenter">Kode</th>
                       <th class="text-center vcenter">Tanggal Dibuat</th>
@@ -87,6 +88,7 @@ $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_gu
                               <b><?= $tugas['judul'] ?></b><br><?= $tugas['deskripsi'] ?>
                             </a>
                           </td>
+                          <td class="text-center vcenter"><?= $tugas['jenis'] ?></td>
                           <td class="text-center vcenter"><?= $getsoal ?> Soal</td>
                           <td class="text-center vcenter">
                             <div class="mt-action-info">

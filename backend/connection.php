@@ -16,6 +16,7 @@ $conn = new mysqli($servername, $username, $password, $database);
 //     die("Connection failed: " . $conn->connect_error);
 // }
 // echo "Connected successfully";
-
+date_default_timezone_set('Asia/Jakarta');
 $session_id_staf = $_SESSION['username'];
 $id_thajaran = 4;
+$semester = 1;

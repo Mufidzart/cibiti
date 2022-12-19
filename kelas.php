@@ -2,6 +2,8 @@
 require('backend/connection.php');
 $page_title = "Learning Management System (LMS)";
 require('frontend/layouts/headlayout.php');
+// $getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_siswa_kelashistory ask ON ask.id=agm.id_subkelas JOIN arf_kelas ak ON ak.id=ask.id_kelas WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
+$getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -118,11 +120,9 @@ require('frontend/layouts/headlayout.php');
     <!-- BEGIN PAGE BASE CONTENT -->
     <div class="row widget-row">
       <?php
-      $thn_ajaran = 5;
-      $getkelasmapel = $conn->query("select ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel from arf_guru_mapel agm join arf_mapel am on am.id=agm.id_mapel join arf_kelas ak on ak.id=agm.id_subkelas where agm.id_staf='$session_id_staf' and agm.id_thajaran=$id_thajaran");
       $colorbg = ["bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red", "bg-blue", "bg-green", "bg-red"];
       $i = 0;
-      while ($datakelas = mysqli_fetch_array($getkelasmapel)) :
+      while ($datakelas = mysqli_fetch_assoc($getkelasmapel)) :
         $no = substr($i, -1);
         $bg = $colorbg[$no];
         if ($datakelas['parent_id'] == 1) {
@@ -133,7 +133,7 @@ require('frontend/layouts/headlayout.php');
           $grade = "XII";
         }
         $kelas = $grade . " " . $datakelas['nama_kelas'];
-        $getsiswa = $conn->query("select * from arf_siswa where id_kelasaktif='" . $kelas . "'");
+        $getsiswa = $conn->query("SELECT * FROM arf_siswa WHERE id_kelasaktif='" . $kelas . "'");
         $countsiswa = $getsiswa->num_rows;
       ?>
         <a href="detail_kelas.php?kelas=<?= $datakelas['id'] ?>">

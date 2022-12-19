@@ -605,23 +605,26 @@
 <script src="../assets/global/scripts/datatable.js" type="text/javascript"></script>
 <script src="../assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
 <script src="../assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
-<script src="../assets/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
+<script src="../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="../assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <script src="../assets/global/scripts/app.min.js" type="text/javascript"></script>
 <!-- END THEME GLOBAL SCRIPTS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="../assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
-<script src="../assets/apps/scripts/calendar.min.js" type="text/javascript"></script>
+<script src="../assets/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
 <script src="../assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
+<script src="../assets/apps/scripts/calendar.min.js" type="text/javascript"></script>
+<script src="../assets/apps/scripts/todo-2.min.js" type="text/javascript"></script>
+<script src="../assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
 <script src="../assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
 <script src="../assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>
 <script src="../assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
-<?= (isset($script)) ? $script : ""; ?>
 </body>
 
 </html>

@@ -294,6 +294,25 @@ switch ($_GET['action']) {
         $data = "Gagal Mengambil Data :" . mysqli_error($conn);
         echo $data;
       }
+    } elseif ($_GET['get'] == "data_tugas") {
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['id_mapel'];
+      $jenis_tugas = $_POST['jenis_tugas'];
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND jenis='$jenis_tugas' AND tgl_hapus IS NULL");
+      $datatugas = [];
+      while ($row = mysqli_fetch_assoc($getsoal)) {
+        $data_push = [
+          "id" => $row['id'],
+          "kode_tugas" => $row['kode_tugas'],
+          "id_mapel" => $row['id_mapel'],
+          "judul" => $row['judul'],
+          "jenis" => $row['jenis'],
+          "deskripsi" => $row['deskripsi'],
+          "tgl_hapus" => $row['tgl_hapus']
+        ];
+        array_push($datatugas, $data_push);
+      }
+      echo json_encode($datatugas);
     }
     break;
 
