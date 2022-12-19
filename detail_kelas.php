@@ -238,17 +238,19 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
       <form role="form" id="form-tambah-penugasan">
         <div class="modal-body form">
           <div class="form-body">
-            <div class="form-group">
+            <div class="form-group" id="form-judul-penugasan">
               <label class="control-label">Judul Penugasan</label>
               <input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="<?= $datakelas['id_mapel'] ?>">
               <input class="form-control" type="hidden" id="id-kelas" name="id-kelas" value="<?= $datakelas['id_kelas'] ?>">
               <input class="form-control spinner" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
+              <div id="pesan-judul-penugasan"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="form-deskripsi-penugasan">
               <label class="control-label">Deskripsi penugasan</label>
               <textarea class="form-control" id="deskripsi-penugasan" name="deskripsi-penugasan" rows="3" placeholder="Deskripsi penugasan..."></textarea>
+              <div id="pesan-deskripsi-penugasan"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="form-jenis-tugas">
               <label class="control-label">Jenis Tugas</label>
               <select class="form-control select2" id="jenis-tugas" name="jenis-tugas">
                 <option></option>
@@ -257,20 +259,22 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
                 <?php endwhile; ?>
               </select>
+              <div id="pesan-jenis-tugas"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="form-kode_soal">
               <label for="kode_soal" class="control-label">Tugas</label>
               <select class="form-control select2" id="kode_soal" name="kode_soal">
                 <option></option>
               </select>
+              <div id="pesan-kode_soal"></div>
             </div>
             <div class="note note-info">
               <div class="row">
                 <div class="col-md-6">
-                  <div class="form-group">
+                  <div class="form-group" id="form-batas-akhir">
                     <label class="control-label"><strong>Batas akhir penugasan</strong></label><br>
                     <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" id="batas-akhir" name="batas-akhir">
                       <span class="input-group-btn">
                         <button class="btn default date-reset" type="button">
                           <i class="fa fa-times"></i>
@@ -280,13 +284,14 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                         </button>
                       </span>
                     </div>
+                    <div id="pesan-batas-akhir"></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group">
+                  <div class="form-group" id="form-durasi">
                     <label class="control-label"><strong>Waktu pengerjaan</strong></label><br>
                     <div class="input-group">
-                      <input type="text" class="form-control text-right">
+                      <input type="text" class="form-control text-right" id="durasi" name="durasi">
                       <span class="input-group-btn">
                         <button class="btn default date-set" type="button">
                           menit
@@ -294,6 +299,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                       </span>
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                    <div id="pesan-durasi"></div>
                   </div>
                 </div>
               </div>
@@ -319,6 +325,7 @@ require('frontend/layouts/bodylayout.php');
     $('#tambah-penugasan').on('click', function() {
       $('#modal-tambah-penugasan').modal('show');
     });
+
     $('#jenis-tugas').on('select2:select', function(e) {
       var id_mapel = $('#id-mapel').val();
       var jenis_tugas = $(this).val();
@@ -340,15 +347,43 @@ require('frontend/layouts/bodylayout.php');
         }
       });
     });
+
     $("#jenis-tugas").select2({
       placeholder: "Pilih jenis tugas..",
       allowClear: true,
       width: "100%"
     });
+
     $("#kode_soal").select2({
       placeholder: "Pilih tugas..",
       allowClear: true,
       width: "100%"
+    });
+
+    $("#form-tambah-penugasan").on("submit", function(e) {
+      e.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=simpan_data_penugasan',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            window.location.reload();
+            $('#modal-tambah-penugasan').modal('hide');
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-' + data.errors[i].input).addClass('has-error');
+            }
+          }
+          for (i = 0; i < data.success.length; i++) {
+            $('#pesan-' + data.success[i]).html('')
+            $('#form-' + data.success[i]).removeClass('has-error');
+          }
+        }
+      });
     });
   });
 </script>

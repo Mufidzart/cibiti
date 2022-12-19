@@ -420,4 +420,85 @@ switch ($_GET['action']) {
       echo json_encode($data);
     }
     break;
+
+  case 'simpan_data_penugasan':
+    // Validation
+    $data['errors'] = [];
+    $data['success'] = [];
+    if (empty($_POST['id-mapel'])) {
+      $validation = ["input" => "id-mapel", "message" => "Mata pelajaran tidak ditemukan."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "id-mapel");
+    }
+    if (empty($_POST['id-kelas'])) {
+      $validation = ["input" => "id-kelas", "message" => "Kelas tidak ditemukan."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "id-kelas");
+    }
+    if (empty($_POST['judul-penugasan'])) {
+      $validation = ["input" => "judul-penugasan", "message" => "Judul tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "judul-penugasan");
+    }
+    if (empty($_POST['kode_soal'])) {
+      $validation = ["input" => "kode_soal", "message" => "Kode tugas tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "kode_soal");
+    }
+    if (empty($_POST['batas-akhir'])) {
+      $validation = ["input" => "batas-akhir", "message" => "Batas akhir penugasan tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "batas-akhir");
+    }
+    if (empty($_POST['durasi'])) {
+      $validation = ["input" => "durasi", "message" => "Waktu pengerjaan tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "durasi");
+    }
+    // End Validation
+    if (!empty($data['errors'])) {
+      $data['acc'] = false;
+      echo json_encode($data);
+    } else {
+      $pecahtgl = explode(" - ", $_POST['batas-akhir']);
+      $tgl = date('Y-m-d', strtotime($pecahtgl[0]));
+      $time = date('H:i:s', strtotime($pecahtgl[1]));
+      $tgl_akhir = $tgl . ' ' . $time;
+      // Inputan Soal
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['id-mapel'];
+      $id_kelas = $_POST['id-kelas'];
+      $judul = $_POST['judul-penugasan'];
+      $deskripsi = $_POST['deskripsi-penugasan'];
+      $kode_tugas = $_POST['kode_soal'];
+      $batas_awal = date("Y-m-d H:i:s");
+      $batas_akhir = $tgl_akhir;
+      $durasi = $_POST['durasi'];
+      // End Inputan Soal
+      // Input Soal
+      $query = mysqli_query($conn, "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, judul, deskripsi, kode_tugas, waktu_mulai, waktu_selesai, durasi_menit) VALUES('$id_staff','$id_mapel','$id_kelas','$judul','$deskripsi','$kode_tugas','$batas_awal','$batas_akhir','$durasi')");
+      $last_id = $conn->insert_id;
+      // End Input Soal
+
+      if ($query) {
+        $data = [
+          "acc" => true,
+          "last_id" => $last_id
+        ];
+        echo json_encode($data);
+      } else {
+        $data = [
+          "acc" => false,
+          "errors" => mysqli_error($conn)
+        ];
+        echo json_encode($data);
+      }
+    }
+    break;
 }
