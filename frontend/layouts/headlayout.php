@@ -40,6 +40,8 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="../assets/global/plugins/jqvmap/jqvmap/jqvmap.css" rel="stylesheet" type="text/css" />
     <link href="../assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
     <link href="../assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL PLUGINS -->
     <!-- BEGIN THEME GLOBAL STYLES -->
     <link href="../assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -48,6 +50,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <!-- BEGIN PAGE LEVEL STYLES -->
     <link href="../assets/pages/css/profile.min.css" rel="stylesheet" type="text/css" />
     <link href="../assets/pages/css/profile-2.min.css" rel="stylesheet" type="text/css" />
+    <link href="../assets/apps/css/todo-2.min.css" rel="stylesheet" type="text/css" />
     <!-- END PAGE LEVEL STYLES -->
     <!-- BEGIN THEME LAYOUT STYLES -->
     <link href="../assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
