@@ -87,17 +87,8 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                       </div>
                     </div>
                     <div class="portlet-body">
-                      <div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible="0">
-                        <ul class="feeds" id="tampil_soal">
-
-                        </ul>
-                      </div>
-                      <!-- <div class="scroller-footer">
-                        <div class="btn-arrow-link pull-right">
-                          <a href="javascript:;">See All Records</a>
-                          <i class="icon-arrow-right"></i>
-                        </div>
-                      </div> -->
+                      <ul class="feeds" id="tampil_soal">
+                      </ul>
                     </div>
                   </div>
                 </div>
