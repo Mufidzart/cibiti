@@ -319,6 +319,12 @@ switch ($_GET['action']) {
       $id_kelas = $_POST['id_kelas'];
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL");
       while ($row = mysqli_fetch_assoc($getpenugasan)) {
+        $pecahtglinput = explode(" ", $row['tgl_input']);
+        $tgl_input = date("d-m-Y", strtotime($pecahtglinput[0]));
+        $jam_input = date("H:i", strtotime($pecahtglinput[1]));
+        $pecahtglselesai = explode(" ", $row['waktu_selesai']);
+        $tgl_selesai = date("d-m-Y", strtotime($pecahtglselesai[0]));
+        $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
       ?>
         <div class="note note-info">
           <div class="mt-comments">
@@ -326,20 +332,20 @@ switch ($_GET['action']) {
               <div class="mt-comment-body">
                 <div class="mt-comment-info">
                   <span class="mt-comment-author"><?= $row['judul'] ?></span>
-                  <span class="mt-comment-date"><?= $row['tgl_input'] ?></span>
+                  <span class="mt-comment-date"><?= $tgl_input . ", " . $jam_input ?> WIB</span>
                 </div>
                 <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
                 <div class="alert alert-info" style="margin-top:10px;">
                   <strong>
-                    <i class="fa fa-calendar"></i> Batas Akhir <?= $row['waktu_selesai'] ?> WIB
+                    <i class="fa fa-calendar"></i> Batas Akhir <?= $tgl_selesai . ", " . $jam_selesai ?> WIB
                   </strong>
                 </div>
                 <div class="mt-comment-details">
                   <span class="mt-comment-status mt-comment-status-pending">
                     <div class="row">
                       <div class="col-md-12">
-                        <a href="javascript:;" class="btn btn-circle default green-stripe"><?= $row['kode_tugas'] ?></a>
-                        <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk mengerjakan</span>
+                        <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['kode_tugas'] ?>"><?= $row['kode_tugas'] ?></a>
+                        <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
                       </div>
                     </div>
                   </span>
@@ -374,18 +380,116 @@ switch ($_GET['action']) {
         <?php
       } else {
         while ($row = mysqli_fetch_assoc($getpenugasan)) {
+          $pecahtgl = explode(" ", $row['waktu_selesai']);
+          $tgl_selesai = date("d-m-Y", strtotime($pecahtgl[0]));
+          $jam_selesai = date("H:i", strtotime($pecahtgl[1]));
         ?>
           <?php if ($datenow <= $row['waktu_selesai']) : ?>
             <div class="alert alert-info" style="margin-left:30px;">
               <a href="javascript:;">
-                <b style="margin-left: -10px;"><?= $row['waktu_selesai'] ?></b><br>
+                <b style="margin-left: -10px;"><?= $tgl_selesai . ", " . $jam_selesai ?> WIB</b><br>
                 (<?= $row['kode_tugas'] ?>) <?= $row['judul'] ?>
               </a>
             </div>
           <?php endif; ?>
-<?php
+      <?php
         }
       }
+    } elseif ($_GET['get'] == "lihat_tugas") {
+      $kode_tugas = $_POST['kode_tugas'];
+      $gettugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+      $datatugas = mysqli_fetch_assoc($gettugas);
+      $id_tugas = $datatugas['id'];
+      ?>
+      <div class="portlet light bordered">
+        <div class="portlet-body">
+          <div class="row">
+            <div class="col-md-12 profile-info" style="padding-right: 50px;padding-left: 50px;margin-bottom: 50px;">
+              <a href="javascript:;" class="btn btn-circle default green-stripe" id="text-kode">KODE: <?= $datatugas['kode_tugas'] ?></a>
+              <h2 class="font-green sbold uppercase" id="text-judul"><?= $datatugas['judul'] ?></h2>
+              <p id="text-deskripsi"><?= $datatugas['deskripsi'] ?></p>
+              <ul class="list-inline">
+                <li id="text-jenis">
+                  <i class="fa fa-briefcase"></i> <?= $datatugas['jenis'] ?>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <div class="portlet light bordered">
+                <div class="portlet-title">
+                  <div class="caption">
+                    <i class="icon-bubble font-green-sharp"></i>
+                    <span class="caption-subject font-green-sharp bold uppercase">SOAL</span>
+                  </div>
+                </div>
+                <div class="portlet-body">
+                  <ul class="feeds">
+                    <?php
+                    $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+                    if ($getsoal) {
+                      $no = 1;
+                      while ($row = mysqli_fetch_assoc($getsoal)) {
+                    ?>
+                        <li>
+                          <div class="col1">
+                            <div class="cont">
+                              <div class="cont-col1">
+                                <div class="label label-sm label-success" style="width: 20px; height: max-content; color:white;">
+                                  <?= $no ?>
+                                </div>
+                              </div>
+                              <div class="cont-col2">
+                                <div class="desc" style="color:black;">
+                                  <?= $row['pertanyaan'] ?>
+                                </div>
+                                <div class="desc" style="color:black;">
+                                  <?php
+                                  $id_soal = $row['id'];
+                                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
+                                  if ($getjawaban) : ?>
+                                    <div class="form-group">
+                                      <div class="mt-radio-list">
+                                        <?php while ($kunci_row = mysqli_fetch_assoc($getjawaban)) :
+                                          if ($kunci_row['kunci'] == "1") {
+                                            $check = "checked";
+                                            $label = "<b style='background-color:#32c5d254;padding:5px;'>" . $kunci_row['jawaban'] . "</b>";
+                                          } else {
+                                            $check = "";
+                                            $label = $kunci_row['jawaban'];
+                                          }
+                                        ?>
+                                          <label class="mt-radio">
+                                            <input type="radio" name="kunci_<?= $kunci_row['id'] ?>" id="kunci_<?= $kunci_row['id'] ?>" value="<?= $kunci_row['jawaban'] ?>" disabled <?= $check ?>>
+                                            <?= $label ?>
+                                            <span></span>
+                                          </label>
+                                        <?php endwhile; ?>
+                                      </div>
+                                    </div>
+                                  <?php endif; ?>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                    <?php
+                        $no++;
+                      }
+                    } else {
+                      $data = "Gagal Mengambil Data :" . mysqli_error($conn);
+                      echo $data;
+                    }
+                    ?>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<?php
     }
     break;
 

@@ -277,6 +277,22 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
+<!-- MODAL LIHAT TUGAS -->
+<div class="modal fade bs-modal-lg" id="modal-lihat-tugas" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Lihat Tugas</h4>
+      </div>
+      <div class="modal-body" id="show_tugas">
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL LIHAT TUGAS -->
 <?php
 require('../frontend/layouts/bodylayout.php');
 ?>
@@ -285,7 +301,7 @@ require('../frontend/layouts/bodylayout.php');
     var id_mapel = '<?= $datakelas['id_mapel'] ?>';
     var id_kelas = '<?= $datakelas['id_kelas'] ?>';
     $.ajax({
-      url: 'backend/function_guru_guru.php?action=get_data&get=data_penugasan',
+      url: '../backend/function_guru.php?action=get_data&get=data_penugasan',
       type: 'post',
       data: {
         id_mapel: id_mapel,
@@ -301,7 +317,7 @@ require('../frontend/layouts/bodylayout.php');
     var id_mapel = '<?= $datakelas['id_mapel'] ?>';
     var id_kelas = '<?= $datakelas['id_kelas'] ?>';
     $.ajax({
-      url: 'backend/function_guru_guru.php?action=get_data&get=data_penugasan_akanberakhir',
+      url: '../backend/function_guru.php?action=get_data&get=data_penugasan_akanberakhir',
       type: 'post',
       data: {
         id_mapel: id_mapel,
@@ -322,11 +338,26 @@ require('../frontend/layouts/bodylayout.php');
       $('#modal-tambah-penugasan').modal('show');
     });
 
+    $('#show_penugasan').on('click', '.lihat_tugas', function() {
+      var kode_tugas = $(this).attr("data-kode");
+      $.ajax({
+        url: '../backend/function_guru.php?action=get_data&get=lihat_tugas',
+        type: 'post',
+        data: {
+          kode_tugas: kode_tugas,
+        },
+        success: function(data) {
+          $('#show_tugas').html(data);
+        }
+      });
+      $('#modal-lihat-tugas').modal('show');
+    });
+
     $('#jenis-tugas').on('select2:select', function(e) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
       var jenis_tugas = $(this).val();
       $.ajax({
-        url: 'backend/function_guru_guru.php?action=get_data&get=data_tugas',
+        url: '../backend/function_guru.php?action=get_data&get=data_tugas',
         type: 'post',
         data: {
           jenis_tugas: jenis_tugas,
@@ -360,7 +391,7 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru_guru.php?action=simpan_data_penugasan',
+        url: '../backend/function_guru.php?action=simpan_data_penugasan',
         type: 'post',
         data: formdata,
         dataType: 'json',
