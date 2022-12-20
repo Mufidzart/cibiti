@@ -19,8 +19,14 @@ switch ($_GET['action']) {
 
     if ($username == "197211012007011009") {
       $_SESSION['username'] = $username;
+      $_SESSION['role'] = "guru";
       $_SESSION['status'] = "login";
-      header("location:kelas.php");
+      header("location:guru/kelas.php");
+    } elseif ($username == "197211012007011009") {
+      $_SESSION['username'] = $username;
+      $_SESSION['role'] = "siswa";
+      $_SESSION['status'] = "login";
+      header("location:siswa/kelas.php");
     } else {
       header("location:index.php?pesan=gagal");
     }

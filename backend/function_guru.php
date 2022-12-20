@@ -289,7 +289,7 @@ switch ($_GET['action']) {
             <button type="submit" class="btn green">Simpan</button>
           </div>
         </form>
-<?php
+      <?php
       } else {
         $data = "Gagal Mengambil Data :" . mysqli_error($conn);
         echo $data;
@@ -313,6 +313,79 @@ switch ($_GET['action']) {
         array_push($datatugas, $data_push);
       }
       echo json_encode($datatugas);
+    } elseif ($_GET['get'] == "data_penugasan") {
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['id_mapel'];
+      $id_kelas = $_POST['id_kelas'];
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL");
+      while ($row = mysqli_fetch_assoc($getpenugasan)) {
+      ?>
+        <div class="note note-info">
+          <div class="mt-comments">
+            <div class="mt-comment">
+              <div class="mt-comment-body">
+                <div class="mt-comment-info">
+                  <span class="mt-comment-author"><?= $row['judul'] ?></span>
+                  <span class="mt-comment-date"><?= $row['tgl_input'] ?></span>
+                </div>
+                <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
+                <div class="alert alert-info" style="margin-top:10px;">
+                  <strong>
+                    <i class="fa fa-calendar"></i> Batas Akhir <?= $row['waktu_selesai'] ?> WIB
+                  </strong>
+                </div>
+                <div class="mt-comment-details">
+                  <span class="mt-comment-status mt-comment-status-pending">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <a href="javascript:;" class="btn btn-circle default green-stripe"><?= $row['kode_tugas'] ?></a>
+                        <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk mengerjakan</span>
+                      </div>
+                    </div>
+                  </span>
+                  <ul class="mt-comment-actions">
+                    <li>
+                      <a href="#">Edit</a>
+                    </li>
+                    <li>
+                      <a href="#">Hapus</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <?php
+      }
+    } elseif ($_GET['get'] == "data_penugasan_akanberakhir") {
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['id_mapel'];
+      $id_kelas = $_POST['id_kelas'];
+      $datenow = date("Y-m-d H:i:s");
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY waktu_selesai DESC");
+      if ($getpenugasan->num_rows == 0) {
+      ?>
+        <div class="alert alert-info" style="margin-left:30px;">
+          <a href="javascript:;">
+            Tidak ada tugas!
+          </a>
+        </div>
+        <?php
+      } else {
+        while ($row = mysqli_fetch_assoc($getpenugasan)) {
+        ?>
+          <?php if ($datenow <= $row['waktu_selesai']) : ?>
+            <div class="alert alert-info" style="margin-left:30px;">
+              <a href="javascript:;">
+                <b style="margin-left: -10px;"><?= $row['waktu_selesai'] ?></b><br>
+                (<?= $row['kode_tugas'] ?>) <?= $row['judul'] ?>
+              </a>
+            </div>
+          <?php endif; ?>
+<?php
+        }
+      }
     }
     break;
 

@@ -1,7 +1,7 @@
 <?php
-require('backend/connection.php');
+require('../backend/connection.php');
 $page_title = "Detail Tugas";
-require('frontend/layouts/headlayout.php');
+require('../frontend/layouts/headlayout.php');
 $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel WHERE atc.id='" . $_GET['tgs'] . "' AND tgl_hapus IS NULL");
 $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=4");
 $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
@@ -333,7 +333,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
 </div>
 <!-- END MODAL EDIT TUGAS -->
 <?php
-require('frontend/layouts/bodylayout.php');
+require('../frontend/layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
   function get_soal() {

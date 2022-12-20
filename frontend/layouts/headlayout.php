@@ -59,7 +59,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="../assets/layouts/layout4/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
     <link href="../assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
-    <link rel="shortcut icon" href="favicon.png" />
+    <link rel="shortcut icon" href="../favicon.png" />
 </head>
 </head>
 <!-- END HEAD -->
@@ -77,7 +77,11 @@ License: You must have a valid license purchased only from themeforest(the above
     <div class="page-header navbar navbar-fixed-top">
         <!-- BEGIN HEADER INNER -->
         <div class="page-header-inner ">
-            <?php include 'frontend/layouts/topbar.php'; ?>
+            <?php if ($_SESSION['role'] == "guru") {
+                include '../frontend/layouts/topbar_guru.php';
+            } else {
+                include '../frontend/layouts/topbar_siswa.php';
+            } ?>
         </div>
         <!-- END HEADER INNER -->
     </div>
@@ -91,7 +95,11 @@ License: You must have a valid license purchased only from themeforest(the above
         <div class="page-sidebar-wrapper">
 
             <!-- BEGIN SIDEBAR -->
-            <?php include 'frontend/layouts/sidebar.php'; ?>
+            <?php if ($_SESSION['role'] == "guru") {
+                include '../frontend/layouts/sidebar_guru.php';
+            } else {
+                include '../frontend/layouts/sidebar_siswa.php';
+            } ?>
             <!-- END SIDEBAR -->
 
         </div>

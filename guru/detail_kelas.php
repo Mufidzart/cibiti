@@ -1,7 +1,7 @@
 <?php
-require('backend/connection.php');
+require('../backend/connection.php');
 $page_title = "Detail Kelas";
-require('frontend/layouts/headlayout.php');
+require('../frontend/layouts/headlayout.php');
 $id_kelas = $_GET['kelas'];
 $getkelasmapel = mysqli_query($conn, "SELECT ak.id AS id_kelas,ak.nama_kelas,ak.parent_id,am.id AS id_mapel,am.nama_mapel,ak.program_keahlian,stf.nama_lengkap,stf.email FROM arf_guru_mapel agm JOIN arf_staf stf ON stf.nip=agm.id_staf JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE ak.id=$id_kelas AND agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
 $datakelas = mysqli_fetch_assoc($getkelasmapel);
@@ -22,6 +22,8 @@ $get_date = date('Y-m-d');
 $get_time = date('H:i:s');
 $current_date = $get_date . 'T' . $get_time . 'Z';
 ?>
+<input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="">
+<input class="form-control" type="hidden" id="id-kelas" name="id-kelas" value="<?= $datakelas['id_kelas'] ?>">
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
   <!-- BEGIN CONTENT BODY -->
@@ -138,7 +140,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   <div class="portlet-title">
                     <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
                       <span class="caption-subject font-green-sharp bold uppercase">Menu </span>
-                      <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>
+                      <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">Klik untuk melihat menu</span>
                     </div>
                   </div>
                   <div class="portlet-body todo-project-list-content" style="height: auto;">
@@ -146,15 +148,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                       <ul class="nav nav-stacked">
                         <li>
                           <a href="javascript:;" data-toggle="collapse" data-target=".akan-berakhir"> Tugas Akan Berakhir </a>
-                          <div class="alert alert-info" style="margin-left:30px;">
-                            <?php if (isset($_GET['action'])) : ?>
-                              Tidak ada tugas berjalan!
-                            <?php else : ?>
-                              <a href="javascript:;">
-                                <b style="margin-left: -10px;">26 Feb 2022, 10:30AM</b><br>
-                                (BE02BF) Tugas Pertama
-                              </a>
-                            <?php endif; ?>
+                          <div id="show_akan_berakhir">
+
                           </div>
                           <!-- <a href="javascript:;" data-toggle="collapse" data-target=".akan-berakhir"><span class="badge badge-info"> 0 </span> Tugas Akan Berakhir </a> -->
                         </li>
@@ -178,41 +173,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   </div>
                 </form>
                 <hr>
-                <div class="note note-info">
-                  <div class="mt-comments">
-                    <div class="mt-comment">
-                      <div class="mt-comment-body">
-                        <div class="mt-comment-info">
-                          <span class="mt-comment-author">Judul Penugasan</span>
-                          <span class="mt-comment-date">26 Feb 2022, 10:30 WIB</span>
-                        </div>
-                        <div class="mt-comment-text"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. </div>
-                        <div class="alert alert-info" style="margin-top:10px;">
-                          <strong>
-                            <i class="fa fa-calendar"></i> Batas Akhir 12 Desember 2023, 23:00 WIB
-                          </strong>
-                        </div>
-                        <div class="mt-comment-details">
-                          <span class="mt-comment-status mt-comment-status-pending">
-                            <div class="row">
-                              <div class="col-md-12">
-                                <a href="javascript:;" class="btn btn-circle default green-stripe">BE02BF</a>
-                                <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk mengerjakan</span>
-                              </div>
-                            </div>
-                          </span>
-                          <ul class="mt-comment-actions">
-                            <li>
-                              <a href="#">Edit</a>
-                            </li>
-                            <li>
-                              <a href="#">Hapus</a>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div id="show_penugasan">
+
                 </div>
               </div>
             </div>
@@ -240,8 +202,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
           <div class="form-body">
             <div class="form-group" id="form-judul-penugasan">
               <label class="control-label">Judul Penugasan</label>
-              <input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="<?= $datakelas['id_mapel'] ?>">
-              <input class="form-control" type="hidden" id="id-kelas" name="id-kelas" value="<?= $datakelas['id_kelas'] ?>">
               <input class="form-control spinner" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
               <div id="pesan-judul-penugasan"></div>
             </div>
@@ -318,19 +278,55 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
 <?php
-require('frontend/layouts/bodylayout.php');
+require('../frontend/layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
+  function get_penugasan() {
+    var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+    var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+    $.ajax({
+      url: 'backend/function_guru_guru.php?action=get_data&get=data_penugasan',
+      type: 'post',
+      data: {
+        id_mapel: id_mapel,
+        id_kelas: id_kelas
+      },
+      success: function(data) {
+        $('#show_penugasan').html(data);
+      }
+    });
+  }
+
+  function get_penugasan_akanberakhir() {
+    var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+    var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+    $.ajax({
+      url: 'backend/function_guru_guru.php?action=get_data&get=data_penugasan_akanberakhir',
+      type: 'post',
+      data: {
+        id_mapel: id_mapel,
+        id_kelas: id_kelas
+      },
+      success: function(data) {
+        console.log(data)
+        $('#show_akan_berakhir').html(data);
+      }
+    });
+  }
+
   $(document).ready(function() {
+    get_penugasan();
+    get_penugasan_akanberakhir();
+
     $('#tambah-penugasan').on('click', function() {
       $('#modal-tambah-penugasan').modal('show');
     });
 
     $('#jenis-tugas').on('select2:select', function(e) {
-      var id_mapel = $('#id-mapel').val();
+      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
       var jenis_tugas = $(this).val();
       $.ajax({
-        url: 'backend/function.php?action=get_data&get=data_tugas',
+        url: 'backend/function_guru_guru.php?action=get_data&get=data_tugas',
         type: 'post',
         data: {
           jenis_tugas: jenis_tugas,
@@ -364,14 +360,14 @@ require('frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function.php?action=simpan_data_penugasan',
+        url: 'backend/function_guru_guru.php?action=simpan_data_penugasan',
         type: 'post',
         data: formdata,
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
-            window.location.reload();
             $('#modal-tambah-penugasan').modal('hide');
+            get_penugasan();
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
