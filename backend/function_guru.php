@@ -318,51 +318,62 @@ switch ($_GET['action']) {
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL");
-      while ($row = mysqli_fetch_assoc($getpenugasan)) {
-        $pecahtglinput = explode(" ", $row['tgl_input']);
-        $tgl_input = date("d-m-Y", strtotime($pecahtglinput[0]));
-        $jam_input = date("H:i", strtotime($pecahtglinput[1]));
-        $pecahtglselesai = explode(" ", $row['waktu_selesai']);
-        $tgl_selesai = date("d-m-Y", strtotime($pecahtglselesai[0]));
-        $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
+      if ($getpenugasan->num_rows == 0) {
       ?>
-        <div class="note note-info">
-          <div class="mt-comments">
-            <div class="mt-comment">
-              <div class="mt-comment-body">
-                <div class="mt-comment-info">
-                  <span class="mt-comment-author"><?= $row['judul'] ?></span>
-                  <span class="mt-comment-date"><?= $tgl_input . ", " . $jam_input ?> WIB</span>
-                </div>
-                <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
-                <div class="alert alert-info" style="margin-top:10px;">
-                  <strong>
-                    <i class="fa fa-calendar"></i> Batas Akhir <?= $tgl_selesai . ", " . $jam_selesai ?> WIB
-                  </strong>
-                </div>
-                <div class="mt-comment-details">
-                  <span class="mt-comment-status mt-comment-status-pending">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['kode_tugas'] ?>"><?= $row['kode_tugas'] ?></a>
-                        <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
+        <div class="row">
+          <div class="col-md-12 text-center" style="opacity: 0.5;">
+            <img src="../assets/images/no-content.png" alt="No Content">
+            <h3>Belum ada penugasan</h3>
+          </div>
+        </div>
+        <?php
+      } else {
+        while ($row = mysqli_fetch_assoc($getpenugasan)) {
+          $pecahtglinput = explode(" ", $row['tgl_input']);
+          $tgl_input = date("d-m-Y", strtotime($pecahtglinput[0]));
+          $jam_input = date("H:i", strtotime($pecahtglinput[1]));
+          $pecahtglselesai = explode(" ", $row['waktu_selesai']);
+          $tgl_selesai = date("d-m-Y", strtotime($pecahtglselesai[0]));
+          $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
+        ?>
+          <div class="note note-info">
+            <div class="mt-comments">
+              <div class="mt-comment">
+                <div class="mt-comment-body">
+                  <div class="mt-comment-info">
+                    <span class="mt-comment-author"><?= $row['judul'] ?></span>
+                    <span class="mt-comment-date"><?= $tgl_input . ", " . $jam_input ?> WIB</span>
+                  </div>
+                  <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
+                  <div class="alert alert-info" style="margin-top:10px;">
+                    <strong>
+                      <i class="fa fa-calendar"></i> Batas Akhir <?= $tgl_selesai . ", " . $jam_selesai ?> WIB
+                    </strong>
+                  </div>
+                  <div class="mt-comment-details">
+                    <span class="mt-comment-status mt-comment-status-pending">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['kode_tugas'] ?>"><?= $row['kode_tugas'] ?></a>
+                          <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
+                        </div>
                       </div>
-                    </div>
-                  </span>
-                  <ul class="mt-comment-actions">
-                    <li>
-                      <a href="#">Edit</a>
-                    </li>
-                    <li>
-                      <a href="#">Hapus</a>
-                    </li>
-                  </ul>
+                    </span>
+                    <ul class="mt-comment-actions">
+                      <li>
+                        <a href="#">Edit</a>
+                      </li>
+                      <li>
+                        <a href="#">Hapus</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      <?php
+        <?php
+        }
       }
     } elseif ($_GET['get'] == "data_penugasan_akanberakhir") {
       $id_staff = $session_id_staf;
@@ -371,7 +382,7 @@ switch ($_GET['action']) {
       $datenow = date("Y-m-d H:i:s");
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY waktu_selesai DESC");
       if ($getpenugasan->num_rows == 0) {
-      ?>
+        ?>
         <div class="alert alert-info" style="margin-left:30px;">
           <a href="javascript:;">
             Tidak ada tugas!
