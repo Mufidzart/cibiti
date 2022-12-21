@@ -71,7 +71,6 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                   </ul>
                 </div>
               </div>
-
               <div class="row">
                 <div class="col-md-12 col-sm-12">
                   <div class="portlet light bordered">

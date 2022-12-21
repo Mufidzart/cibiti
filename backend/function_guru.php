@@ -177,10 +177,19 @@ switch ($_GET['action']) {
     if ($_GET['get'] == 'data_soal') {
       $kode_tugas = $_POST['kode_tugas'];
       $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-      if ($getsoal) {
+      if ($getsoal->num_rows == 0) {
+?>
+        <div class="row">
+          <div class="col-md-12 text-center" style="opacity: 0.5;">
+            <img src="../assets/images/no-content.png" alt="No Content">
+            <h3>Belum ada soal</h3>
+          </div>
+        </div>
+        <?php
+      } else {
         $no = 1;
         while ($row = mysqli_fetch_assoc($getsoal)) {
-?>
+        ?>
           <li>
             <div class="col1">
               <div class="cont">
@@ -230,9 +239,6 @@ switch ($_GET['action']) {
         <?php
           $no++;
         }
-      } else {
-        $data = "Gagal Mengambil Data :" . mysqli_error($conn);
-        echo $data;
       }
     } elseif ($_GET['get'] == 'data_soal_id') {
       $id_soal = $_POST['id_soal'];
