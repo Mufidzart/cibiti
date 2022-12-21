@@ -22,7 +22,7 @@ switch ($_GET['action']) {
       $_SESSION['role'] = "guru";
       $_SESSION['status'] = "login";
       header("location:guru/kelas.php");
-    } elseif ($username == "197211012007011009") {
+    } elseif ($username == "asd") {
       $_SESSION['username'] = $username;
       $_SESSION['role'] = "siswa";
       $_SESSION['status'] = "login";
