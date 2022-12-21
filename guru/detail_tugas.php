@@ -321,7 +321,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
   </div>
   <!-- /.modal-dialog -->
 </div>
-<!-- END MODAL EDIT TUGAS -->
+<!-- END MODAL HAPUS TUGAS -->
 <?php
 require('../frontend/layouts/bodylayout.php');
 ?>

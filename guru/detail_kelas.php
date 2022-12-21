@@ -311,6 +311,37 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL EDIT PENUGASAN -->
+<!-- MODAL HAPUS PENUGASAN -->
+<div class="modal fade bs-modal-md" id="modal-hapus-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Hapus Penugasan</h4>
+      </div>
+      <form role="form" id="form-hapus-penugasan">
+        <div class="modal-body">
+          <div class="form-body">
+            <div class="form-group">
+              <input class="form-control spinner" type="hidden" id="id-hapus-penugasan" name="id-hapus-penugasan" value="">
+              <div class="note note-danger">
+                <h4 class="block">Peringatan Hapus!</h4>
+                <p> Apakah anda yakin menghapus data ini? </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn red">Hapus</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL HAPUS PENUGASAN -->
 <?php
 require('../frontend/layouts/bodylayout.php');
 ?>
@@ -392,7 +423,6 @@ require('../frontend/layouts/bodylayout.php');
       });
     });
 
-
     $("#jenis-tugas").select2({
       placeholder: "Pilih jenis tugas..",
       allowClear: true,
@@ -458,25 +488,24 @@ require('../frontend/layouts/bodylayout.php');
       });
     });
 
-    $('#show_penugasan').on('select2:select', '.jenis-edittugas', function(e) {
-      console.log("TEST");
-      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
-      var jenis_tugas = $(this).val();
+    $('#show_penugasan').on('click', '.hapus-penugasan', function(event) {
+      var id_penugasan = $(this).attr('data-id');
+      $('#id-hapus-penugasan').val(id_penugasan);
+      $('#modal-hapus-penugasan').modal('show');
+    });
+
+    $("#form-hapus-penugasan").on("submit", function(e) {
+      e.preventDefault();
+      var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=get_data&get=data_tugas',
+        url: '../backend/function_guru.php?action=hapus_data_penugasan',
         type: 'post',
-        data: {
-          jenis_tugas: jenis_tugas,
-          id_mapel: id_mapel
-        },
+        data: formdata,
         dataType: 'json',
         success: function(data) {
-          var html = '';
-          for (i = 0; i < data.length; i++) {
-            html += '<option value="' + data[i].kode_tugas + '">(' + data[i].kode_tugas + ') ' + data[i].judul + '</option>';
-          }
-          $('#kode_soal-editpenugasan').html(html);
-          $('#kode_soal-editpenugasan').trigger('change');
+          $('#modal-hapus-penugasan').modal('hide');
+          get_penugasan();
+          get_penugasan_akanberakhir();
         }
       });
     });

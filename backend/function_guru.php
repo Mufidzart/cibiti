@@ -710,8 +710,8 @@ switch ($_GET['action']) {
       $jenis_tugas = $datatugas['jenis'];
       $gettugas_all = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE jenis='$jenis_tugas' AND tgl_hapus IS NULL");
       $getjenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
-      $get_date = date('Y-m-d');
-      $get_time = date('H:i:s');
+      $get_date = date('Y-m-d', strtotime($penugasan['waktu_selesai']));
+      $get_time = date('H:i:s', strtotime($penugasan['waktu_selesai']));
       $current_date = $get_date . 'T' . $get_time . 'Z';
     ?>
       <form role="form" class="form-edit-penugasan" id="form-edit-penugasan">
@@ -787,9 +787,50 @@ switch ($_GET['action']) {
         </div>
         <div class="form-actions right">
           <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn green">Simpan</button>
+          <button type="submit" class="btn green btn_simpan_edit">Simpan</button>
         </div>
       </form>
+      <script>
+        $(document).ready(function() {
+          $('#jenis-edittugas').on('select2:select', function(e) {
+            var id_mapel = '<?= $penugasan['id_mapel'] ?>';
+            var jenis_tugas = $(this).val();
+            $.ajax({
+              url: '../backend/function_guru.php?action=get_data&get=data_tugas',
+              type: 'post',
+              data: {
+                jenis_tugas: jenis_tugas,
+                id_mapel: id_mapel
+              },
+              dataType: 'json',
+              success: function(data) {
+                var html = '';
+                for (i = 0; i < data.length; i++) {
+                  html += '<option value="' + data[i].kode_tugas + '">(' + data[i].kode_tugas + ') ' + data[i].judul + '</option>';
+                }
+                $('#kode_soal-editpenugasan').html(html);
+                $('#kode_soal-editpenugasan').trigger('change');
+              }
+            });
+          });
+          $("#form-edit-penugasan").on("submit", function(event) {
+            event.preventDefault();
+            var formdata = $(this).serialize();
+            $.ajax({
+              url: '../backend/function_guru.php?action=edit_data_penugasan',
+              type: 'post',
+              data: formdata,
+              dataType: 'json',
+              success: function(data) {
+                $('#modal-edit-penugasan').modal('hide');
+                get_penugasan();
+                get_penugasan_akanberakhir();
+              }
+            });
+          });
+          $('.form_datetime').datetimepicker();
+        });
+      </script>
 <?php
     } else {
       $data = "Gagal Mengambil Data :" . mysqli_error($conn);
@@ -833,7 +874,7 @@ switch ($_GET['action']) {
       $data['acc'] = false;
       echo json_encode($data);
     } else {
-      $pecahtgl = explode(" - ", $_POST['batas-akhir-editpenugasan']);
+      $pecahtgl = explode(" ", $_POST['batas-akhir-editpenugasan']);
       $tgl = date('Y-m-d', strtotime($pecahtgl[0]));
       $time = date('H:i:s', strtotime($pecahtgl[1]));
       $tgl_akhir = $tgl . ' ' . $time;
@@ -847,14 +888,12 @@ switch ($_GET['action']) {
       $durasi = $_POST['durasi-editpenugasan'];
       // End Inputan Soal
       // Input Soal
-      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', kode_tugas='$kode_tugas', waktu_mulai='$batas_awal', waktu_selesai='$batas_akhir', durasi_menit='$durasi' WHERE id='$id_soal'");
-      $last_id = $conn->insert_id;
+      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', kode_tugas='$kode_tugas', waktu_mulai='$batas_awal', waktu_selesai='$batas_akhir', durasi_menit='$durasi' WHERE id='$id_penugasan'");
       // End Input Soal
 
       if ($query) {
         $data = [
           "acc" => true,
-          "last_id" => $last_id
         ];
         echo json_encode($data);
       } else {
@@ -864,6 +903,19 @@ switch ($_GET['action']) {
         ];
         echo json_encode($data);
       }
+    }
+    break;
+
+  case 'hapus_data_penugasan';
+    $id = $_POST['id-hapus-penugasan'];
+    $today = date("Y-m-d h:i:s");
+    $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET tgl_hapus='$today' WHERE id='$id'");
+    if ($query) {
+      $data = "Hapus Data Sukses";
+      echo json_encode($data);
+    } else {
+      $data = "Hapus Data Gagal: " . mysqli_error($conn);
+      echo json_encode($data);
     }
     break;
 }
