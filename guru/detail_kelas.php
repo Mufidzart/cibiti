@@ -22,7 +22,7 @@ $get_date = date('Y-m-d');
 $get_time = date('H:i:s');
 $current_date = $get_date . 'T' . $get_time . 'Z';
 ?>
-<input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="">
+<input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="<?= $id_mapel ?>">
 <input class="form-control" type="hidden" id="id-kelas" name="id-kelas" value="<?= $datakelas['id_kelas'] ?>">
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -202,6 +202,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
           <div class="form-body">
             <div class="form-group" id="form-judul-penugasan">
               <label class="control-label">Judul Penugasan</label>
+              <input class="form-control" type="hidden" id="mapel" name="mapel" value="<?= $id_mapel ?>">
+              <input class="form-control" type="hidden" id="kelas" name="kelas" value="<?= $datakelas['id_kelas'] ?>">
               <input class="form-control spinner" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
               <div id="pesan-judul-penugasan"></div>
             </div>
@@ -399,6 +401,7 @@ require('../frontend/layouts/bodylayout.php');
           if (data.acc == true) {
             $('#modal-tambah-penugasan').modal('hide');
             get_penugasan();
+            get_penugasan_akanberakhir();
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')

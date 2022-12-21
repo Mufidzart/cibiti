@@ -619,17 +619,17 @@ switch ($_GET['action']) {
     // Validation
     $data['errors'] = [];
     $data['success'] = [];
-    if (empty($_POST['id-mapel'])) {
-      $validation = ["input" => "id-mapel", "message" => "Mata pelajaran tidak ditemukan."];
+    if (empty($_POST['mapel'])) {
+      $validation = ["input" => "mapel", "message" => "Mata pelajaran tidak ditemukan."];
       array_push($data['errors'], $validation);
     } else {
-      array_push($data['success'], "id-mapel");
+      array_push($data['success'], "mapel");
     }
-    if (empty($_POST['id-kelas'])) {
-      $validation = ["input" => "id-kelas", "message" => "Kelas tidak ditemukan."];
+    if (empty($_POST['kelas'])) {
+      $validation = ["input" => "kelas", "message" => "Kelas tidak ditemukan."];
       array_push($data['errors'], $validation);
     } else {
-      array_push($data['success'], "id-kelas");
+      array_push($data['success'], "kelas");
     }
     if (empty($_POST['judul-penugasan'])) {
       $validation = ["input" => "judul-penugasan", "message" => "Judul tidak boleh kosong."];
@@ -650,8 +650,12 @@ switch ($_GET['action']) {
       array_push($data['success'], "batas-akhir");
     }
     if (empty($_POST['durasi'])) {
-      $validation = ["input" => "durasi", "message" => "Waktu pengerjaan tidak boleh kosong."];
-      array_push($data['errors'], $validation);
+      if ($_POST['durasi'] == "0") {
+        array_push($data['success'], "durasi");
+      } else {
+        $validation = ["input" => "durasi", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      }
     } else {
       array_push($data['success'], "durasi");
     }
@@ -666,8 +670,8 @@ switch ($_GET['action']) {
       $tgl_akhir = $tgl . ' ' . $time;
       // Inputan Soal
       $id_staff = $session_id_staf;
-      $id_mapel = $_POST['id-mapel'];
-      $id_kelas = $_POST['id-kelas'];
+      $id_mapel = $_POST['mapel'];
+      $id_kelas = $_POST['kelas'];
       $judul = $_POST['judul-penugasan'];
       $deskripsi = $_POST['deskripsi-penugasan'];
       $kode_tugas = $_POST['kode_soal'];
