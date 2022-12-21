@@ -4,9 +4,9 @@ if (!isset($_SESSION['username'])) {
   header("location:../index.php");
 }
 $servername = "localhost";
-$username = "root";
-$password = "";
-$database = "cibiti";
+$username = "u1671256_cibitiusr";
+$password = "cibitiusr";
+$database = "u1671256_cibiti";
 
 // membuat koneksi
 $conn = new mysqli($servername, $username, $password, $database);
