@@ -367,10 +367,10 @@ switch ($_GET['action']) {
                     </span>
                     <ul class="mt-comment-actions">
                       <li>
-                        <a href="#">Edit</a>
+                        <a href="javascript:;" class="edit-penugasan" data-id="<?= $row['id'] ?>">Edit</a>
                       </li>
                       <li>
-                        <a href="#">Hapus</a>
+                        <a href="javascript:;" class="hapus-penugasan" data-id="<?= $row['id'] ?>">Hapus</a>
                       </li>
                     </ul>
                   </div>
@@ -506,7 +506,7 @@ switch ($_GET['action']) {
           </div>
         </div>
       </div>
-<?php
+    <?php
     }
     break;
 
@@ -681,6 +681,173 @@ switch ($_GET['action']) {
       // End Inputan Soal
       // Input Soal
       $query = mysqli_query($conn, "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, judul, deskripsi, kode_tugas, waktu_mulai, waktu_selesai, durasi_menit) VALUES('$id_staff','$id_mapel','$id_kelas','$judul','$deskripsi','$kode_tugas','$batas_awal','$batas_akhir','$durasi')");
+      $last_id = $conn->insert_id;
+      // End Input Soal
+
+      if ($query) {
+        $data = [
+          "acc" => true,
+          "last_id" => $last_id
+        ];
+        echo json_encode($data);
+      } else {
+        $data = [
+          "acc" => false,
+          "errors" => mysqli_error($conn)
+        ];
+        echo json_encode($data);
+      }
+    }
+    break;
+  case 'get_data_penugasan_byid':
+    $id_penugasan = $_POST['id_penugasan'];
+    $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan' AND tgl_hapus IS NULL");
+    if ($getpenugasan->num_rows !== 0) {
+      $penugasan = mysqli_fetch_assoc($getpenugasan);
+      $kode_tugas = $penugasan['kode_tugas'];
+      $gettugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+      $datatugas = mysqli_fetch_assoc($gettugas);
+      $jenis_tugas = $datatugas['jenis'];
+      $gettugas_all = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE jenis='$jenis_tugas' AND tgl_hapus IS NULL");
+      $getjenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
+      $get_date = date('Y-m-d');
+      $get_time = date('H:i:s');
+      $current_date = $get_date . 'T' . $get_time . 'Z';
+    ?>
+      <form role="form" class="form-edit-penugasan" id="form-edit-penugasan">
+        <input type="hidden" class="form-control" name="id-editpenugasan" value="<?= $penugasan['id'] ?>">
+        <div class="form-body">
+          <div class="form-group" id="form-judul-editpenugasan">
+            <label class="control-label">Judul Penugasan</label>
+            <input class="form-control spinner" type="text" id="judul-editpenugasan" name="judul-editpenugasan" placeholder="Judul penugasan..." value="<?= $penugasan['judul'] ?>">
+            <div id="pesan-judul-editpenugasan"></div>
+          </div>
+          <div class="form-group" id="form-deskripsi-editpenugasan">
+            <label class="control-label">Deskripsi penugasan</label>
+            <textarea class="form-control" id="deskripsi-editpenugasan" name="deskripsi-editpenugasan" rows="3" placeholder="Deskripsi penugasan..."><?= $penugasan['deskripsi'] ?></textarea>
+            <div id="pesan-deskripsi-editpenugasan"></div>
+          </div>
+          <div class="form-group" id="form-jenis-edittugas">
+            <label class="control-label">Jenis Tugas</label>
+            <select class="form-control jenis-edittugas" id="jenis-edittugas" name="jenis-edittugas">
+              <option></option>
+              <?php while ($jenis = mysqli_fetch_array($getjenis_tugas)) :
+                $select = ($jenis['jenis_tugas'] == $jenis_tugas) ? "selected" : ""; ?>
+                <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
+              <?php endwhile; ?>
+            </select>
+            <div id="pesan-jenis-edittugas"></div>
+          </div>
+          <div class="form-group" id="form-kode_soal-editpenugasan">
+            <label for="kode_soal" class="control-label">Tugas</label>
+            <select class="form-control" id="kode_soal-editpenugasan" name="kode_soal-editpenugasan">
+              <?php while ($tugas = mysqli_fetch_array($gettugas_all)) :
+                $select = ($tugas['kode_tugas'] == $kode_tugas) ? "selected" : ""; ?>
+                <option value="<?= $tugas['kode_tugas'] ?>" <?= $select ?>>(<?= $tugas['kode_tugas'] ?>) <?= $tugas['judul'] ?></option>
+              <?php endwhile; ?>
+            </select>
+            <div id="pesan-kode_soal-editpenugasan"></div>
+          </div>
+          <div class="note note-info">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group" id="form-batas-akhir-editpenugasan">
+                  <label class="control-label"><strong>Batas akhir penugasan</strong></label><br>
+                  <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
+                    <input type="text" class="form-control" id="batas-akhir-editpenugasan" name="batas-akhir-editpenugasan" value="<?= $penugasan['waktu_selesai'] ?>">
+                    <span class="input-group-btn">
+                      <button class="btn default date-reset" type="button">
+                        <i class="fa fa-times"></i>
+                      </button>
+                      <button class="btn default date-set" type="button">
+                        <i class="fa fa-calendar"></i>
+                      </button>
+                    </span>
+                  </div>
+                  <div id="pesan-batas-akhir-editpenugasan"></div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group" id="form-durasi-editpenugasan">
+                  <label class="control-label"><strong>Waktu pengerjaan</strong></label><br>
+                  <div class="input-group">
+                    <input type="text" class="form-control text-right" id="durasi-editpenugasan" name="durasi-editpenugasan" value="<?= $penugasan['durasi_menit'] ?>">
+                    <span class="input-group-btn">
+                      <button class="btn default date-set" type="button">
+                        menit
+                      </button>
+                    </span>
+                  </div>
+                  <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                  <div id="pesan-durasi-editpenugasan"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions right">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn green">Simpan</button>
+        </div>
+      </form>
+<?php
+    } else {
+      $data = "Gagal Mengambil Data :" . mysqli_error($conn);
+      echo $data;
+    }
+    break;
+  case 'edit_data_penugasan':
+    // Validation
+    $data['errors'] = [];
+    $data['success'] = [];
+    if (empty($_POST['judul-editpenugasan'])) {
+      $validation = ["input" => "judul-editpenugasan", "message" => "Judul tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "judul-editpenugasan");
+    }
+    if (empty($_POST['kode_soal-editpenugasan'])) {
+      $validation = ["input" => "kode_soal-editpenugasan", "message" => "Kode tugas tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "kode_soal-editpenugasan");
+    }
+    if (empty($_POST['batas-akhir-editpenugasan'])) {
+      $validation = ["input" => "batas-akhir-editpenugasan", "message" => "Batas akhir penugasan tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "batas-akhir-editpenugasan");
+    }
+    if (empty($_POST['durasi-editpenugasan'])) {
+      if ($_POST['durasi-editpenugasan'] == "0") {
+        array_push($data['success'], "durasi-editpenugasan");
+      } else {
+        $validation = ["input" => "durasi-editpenugasan", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      }
+    } else {
+      array_push($data['success'], "durasi-editpenugasan");
+    }
+    // End Validation
+    if (!empty($data['errors'])) {
+      $data['acc'] = false;
+      echo json_encode($data);
+    } else {
+      $pecahtgl = explode(" - ", $_POST['batas-akhir-editpenugasan']);
+      $tgl = date('Y-m-d', strtotime($pecahtgl[0]));
+      $time = date('H:i:s', strtotime($pecahtgl[1]));
+      $tgl_akhir = $tgl . ' ' . $time;
+      // Inputan Soal
+      $id_penugasan = $_POST['id-editpenugasan'];
+      $judul = $_POST['judul-editpenugasan'];
+      $deskripsi = $_POST['deskripsi-editpenugasan'];
+      $kode_tugas = $_POST['kode_soal-editpenugasan'];
+      $batas_awal = date("Y-m-d H:i:s");
+      $batas_akhir = $tgl_akhir;
+      $durasi = $_POST['durasi-editpenugasan'];
+      // End Inputan Soal
+      // Input Soal
+      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', kode_tugas='$kode_tugas', waktu_mulai='$batas_awal', waktu_selesai='$batas_akhir', durasi_menit='$durasi' WHERE id='$id_soal'");
       $last_id = $conn->insert_id;
       // End Input Soal
 

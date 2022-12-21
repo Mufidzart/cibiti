@@ -295,6 +295,22 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL LIHAT TUGAS -->
+<!-- MODAL EDIT PENUGASAN -->
+<div class="modal fade bs-modal-lg" id="modal-edit-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Edit penugasan</h4>
+      </div>
+      <div class="modal-body form" id="tampil-edit-penugasan">
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL EDIT PENUGASAN -->
 <?php
 require('../frontend/layouts/bodylayout.php');
 ?>
@@ -326,7 +342,6 @@ require('../frontend/layouts/bodylayout.php');
         id_kelas: id_kelas
       },
       success: function(data) {
-        console.log(data)
         $('#show_akan_berakhir').html(data);
       }
     });
@@ -377,6 +392,7 @@ require('../frontend/layouts/bodylayout.php');
       });
     });
 
+
     $("#jenis-tugas").select2({
       placeholder: "Pilih jenis tugas..",
       allowClear: true,
@@ -412,6 +428,55 @@ require('../frontend/layouts/bodylayout.php');
             $('#pesan-' + data.success[i]).html('')
             $('#form-' + data.success[i]).removeClass('has-error');
           }
+        }
+      });
+    });
+
+    $('#show_penugasan').on('click', '.edit-penugasan', function(event) {
+      var id_penugasan = $(this).attr('data-id');
+      $.ajax({
+        url: '../backend/function_guru.php?action=get_data_penugasan_byid',
+        type: 'post',
+        data: {
+          id_penugasan: id_penugasan,
+        },
+        success: function(data) {
+          $('#tampil-edit-penugasan').html(data);
+          $('#modal-edit-penugasan').modal('show');
+          $("#jenis-edittugas").select2({
+            placeholder: "Pilih jenis tugas..",
+            allowClear: true,
+            width: "100%"
+          });
+
+          $("#kode_soal-editpenugasan").select2({
+            placeholder: "Pilih tugas..",
+            allowClear: true,
+            width: "100%"
+          });
+        }
+      });
+    });
+
+    $('#show_penugasan').on('select2:select', '.jenis-edittugas', function(e) {
+      console.log("TEST");
+      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+      var jenis_tugas = $(this).val();
+      $.ajax({
+        url: '../backend/function_guru.php?action=get_data&get=data_tugas',
+        type: 'post',
+        data: {
+          jenis_tugas: jenis_tugas,
+          id_mapel: id_mapel
+        },
+        dataType: 'json',
+        success: function(data) {
+          var html = '';
+          for (i = 0; i < data.length; i++) {
+            html += '<option value="' + data[i].kode_tugas + '">(' + data[i].kode_tugas + ') ' + data[i].judul + '</option>';
+          }
+          $('#kode_soal-editpenugasan').html(html);
+          $('#kode_soal-editpenugasan').trigger('change');
         }
       });
     });
