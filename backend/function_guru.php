@@ -323,7 +323,7 @@ switch ($_GET['action']) {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
-      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL");
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY id DESC");
       if ($getpenugasan->num_rows == 0) {
       ?>
         <div class="row">

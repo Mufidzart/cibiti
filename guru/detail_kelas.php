@@ -446,8 +446,6 @@ require('../frontend/layouts/bodylayout.php');
         success: function(data) {
           if (data.acc == true) {
             $('#modal-tambah-penugasan').modal('hide');
-            get_penugasan();
-            get_penugasan_akanberakhir();
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
@@ -458,6 +456,8 @@ require('../frontend/layouts/bodylayout.php');
             $('#pesan-' + data.success[i]).html('')
             $('#form-' + data.success[i]).removeClass('has-error');
           }
+          get_penugasan();
+          get_penugasan_akanberakhir();
         }
       });
     });
