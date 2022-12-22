@@ -1,7 +1,7 @@
 <?php
-require('../backend/connection.php');
+require('backend/connection.php');
 $page_title = "Detail Tugas";
-require('../frontend/layouts/headlayout.php');
+require('layouts/headlayout.php');
 $data_tugas = mysqli_query($conn, "SELECT atc.*,am.nama_mapel FROM arf_tugas_cbt atc JOIN arf_mapel am ON am.id=atc.id_mapel WHERE atc.id='" . $_GET['tgs'] . "' AND tgl_hapus IS NULL");
 $getmapel = mysqli_query($conn, "SELECT distinct am.id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=4");
 $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
@@ -323,13 +323,13 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
 </div>
 <!-- END MODAL HAPUS TUGAS -->
 <?php
-require('../frontend/layouts/bodylayout.php');
+require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
   function get_soal() {
     var kode_tugas = $('#kode-show').val();
     $.ajax({
-      url: '../backend/function_guru.php?action=get_data&get=data_soal',
+      url: 'backend/function_guru.php?action=get_data&get=data_soal',
       type: 'post',
       data: {
         kode_tugas: kode_tugas,
@@ -357,7 +357,7 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=edit_data_tugas',
+        url: 'backend/function_guru.php?action=edit_data_tugas',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -386,7 +386,7 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=hapus_data_tugas',
+        url: 'backend/function_guru.php?action=hapus_data_tugas',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -401,7 +401,7 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=simpan_data_soal',
+        url: 'backend/function_guru.php?action=simpan_data_soal',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -445,7 +445,7 @@ require('../frontend/layouts/bodylayout.php');
     $('#tampil_soal').on('click', '.edit-soal', function(event) {
       var id_soal = $(this).attr('data-id');
       $.ajax({
-        url: '../backend/function_guru.php?action=get_data&get=data_soal_id',
+        url: 'backend/function_guru.php?action=get_data&get=data_soal_id',
         type: 'post',
         data: {
           id_soal: id_soal
@@ -465,7 +465,7 @@ require('../frontend/layouts/bodylayout.php');
       event.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=edit_data_soal',
+        url: 'backend/function_guru.php?action=edit_data_soal',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -504,7 +504,7 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=hapus_data_soal',
+        url: 'backend/function_guru.php?action=hapus_data_soal',
         type: 'post',
         data: formdata,
         dataType: 'json',

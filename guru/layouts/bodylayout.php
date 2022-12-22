@@ -50,14 +50,14 @@
                             <div class="media-status">
                                 <span class="badge badge-success">8</span>
                             </div>
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar3.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar3.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Bob Nilson</h4>
                                 <div class="media-heading-sub"> Project Manager </div>
                             </div>
                         </li>
                         <li class="media">
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar1.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar1.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Nick Larson</h4>
                                 <div class="media-heading-sub"> Art Director </div>
@@ -67,14 +67,14 @@
                             <div class="media-status">
                                 <span class="badge badge-danger">3</span>
                             </div>
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar4.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar4.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Deon Hubert</h4>
                                 <div class="media-heading-sub"> CTO </div>
                             </div>
                         </li>
                         <li class="media">
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar2.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar2.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Ella Wong</h4>
                                 <div class="media-heading-sub"> CEO </div>
@@ -87,7 +87,7 @@
                             <div class="media-status">
                                 <span class="badge badge-warning">2</span>
                             </div>
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar6.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar6.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Lara Kunis</h4>
                                 <div class="media-heading-sub"> CEO, Loop Inc </div>
@@ -98,7 +98,7 @@
                             <div class="media-status">
                                 <span class="label label-sm label-success">new</span>
                             </div>
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar7.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar7.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Ernie Kyllonen</h4>
                                 <div class="media-heading-sub"> Project Manager,
@@ -107,7 +107,7 @@
                             </div>
                         </li>
                         <li class="media">
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar8.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar8.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Lisa Stone</h4>
                                 <div class="media-heading-sub"> CTO, Keort Inc </div>
@@ -118,14 +118,14 @@
                             <div class="media-status">
                                 <span class="badge badge-success">7</span>
                             </div>
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar9.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar9.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Deon Portalatin</h4>
                                 <div class="media-heading-sub"> CFO, H&D LTD </div>
                             </div>
                         </li>
                         <li class="media">
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar10.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar10.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Irina Savikova</h4>
                                 <div class="media-heading-sub"> CEO, Tizda Motors Inc </div>
@@ -135,7 +135,7 @@
                             <div class="media-status">
                                 <span class="badge badge-danger">4</span>
                             </div>
-                            <img class="media-object" src="../assets/layouts/layout/img/avatar11.jpg" alt="...">
+                            <img class="media-object" src="assets/layouts/layout/img/avatar11.jpg" alt="...">
                             <div class="media-body">
                                 <h4 class="media-heading">Maria Gomez</h4>
                                 <div class="media-heading-sub"> Manager, Infomatic Inc </div>
@@ -152,7 +152,7 @@
                         </div>
                         <div class="page-quick-sidebar-chat-user-messages">
                             <div class="post out">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar3.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Bob Nilson</a>
@@ -161,7 +161,7 @@
                                 </div>
                             </div>
                             <div class="post in">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar2.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Ella Wong</a>
@@ -170,7 +170,7 @@
                                 </div>
                             </div>
                             <div class="post out">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar3.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Bob Nilson</a>
@@ -179,7 +179,7 @@
                                 </div>
                             </div>
                             <div class="post in">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar2.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Ella Wong</a>
@@ -188,7 +188,7 @@
                                 </div>
                             </div>
                             <div class="post out">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar3.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Bob Nilson</a>
@@ -197,7 +197,7 @@
                                 </div>
                             </div>
                             <div class="post in">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar2.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Ella Wong</a>
@@ -206,7 +206,7 @@
                                 </div>
                             </div>
                             <div class="post out">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar3.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Bob Nilson</a>
@@ -215,7 +215,7 @@
                                 </div>
                             </div>
                             <div class="post in">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar2.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar2.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Ella Wong</a>
@@ -224,7 +224,7 @@
                                 </div>
                             </div>
                             <div class="post out">
-                                <img class="avatar" alt="" src="../assets/layouts/layout/img/avatar3.jpg" />
+                                <img class="avatar" alt="" src="assets/layouts/layout/img/avatar3.jpg" />
                                 <div class="message">
                                     <span class="arrow"></span>
                                     <a href="javascript:;" class="name">Bob Nilson</a>
@@ -584,38 +584,38 @@
 </div>
 <!-- END FOOTER -->
 <!--[if lt IE 9]>
-<script src="../assets/global/plugins/respond.min.js"></script>
-<script src="../assets/global/plugins/excanvas.min.js"></script> 
+<script src="assets/global/plugins/respond.min.js"></script>
+<script src="assets/global/plugins/excanvas.min.js"></script> 
 <![endif]-->
 <!-- BEGIN PAGE LEVEL PLUGINS -->
-<script src="../assets/global/plugins/moment.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
-<script src="../assets/global/scripts/datatable.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
-<script src="../assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/moment.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/counterup/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+<script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
-<script src="../assets/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
 <!-- END THEME GLOBAL SCRIPTS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
-<script src="../assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
-<script src="../assets/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
-<script src="../assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
-<script src="../assets/apps/scripts/calendar.min.js" type="text/javascript"></script>
-<script src="../assets/apps/scripts/todo-2.min.js" type="text/javascript"></script>
-<script src="../assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+<script src="assets/pages/scripts/dashboard.min.js" type="text/javascript"></script>
+<script src="assets/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
+<script src="assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
+<script src="assets/apps/scripts/calendar.min.js" type="text/javascript"></script>
+<script src="assets/apps/scripts/todo-2.min.js" type="text/javascript"></script>
+<script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
-<script src="../assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
-<script src="../assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>
-<script src="../assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
+<script src="assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
+<script src="assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>
+<script src="assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 <!-- END THEME LAYOUT SCRIPTS -->
 </body>
 

@@ -181,7 +181,7 @@ switch ($_GET['action']) {
 ?>
         <div class="row">
           <div class="col-md-12 text-center" style="opacity: 0.5;">
-            <img src="../assets/images/no-content.png" alt="No Content">
+            <img src="assets/images/no-content.png" alt="No Content">
             <h3>Belum ada soal</h3>
           </div>
         </div>
@@ -328,7 +328,7 @@ switch ($_GET['action']) {
       ?>
         <div class="row">
           <div class="col-md-12 text-center" style="opacity: 0.5;">
-            <img src="../assets/images/no-content.png" alt="No Content">
+            <img src="assets/images/no-content.png" alt="No Content">
             <h3>Belum ada penugasan</h3>
           </div>
         </div>
@@ -796,7 +796,7 @@ switch ($_GET['action']) {
             var id_mapel = '<?= $penugasan['id_mapel'] ?>';
             var jenis_tugas = $(this).val();
             $.ajax({
-              url: '../backend/function_guru.php?action=get_data&get=data_tugas',
+              url: 'backend/function_guru.php?action=get_data&get=data_tugas',
               type: 'post',
               data: {
                 jenis_tugas: jenis_tugas,
@@ -817,7 +817,7 @@ switch ($_GET['action']) {
             event.preventDefault();
             var formdata = $(this).serialize();
             $.ajax({
-              url: '../backend/function_guru.php?action=edit_data_penugasan',
+              url: 'backend/function_guru.php?action=edit_data_penugasan',
               type: 'post',
               data: formdata,
               dataType: 'json',

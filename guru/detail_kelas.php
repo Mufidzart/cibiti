@@ -1,7 +1,7 @@
 <?php
-require('../backend/connection.php');
+require('backend/connection.php');
 $page_title = "Detail Kelas";
-require('../frontend/layouts/headlayout.php');
+require('layouts/headlayout.php');
 $id_kelas = $_GET['kelas'];
 $getkelasmapel = mysqli_query($conn, "SELECT ak.id AS id_kelas,ak.nama_kelas,ak.parent_id,am.id AS id_mapel,am.nama_mapel,ak.program_keahlian,stf.nama_lengkap,stf.email FROM arf_guru_mapel agm JOIN arf_staf stf ON stf.nip=agm.id_staf JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE ak.id=$id_kelas AND agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
 $datakelas = mysqli_fetch_assoc($getkelasmapel);
@@ -72,7 +72,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   <div class="portlet light profile-sidebar-portlet">
                     <!-- SIDEBAR USERPIC -->
                     <div class="profile-userpic">
-                      <img src="../assets/images/admin_avatar.png" class="img-responsive" alt="">
+                      <img src="assets/images/admin_avatar.png" class="img-responsive" alt="">
                     </div>
                     <!-- END SIDEBAR USERPIC -->
                     <!-- SIDEBAR USER TITLE -->
@@ -119,7 +119,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
               <?php while ($datasiswa = mysqli_fetch_array($getsiswa)) : ?>
                 <div class="mt-comment">
                   <div class="mt-comment-img">
-                    <img src="../assets/images/person_avatar.png" style="width:100%;">
+                    <img src="assets/images/person_avatar.png" style="width:100%;">
                   </div>
                   <div class="mt-comment-body">
                     <div class="mt-comment-info">
@@ -163,7 +163,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   <div class="form-body">
                     <div class="form-group">
                       <label class="col-md-1 control-label vcenter">
-                        <img alt="" class="img-circle bg-white" style="padding:2px;width:40px;" src="../assets/images/admin_avatar.png" />
+                        <img alt="" class="img-circle bg-white" style="padding:2px;width:40px;" src="assets/images/admin_avatar.png" />
                       </label>
                       <div class="col-md-9 vcenter" style="padding-top:7px;">
                         <input class="form-control" type="hidden" id="id_tugas" name="id_tugas" value="">
@@ -343,14 +343,14 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
 </div>
 <!-- END MODAL HAPUS PENUGASAN -->
 <?php
-require('../frontend/layouts/bodylayout.php');
+require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
   function get_penugasan() {
     var id_mapel = '<?= $datakelas['id_mapel'] ?>';
     var id_kelas = '<?= $datakelas['id_kelas'] ?>';
     $.ajax({
-      url: '../backend/function_guru.php?action=get_data&get=data_penugasan',
+      url: 'backend/function_guru.php?action=get_data&get=data_penugasan',
       type: 'post',
       data: {
         id_mapel: id_mapel,
@@ -366,7 +366,7 @@ require('../frontend/layouts/bodylayout.php');
     var id_mapel = '<?= $datakelas['id_mapel'] ?>';
     var id_kelas = '<?= $datakelas['id_kelas'] ?>';
     $.ajax({
-      url: '../backend/function_guru.php?action=get_data&get=data_penugasan_akanberakhir',
+      url: 'backend/function_guru.php?action=get_data&get=data_penugasan_akanberakhir',
       type: 'post',
       data: {
         id_mapel: id_mapel,
@@ -389,7 +389,7 @@ require('../frontend/layouts/bodylayout.php');
     $('#show_penugasan').on('click', '.lihat_tugas', function() {
       var kode_tugas = $(this).attr("data-kode");
       $.ajax({
-        url: '../backend/function_guru.php?action=get_data&get=lihat_tugas',
+        url: 'backend/function_guru.php?action=get_data&get=lihat_tugas',
         type: 'post',
         data: {
           kode_tugas: kode_tugas,
@@ -405,7 +405,7 @@ require('../frontend/layouts/bodylayout.php');
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
       var jenis_tugas = $(this).val();
       $.ajax({
-        url: '../backend/function_guru.php?action=get_data&get=data_tugas',
+        url: 'backend/function_guru.php?action=get_data&get=data_tugas',
         type: 'post',
         data: {
           jenis_tugas: jenis_tugas,
@@ -439,25 +439,25 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=simpan_data_penugasan',
+        url: 'backend/function_guru.php?action=simpan_data_penugasan',
         type: 'post',
         data: formdata,
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
             $('#modal-tambah-penugasan').modal('hide');
+            get_penugasan();
+            get_penugasan_akanberakhir();
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
               $('#form-' + data.errors[i].input).addClass('has-error');
             }
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
           }
-          for (i = 0; i < data.success.length; i++) {
-            $('#pesan-' + data.success[i]).html('')
-            $('#form-' + data.success[i]).removeClass('has-error');
-          }
-          get_penugasan();
-          get_penugasan_akanberakhir();
         }
       });
     });
@@ -465,7 +465,7 @@ require('../frontend/layouts/bodylayout.php');
     $('#show_penugasan').on('click', '.edit-penugasan', function(event) {
       var id_penugasan = $(this).attr('data-id');
       $.ajax({
-        url: '../backend/function_guru.php?action=get_data_penugasan_byid',
+        url: 'backend/function_guru.php?action=get_data_penugasan_byid',
         type: 'post',
         data: {
           id_penugasan: id_penugasan,
@@ -498,7 +498,7 @@ require('../frontend/layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: '../backend/function_guru.php?action=hapus_data_penugasan',
+        url: 'backend/function_guru.php?action=hapus_data_penugasan',
         type: 'post',
         data: formdata,
         dataType: 'json',
