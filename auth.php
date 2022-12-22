@@ -5,7 +5,7 @@ switch ($_GET['action']) {
     session_start();
 
     // menghubungkan dengan koneksi
-    include 'backend/connection.php';
+    // include 'backend/connection.php';
 
     // menangkap data yang dikirim dari form
     $username = $_POST['username'];
@@ -22,11 +22,11 @@ switch ($_GET['action']) {
       $_SESSION['role'] = "guru";
       $_SESSION['status'] = "login";
       header("location:guru/kelas.php");
-    } elseif ($username == "asd") {
+    } elseif ($username == "siswa") {
       $_SESSION['username'] = $username;
       $_SESSION['role'] = "siswa";
       $_SESSION['status'] = "login";
-      header("location:siswa/kelas.php");
+      header("location:siswa/dashboard.php");
     } else {
       header("location:index.php?pesan=gagal");
     }
