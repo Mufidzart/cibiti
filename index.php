@@ -4,7 +4,7 @@ if (isset($_SESSION['username'])) {
   if ($_SESSION['role'] == "guru") {
     header("location:guru/kelas.php");
   } else {
-    header("location:siswa/kelas.php");
+    header("location:siswa/dashboard.php");
   }
 }
 ?>
