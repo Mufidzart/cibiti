@@ -28,16 +28,16 @@ License: For each use you must have a valid license purchased only from above li
   <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
   <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
   <!--begin::Fonts(mandatory for all pages)-->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+  <link rel="sheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
   <!--end::Fonts-->
-  <!--begin::Vendor Stylesheets(used for this page only)-->
-  <link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-  <link href="assets/plugins/custom/vis-timeline/vis-timeline.bundle.css" rel="stylesheet" type="text/css" />
-  <!--end::Vendor Stylesheets-->
-  <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
-  <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-  <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-  <!--end::Global Stylesheets Bundle-->
+  <!--begin::Vendor sheets(used for this page only)-->
+  <link href="assets/plugins/custom/datatables/datatables.bundle.css" rel="sheet" type="text/css" />
+  <link href="assets/plugins/custom/vis-timeline/vis-timeline.bundle.css" rel="sheet" type="text/css" />
+  <!--end::Vendor sheets-->
+  <!--begin::Global sheets Bundle(mandatory for all pages)-->
+  <link href="assets/plugins/global/plugins.bundle.css" rel="sheet" type="text/css" />
+  <link href="assets/css/.bundle.css" rel="sheet" type="text/css" />
+  <!--end::Global sheets Bundle-->
   <!--Begin::Google Tag Manager -->
   <script>
     (function(w, d, s, l, i) {
@@ -4128,7 +4128,7 @@ License: For each use you must have a valid license purchased only from above li
                   <!--begin::Menu-->
                   <div class="menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px" data-kt-menu="true">
                     <!--begin::Heading-->
-                    <div class="d-flex flex-column bgi-no-repeat rounded-top" style="background-image:url('assets/media/misc/menu-header-bg.jpg')">
+                    <div class="d-flex flex-column bgi-no-repeat rounded-top" ="background-image:url('assets/media/misc/menu-header-bg.jpg')">
                       <!--begin::Title-->
                       <h3 class="text-white fw-semibold px-9 mt-10 mb-6">Notifications
                         <span class="fs-8 opacity-75 ps-3">24 reports</span>
@@ -5228,7 +5228,7 @@ License: For each use you must have a valid license purchased only from above li
                             <div class="d-flex align-items-center mb-5">
                               <!--begin::Chart-->
                               <div class="w-80px flex-shrink-0 me-2">
-                                <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_1" style="height: 100px"></div>
+                                <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_1"></div>
                               </div>
                               <!--end::Chart-->
                               <!--begin::Info-->
@@ -5314,7 +5314,7 @@ License: For each use you must have a valid license purchased only from above li
                             <div class="d-flex align-items-center mb-5">
                               <!--begin::Chart-->
                               <div class="w-80px flex-shrink-0 me-2">
-                                <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_2" style="height: 100px"></div>
+                                <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_2" ></div>
                               </div>
                               <!--end::Chart-->
                               <!--begin::Info-->
@@ -5400,7 +5400,7 @@ License: For each use you must have a valid license purchased only from above li
                             <div class="d-flex align-items-center mb-5">
                               <!--begin::Chart-->
                               <div class="w-80px flex-shrink-0 me-2">
-                                <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_3" style="height: 100px"></div>
+                                <div class="min-h-auto ms-n3" id="kt_slider_widget_1_chart_3"></div>
                               </div>
                               <!--end::Chart-->
                               <!--begin::Info-->
@@ -5813,7 +5813,7 @@ License: For each use you must have a valid license purchased only from above li
                 </div>
                 <!--end::Row-->
                 <!--begin::Engage widget 4-->
-                <div class="card border-transparent" data-theme="light" style="background-color: #1C325E;">
+                <div class="card border-transparent" data-theme="light">
                   <!--begin::Body-->
                   <div class="card-body d-flex ps-xl-15">
                     <!--begin::Wrapper-->
@@ -6193,7 +6193,7 @@ License: For each use you must have a valid license purchased only from above li
                       <div class="d-flex align-items-center w-100 mw-125px">
                         <!--begin::Progress-->
                         <div class="progress h-6px w-100 me-2 bg-light-success">
-                          <div class="progress-bar bg-success" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-success" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <!--end::Progress-->
                         <!--begin::Value-->
@@ -6229,7 +6229,7 @@ License: For each use you must have a valid license purchased only from above li
                       <div class="d-flex align-items-center w-100 mw-125px">
                         <!--begin::Progress-->
                         <div class="progress h-6px w-100 me-2 bg-light-warning">
-                          <div class="progress-bar bg-warning" role="progressbar" style="width: 87%" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="87" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <!--end::Progress-->
                         <!--begin::Value-->
@@ -6265,7 +6265,7 @@ License: For each use you must have a valid license purchased only from above li
                       <div class="d-flex align-items-center w-100 mw-125px">
                         <!--begin::Progress-->
                         <div class="progress h-6px w-100 me-2 bg-light-primary">
-                          <div class="progress-bar bg-primary" role="progressbar" style="width: 44%" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <!--end::Progress-->
                         <!--begin::Value-->
@@ -6301,7 +6301,7 @@ License: For each use you must have a valid license purchased only from above li
                       <div class="d-flex align-items-center w-100 mw-125px">
                         <!--begin::Progress-->
                         <div class="progress h-6px w-100 me-2 bg-light-info">
-                          <div class="progress-bar bg-info" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-info" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <!--end::Progress-->
                         <!--begin::Value-->
@@ -6337,7 +6337,7 @@ License: For each use you must have a valid license purchased only from above li
                       <div class="d-flex align-items-center w-100 mw-125px">
                         <!--begin::Progress-->
                         <div class="progress h-6px w-100 me-2 bg-light-danger">
-                          <div class="progress-bar bg-danger" role="progressbar" style="width: 56%" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="56" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <!--end::Progress-->
                         <!--begin::Value-->
@@ -6373,7 +6373,7 @@ License: For each use you must have a valid license purchased only from above li
                       <div class="d-flex align-items-center w-100 mw-125px">
                         <!--begin::Progress-->
                         <div class="progress h-6px w-100 me-2 bg-light-success">
-                          <div class="progress-bar bg-success" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar bg-success" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <!--end::Progress-->
                         <!--begin::Value-->
@@ -8167,12 +8167,12 @@ License: For each use you must have a valid license purchased only from above li
         <!--begin::Modal body-->
         <div class="modal-body pt-0 pb-5 px-15 mt-n5" id="kt_engage_sitemap_body">
           <div class="container-fluid">
-            <style>
+            <>
               .app-sitemap-thumbnail {
                 border: 1px solid var(--kt-body-bg);
                 filter: drop-shadow(0px 0px 50px rgba(49, 52, 122, 0.12));
               }
-            </style>
+            </>
             <!--begin::Image view-->
             <div class="d-block" id="kt_engage_sitemap_view_image">
               <!--begin::Tabs wrapper-->
@@ -13042,7 +13042,7 @@ License: For each use you must have a valid license purchased only from above li
                     </label>
                     <!--end::Label-->
                     <!--begin::Image input placeholder-->
-                    <style>
+                    <>
                       .image-input-placeholder {
                         background-image: url('assets/media/svg/files/blank-image.svg');
                       }
@@ -13050,7 +13050,7 @@ License: For each use you must have a valid license purchased only from above li
                       [data-theme="dark"] .image-input-placeholder {
                         background-image: url('assets/media/svg/files/blank-image-dark.svg');
                       }
-                    </style>
+                    </>
                     <!--end::Image input placeholder-->
                     <!--begin::Image input-->
                     <div class="image-input image-input-empty image-input-outline image-input-placeholder" data-kt-image-input="true">
@@ -14928,7 +14928,7 @@ License: For each use you must have a valid license purchased only from above li
                             <!--end::Avatar-->
                             <!--begin::Details-->
                             <div class="ms-6">
-                              <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">User CRUD Styles</a>
+                              <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">User CRUD s</a>
                               <div class="fw-semibold text-muted">85kb</div>
                             </div>
                             <!--end::Details-->

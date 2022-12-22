@@ -4,8 +4,8 @@
   <div class="container d-flex flex-stack">
     <!--begin::Mobile logo-->
     <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-      <a href="../../demo9/dist/index.html">
-        <img alt="Logo" src="assets/media/logos/logo-demo9.svg" class="h-35px" />
+      <a href="<?= $baseurl ?>">
+        <img alt="Logo" src="../favicon.png" class="h-35px" />
       </a>
     </div>
     <!--end::Mobile logo-->
@@ -33,7 +33,7 @@
     <div class="page-title d-flex flex-column align-items-start justify-content-center flex-wrap me-lg-20 py-3 py-lg-0 me-3">
       <!--begin::Heading-->
       <h1 class="d-flex flex-column text-dark fw-bolder my-1">
-        <span class="text-white fs-1">Dashboard</span>
+        <span class="text-white fs-1">Learning Management System (LMS)</span>
         <small class="text-gray-600 fs-6 fw-normal pt-2">Create a store with #YDR-124-346 code</small>
       </h1>
       <!--end::Heading-->
