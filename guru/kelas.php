@@ -3,7 +3,14 @@ require('backend/connection.php');
 $page_title = "Learning Management System (LMS)";
 require('layouts/headlayout.php');
 // $getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_siswa_kelashistory ask ON ask.id=agm.id_subkelas JOIN arf_kelas ak ON ak.id=ask.id_kelas WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
-$getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
+$getkelasmapel = $conn->query(
+  "SELECT agm.id_kelas,agm.id_subkelas,ak.nama_kelas,ak.parent_id,am.nama_mapel 
+  FROM arf_guru_mapel agm 
+  JOIN arf_mapel am ON am.id=agm.id_mapel 
+  JOIN arf_kelas ak ON ak.id=agm.id_subkelas 
+  WHERE agm.id_staf='$session_id_staf' 
+  AND agm.id_thajaran=$id_thajaran"
+);
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -133,10 +140,12 @@ $getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_m
           $grade = "XII";
         }
         $kelas = $grade . " " . $datakelas['nama_kelas'];
-        $getsiswa = $conn->query("SELECT * FROM arf_siswa WHERE id_kelasaktif='" . $kelas . "'");
+        $id_kelas = $datakelas['id_kelas'];
+        $id_subkelas = $datakelas['id_subkelas'];
+        $getsiswa = $conn->query("SELECT * FROM arf_siswa_kelashistory WHERE id_kelas_induk=$id_kelas AND id_kelas=$id_subkelas AND id_thajaran=$id_thajaran AND id_semester=$semester");
         $countsiswa = $getsiswa->num_rows;
       ?>
-        <a href="detail_kelas.php?kelas=<?= $datakelas['id'] ?>">
+        <a href="detail_kelas.php?kelas=<?= $id_kelas ?>&subkelas=<?= $id_subkelas ?>">
           <div class="col-md-3">
             <!-- BEGIN WIDGET THUMB -->
             <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">

@@ -3,7 +3,18 @@ require('backend/connection.php');
 $page_title = "Detail Kelas";
 require('layouts/headlayout.php');
 $id_kelas = $_GET['kelas'];
-$getkelasmapel = mysqli_query($conn, "SELECT ak.id AS id_kelas,ak.nama_kelas,ak.parent_id,am.id AS id_mapel,am.nama_mapel,ak.program_keahlian,stf.nama_lengkap,stf.email FROM arf_guru_mapel agm JOIN arf_staf stf ON stf.nip=agm.id_staf JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_kelas ak ON ak.id=agm.id_subkelas WHERE ak.id=$id_kelas AND agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
+$id_subkelas = $_GET['subkelas'];
+$getkelasmapel = mysqli_query(
+  $conn,
+  "SELECT ak.id AS id_kelas,ak.nama_kelas,ak.parent_id,am.id AS id_mapel,am.nama_mapel,ak.program_keahlian,stf.nama_lengkap,stf.email 
+  FROM arf_guru_mapel agm 
+  JOIN arf_staf stf ON stf.nip=agm.id_staf 
+  JOIN arf_mapel am ON am.id=agm.id_mapel 
+  JOIN arf_kelas ak ON ak.id=agm.id_subkelas 
+  WHERE ak.id=$id_subkelas 
+  AND agm.id_staf='$session_id_staf' 
+  AND agm.id_thajaran=$id_thajaran"
+);
 $datakelas = mysqli_fetch_assoc($getkelasmapel);
 if ($datakelas['parent_id'] == 1) {
   $grade = "X";
@@ -13,8 +24,16 @@ if ($datakelas['parent_id'] == 1) {
   $grade = "XII";
 }
 $id_mapel = $datakelas['id_mapel'];
-$kelas = $grade . " " . $datakelas['nama_kelas'];
-$getsiswa = $conn->query("SELECT * FROM arf_siswa WHERE id_kelasaktif='" . $kelas . "'");
+$getsiswa = $conn->query(
+  "SELECT ask.nis,ask.nama_siswa,asw.email_siswa,ask.id_kelas_induk,ak.nama_kelas,ak.program_keahlian
+   FROM arf_siswa_kelashistory ask
+   JOIN arf_siswa asw ON asw.nis=ask.nis
+   JOIN arf_kelas ak ON ak.id=ask.id_kelas
+   WHERE id_kelas_induk=$id_kelas 
+   AND id_kelas=$id_subkelas 
+   AND id_thajaran=$id_thajaran 
+   AND id_semester=$semester"
+);
 $countsiswa = $getsiswa->num_rows;
 $jenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
 $getsoal = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id_staff='$session_id_staf' AND id_mapel='$id_mapel' AND tgl_hapus IS NULL");
@@ -116,9 +135,11 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
           <!--tab_1_2-->
           <div class="tab-pane" id="tab_peserta">
             <div class="mt-comments">
-              <?php while ($datasiswa = mysqli_fetch_array($getsiswa)) : ?>
+              <?php $no = 1;
+              while ($datasiswa = mysqli_fetch_array($getsiswa)) : ?>
                 <div class="mt-comment">
                   <div class="mt-comment-img">
+                    <?= $no ?>
                     <img src="assets/images/person_avatar.png" style="width:100%;">
                   </div>
                   <div class="mt-comment-body">
@@ -126,9 +147,18 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                       <span class="mt-comment-author"><?= $datasiswa['nama_siswa'] ?></span>
                       <!-- <span class="mt-comment-date">26 Feb, 10:30AM</span> -->
                     </div>
-                    <div class="mt-comment-text">NIS: <?= $datasiswa['nis'] ?> <?= (!empty($datasiswa['email_siswa'])) ? "- EMAIL : " . $datasiswa['email_siswa'] : "" ?> Kelas: <?= $datasiswa['id_kelasaktif'] ?></div>
+                    <?php
+                    if ($datasiswa['id_kelas_induk'] == 1) {
+                      $grade = "X";
+                    } elseif ($datasiswa['id_kelas_induk'] == 2) {
+                      $grade = "XI";
+                    } elseif ($datasiswa['id_kelas_induk'] == 3) {
+                      $grade = "XII";
+                    } ?>
+                    <div class="mt-comment-text">NIS: <?= $datasiswa['nis'] ?> <?= (!empty($datasiswa['email_siswa'])) ? "- EMAIL : " . $datasiswa['email_siswa'] : "" ?> <br>Kelas: <?= $grade . " " . $datasiswa['nama_kelas'] . " (" . $datasiswa['program_keahlian'] . ")" ?></div>
                   </div>
                 </div>
+                <?php $no++; ?>
               <?php endwhile; ?>
             </div>
           </div>

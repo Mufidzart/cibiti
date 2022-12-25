@@ -1,6 +1,6 @@
 <?php
 require 'connection.php';
-
+include 'helpers.php';
 switch ($_GET['action']) {
   case 'simpan_data_tugas':
     $id_staff = $session_id_staf;
@@ -339,7 +339,7 @@ switch ($_GET['action']) {
           $tgl_input = date("d-m-Y", strtotime($pecahtglinput[0]));
           $jam_input = date("H:i", strtotime($pecahtglinput[1]));
           $pecahtglselesai = explode(" ", $row['waktu_selesai']);
-          $tgl_selesai = date("d-m-Y", strtotime($pecahtglselesai[0]));
+          $tgl_selesai = date("Y-m-d", strtotime($pecahtglselesai[0]));
           $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
         ?>
           <div class="note note-info">
@@ -353,7 +353,7 @@ switch ($_GET['action']) {
                   <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
                   <div class="alert alert-info" style="margin-top:10px;">
                     <strong>
-                      <i class="fa fa-calendar"></i> Batas Akhir <?= $tgl_selesai . ", " . $jam_selesai ?> WIB
+                      <i class="fa fa-calendar"></i> Batas Akhir <?= tgl_indo($tgl_selesai) . ", " . $jam_selesai ?> WIB
                     </strong>
                   </div>
                   <div class="mt-comment-details">
