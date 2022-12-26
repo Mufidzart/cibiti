@@ -3,8 +3,28 @@ require('backend/connection.php');
 $page_title = "Learning Management System (LMS)";
 require('layouts/headlayout.php');
 $nis = $_SESSION['username'];
-$getsiswa = $conn->query("SELECT * FROM arf_siswa WHERE nis=$nis");
+$getsiswa = $conn->query(
+  "SELECT asw.*,ask.id_kelas_induk,ask.id_kelas
+  FROM arf_siswa asw
+  JOIN arf_siswa_kelashistory ask ON ask.nis=asw.nis
+  WHERE asw.nis=$nis
+  AND ask.id_thajaran=$id_thajaran
+  ANd ask.id_semester=$semester"
+);
 $datasiswa = mysqli_fetch_assoc($getsiswa);
+$kelas_siswa = $datasiswa['id_kelas_induk'];
+$subkelas_siswa = $datasiswa['id_kelas'];
+$getgurumapel = $conn->query(
+  "SELECT agm.id_staf,agm.id_mapel,asf.nama_lengkap,am.nama_mapel
+  FROM arf_guru_mapel agm
+  JOIN arf_staf asf ON asf.nip=agm.id_staf
+  JOIN arf_mapel am ON am.id=agm.id_mapel
+  WHERE agm.id_kelas=$kelas_siswa
+  AND agm.id_subkelas=$subkelas_siswa
+  AND agm.id_thajaran=$id_thajaran"
+);
+
+
 ?>
 <!-- BEGIN CONTENT -->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -290,12 +310,16 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
       <!--end::Col-->
     </div>
     <!--end::Row-->
+  </div>
+  <!--end::Container-->
+  <!--begin::Container-->
+  <div class="container-xxl" id="kt_content_container">
     <!--begin::Row-->
     <div class="row g-5 g-xl-8">
       <!--begin::Col-->
-      <div class="col-xl-12 ps-xl-12">
-        <!--begin::Engage widget 1-->
-        <div class="card card-xl-stretch mb-xl-8">
+      <div class="col-xl-12">
+        <!--begin::details View-->
+        <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
           <!--begin::Header-->
           <div class="card-header border-0">
             <h3 class="card-title fw-bolder text-dark">Mata Pelajaran</h3>
@@ -395,44 +419,56 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
             </div>
           </div>
           <!--end::Header-->
-          <!--begin::Body-->
-          <div class="card-body pt-2">
-            <!--begin::Item-->
-            <div class="col-xl-4 ps-xl-12">
-              <div class="card bg-primary">
-                <!--begin::Body-->
-                <div class="card-body d-flex flex-column justify-content-center">
-                  <!--begin::Title-->
-                  <?php
-                  $dat = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-                  $date = $dat->format('H');
-                  if ($date < 10)
-                    $selamat = "Selamat Pagi";
-                  else if ($date < 15)
-                    $selamat = "Selamat Siang";
-                  else if ($date < 19)
-                    $selamat = "Selamat Sore";
-                  else
-                    $selamat = "Selamat Malam";
-                  ?>
-                  <h3 class="text-white fs-2x fw-bolder line-height-lg mb-5"><?= $selamat ?>
-                    <br /><?= ucwords(strtolower($datasiswa['nama_siswa'])) ?>
-                  </h3>
-                  <!--end::Title-->
-                  <!--begin::Action-->
-                  <div class="m-0">
-                    <!-- <a href='#' class="btn btn-success fw-bold px-6 py-3" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Create an App</a> -->
-                  </div>
-                  <!--begin::Action-->
+          <!--begin::Card body-->
+          <div class="card-body">
+            <div class="row">
+              <?php
+              $colorbg = ["bg-light-primary", "bg-secondary", "bg-light", "bg-light-success", "bg-light-warning", "bg-light-danger", "bg-light-dark"];
+              $i = 0;
+              while ($datamapel = mysqli_fetch_assoc($getgurumapel)) :
+                if ($i == 7) {
+                  $i = 0;
+                } else {
+                  $i = $i;
+                }
+                $no = substr($i, -1);
+                $bg = $colorbg[$no];
+              ?>
+                <div class="col-xl-4 ps-xl-12 pb-2">
+                  <a class="d-flex align-items-center rounded py-5 px-4 <?= $bg ?>" href="detail_mapel.php?kls=<?= $kelas_siswa ?>&skls=<?= $subkelas_siswa ?>&g=<?= $datamapel['id_staf'] ?>&mpl=<?= $datamapel['id_mapel'] ?>">
+                    <!--begin::Icon-->
+                    <div class="d-flex h-80px w-80px flex-shrink-0 flex-center">
+                      <!--begin::Svg Icon | path: icons/duotune/abstract/abs051.svg-->
+                      <span class="svg-icon svg-icon-info position-absolute opacity-10">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" viewBox="0 0 70 70" fill="none" class="w-80px h-80px">
+                          <path d="M28 4.04145C32.3316 1.54059 37.6684 1.54059 42 4.04145L58.3109 13.4585C62.6425 15.9594 65.3109 20.5812 65.3109 25.5829V44.4171C65.3109 49.4188 62.6425 54.0406 58.3109 56.5415L42 65.9585C37.6684 68.4594 32.3316 68.4594 28 65.9585L11.6891 56.5415C7.3575 54.0406 4.68911 49.4188 4.68911 44.4171V25.5829C4.68911 20.5812 7.3575 15.9594 11.6891 13.4585L28 4.04145Z" fill="#000000"></path>
+                        </svg>
+                      </span>
+                      <!--end::Svg Icon-->
+                      <!--begin::Svg Icon | path: icons/duotune/art/art006.svg-->
+                      <span class="svg-icon svg-icon-3x svg-icon-info position-absolute">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <path opacity="0.3" d="M22 19V17C22 16.4 21.6 16 21 16H8V3C8 2.4 7.6 2 7 2H5C4.4 2 4 2.4 4 3V19C4 19.6 4.4 20 5 20H21C21.6 20 22 19.6 22 19Z" fill="black"></path>
+                          <path d="M20 5V21C20 21.6 19.6 22 19 22H17C16.4 22 16 21.6 16 21V8H8V4H19C19.6 4 20 4.4 20 5ZM3 8H4V4H3C2.4 4 2 4.4 2 5V7C2 7.6 2.4 8 3 8Z" fill="black"></path>
+                        </svg>
+                      </span>
+                      <!--end::Svg Icon-->
+                    </div>
+                    <div class="text-gray-800 text-hover-primary fw-bolder fs-3 ms-3">
+                      <?= $datamapel['nama_mapel'] ?>
+                      <span class="text-muted fw-bold fs-6 d-block"><?= $datamapel['nama_lengkap'] ?></span>
+                    </div>
+                    <!--end::Icon-->
+                  </a>
                 </div>
-                <!--end::Body-->
-              </div>
+              <?php
+                $i++;
+              endwhile; ?>
             </div>
-            <!--end:Item-->
           </div>
-          <!--end::Body-->
+          <!--end::Card body-->
         </div>
-        <!--end::Engage widget 1-->
+        <!--end::details View-->
       </div>
       <!--end::Col-->
     </div>
