@@ -34,7 +34,7 @@
       <!--begin::Heading-->
       <h1 class="d-flex flex-column text-dark fw-bolder my-1">
         <span class="text-white fs-1">Learning Management System (LMS)</span>
-        <small class="text-gray-600 fs-6 fw-normal pt-2">Create a store with #YDR-124-346 code</small>
+        <small class="text-gray-600 fs-6 fw-normal pt-2">by Goweb Indonesia</small>
       </h1>
       <!--end::Heading-->
     </div>
