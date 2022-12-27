@@ -26,7 +26,7 @@
         <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">
           <h3><?= $penugasan['judul'] ?></h3>
           <p><?= $penugasan['deskripsi'] ?></p>
-          <a href="#" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6" data-kode="<?= $penugasan['kode_tugas'] ?>">
+          <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6" data-kode="<?= $penugasan['kode_tugas'] ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span>
             <span class="d-flex flex-column align-items-start ms-2">
               <span class="fs-3 fw-bolder"><?= $penugasan['kode_tugas'] ?></span>
