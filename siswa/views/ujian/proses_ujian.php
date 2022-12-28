@@ -88,8 +88,6 @@
     var start_ujian = new Date(mulai_ujian);
     var now = new Date();
     var take_duration = diff_minutes(now, start_ujian);
-    console.log(take_duration);
-    console.log(getSecondsDiff(start_ujian, now))
     var sisa_menit = duration - take_duration;
     var countdown = sisa_menit * 60 * 1000;
     var timerId = setInterval(function() {
