@@ -45,9 +45,13 @@ $datatugas = mysqli_fetch_assoc($gettugas);
                   <span class="fs-3 fw-bolder"><?= $datatugas['kode_tugas'] ?></span>
                 </span>
               </a>
-              <br>Batas waktu mengerjakan adalah
-              <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit'] ?> menit</b>
-              <br>Tugas akan berakhir pada
+              <?php if ($datapenugasan['durasi_menit'] == 0) : ?>
+                <br>Kerjakan sebelum
+              <?php else : ?>
+                <br>Batas waktu mengerjakan adalah
+                <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit'] ?> menit</b>
+                <br>Tugas akan berakhir pada
+              <?php endif; ?>
               <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['waktu_selesai']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['waktu_selesai'])) ?> WIB</b>
             </p>
           </div>
