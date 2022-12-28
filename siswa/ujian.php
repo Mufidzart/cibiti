@@ -21,6 +21,7 @@ $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_penugas
     if ($getprosesujian->num_rows == 0) {
       require('views/ujian/mulai_ujian.php');
     } else {
+      $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
       require('views/ujian/proses_ujian.php');
     }
     ?>
@@ -34,7 +35,6 @@ require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
   $(document).ready(function() {
-    waktu();
     $('#mulai_ujian').on('click', function(event) {
       var id_penugasan = $(this).attr("data-penugasan");
       $.ajax({

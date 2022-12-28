@@ -69,14 +69,28 @@
 </div>
 
 <!--begin::Exolore drawer toggle-->
-<button id="timer" class="btn btn-sm bg-body btn-color-gray-700 btn-active-primary shadow-sm position-fixed px-5 fw-bolder zindex-2 top-50 mt-10 end-0" title="Explore Metronic" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-trigger="hover">
+<button id="timer" class="btn btn-sm bg-success btn-color-gray-700 btn-active-primary shadow-sm position-fixed px-5 fw-bolder zindex-2 mt-10 end-0 text-white" title="Jawaban tersimpan otomatis" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-trigger="hover" style="top: 20%;">
   <span class="fs-6">Sisa Waktu</span><br>
   <span class="fs-1" id="waktu"></span>
 </button>
 <!--end::Exolore drawer toggle-->
 <script>
+  function diff_minutes(datetime2, datetime1) {
+    var diff = (datetime2.getTime() - datetime1.getTime()) / 1000;
+    diff /= 60;
+    return Math.abs(Math.round(diff));
+  }
+
   function waktu() {
-    var sisa_menit = 120;
+    var durasi_menit = '<?= $datapenugasan['durasi_menit'] ?>';
+    var mulai_ujian = '<?= $dataprosesujian['mulai_ujian'] ?>';
+    var duration = parseInt(durasi_menit);
+    var start_ujian = new Date(mulai_ujian);
+    var now = new Date();
+    var take_duration = diff_minutes(now, start_ujian);
+    console.log(take_duration);
+    console.log(getSecondsDiff(start_ujian, now))
+    var sisa_menit = duration - take_duration;
     var countdown = sisa_menit * 60 * 1000;
     var timerId = setInterval(function() {
       countdown -= 1000;
@@ -88,7 +102,6 @@
       if (countdown <= 600000 && countdown >= 1000) {
         $("#timer").removeClass("bg-body");
         $("#timer").addClass("bg-danger");
-        $("#timer").addClass("text-white");
         $("#waktu").html(menit + " : " + detik);
       } else if (countdown <= 0) {
         alert("30 min!");
