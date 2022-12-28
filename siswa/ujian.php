@@ -34,6 +34,19 @@ require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
   $(document).ready(function() {
-    console.log("Test")
+    $('#mulai_ujian').on('click', function(event) {
+      var id_penugasan = $(this).attr("data-penugasan");
+      $.ajax({
+        url: 'backend/function.php?action=mulai_ujian',
+        type: 'post',
+        data: {
+          id_penugasan: id_penugasan
+        },
+        success: function(data) {
+          // console.log(id_penugasan);
+          location.reload();
+        }
+      });
+    })
   })
 </script>

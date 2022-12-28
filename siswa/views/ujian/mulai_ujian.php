@@ -25,7 +25,7 @@
       </p>
       <!--end::Description-->
       <!--begin::Action-->
-      <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer">Mulai</a>
+      <a href="javascript:;" class="btn btn-primary" id="mulai_ujian" data-penugasan="<?= $datapenugasan['id'] ?>">Mulai</a>
       <!--end::Action-->
     </div>
     <!--end::Wrapper-->
