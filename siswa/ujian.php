@@ -34,6 +34,7 @@ require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
   $(document).ready(function() {
+    waktu();
     $('#mulai_ujian').on('click', function(event) {
       var id_penugasan = $(this).attr("data-penugasan");
       $.ajax({
