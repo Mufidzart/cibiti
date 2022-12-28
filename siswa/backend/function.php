@@ -22,7 +22,7 @@ switch ($_GET['action']) {
     break;
   case 'mulai_ujian':
     $id_penugasan = $_POST['id_penugasan'];
-    $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+    $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
     $datapenugasan = mysqli_fetch_assoc($getpenugasan);
     $idpenugasan = $datapenugasan['id'];
     $nis = $_SESSION['username'];
@@ -33,6 +33,33 @@ switch ($_GET['action']) {
         "INSERT INTO arf_proses_ujian(id_penugasan, id_siswa, mulai_ujian) 
         VALUES('$idpenugasan','$nis','$mulai_ujian')"
       );
+    }
+    break;
+
+  case 'push_jawaban':
+    $id_penugasan = $_POST['id_penugasan'];
+    $kode_tugas = $_POST['kode_tugas'];
+    $id_soal = $_POST['id_soal'];
+    $id_kunci = $_POST['id_kunci'];
+    $jawaban = $_POST['jawaban'];
+    $nis = $_SESSION['username'];
+    $getjawaban = $conn->query(
+      "SELECT * FROM arf_jawaban_siswa 
+      WHERE id_siswa='$nis' 
+      AND id_penugasan=$id_penugasan
+      AND kode_tugas='$kode_tugas'
+      AND id_soal=$id_soal
+      AND tgl_hapus IS NULL"
+    );
+    $datajawaban = mysqli_fetch_assoc($getjawaban);
+    if ($getjawaban->num_rows == 0) {
+      $query = $conn->query(
+        "INSERT INTO arf_jawaban_siswa(id_siswa, id_penugasan, kode_tugas, id_soal, id_jawaban, jawaban) 
+        VALUES('$nis','$id_penugasan','$kode_tugas','$id_soal','$id_kunci','$jawaban')"
+      );
+    } else {
+      $id_jawaban = $datajawaban['id'];
+      $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban='$id_kunci', jawaban='$jawaban', WHERE id=$id_jawaban");
     }
     break;
 }

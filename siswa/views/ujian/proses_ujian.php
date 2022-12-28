@@ -3,6 +3,12 @@
   <div class="card-body p-0">
     <!--begin::Wrapper-->
     <div class="card-px my-10">
+      <div class="col-xl-6 mb-15 mb-xl-0 pe-5">
+        <h4 class="mb-0"><?= $datapenugasan['judul'] ?></h4>
+        <p class="fs-6 fw-bold text-gray-600 py-4 m-0">
+          <?= $datapenugasan['deskripsi'] ?>
+        </p>
+      </div>
       <?php
       $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
       if ($getsoal->num_rows == 0) : ?>
@@ -51,7 +57,7 @@
               if ($getjawaban->num_rows !== 0) : ?>
                 <?php while ($jawaban = mysqli_fetch_assoc($getjawaban)) : ?>
                   <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input" type="radio" value="<?= $jawaban['jawaban'] ?>" name="jawaban_<?= $id_soal ?>">
+                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $jawaban['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $jawaban['id'] ?>">
                     <label class="form-check-label" for="flexRadioDefault"><?= $jawaban['jawaban'] ?></label>
                   </div>
                 <?php endwhile; ?>
@@ -120,5 +126,25 @@
 
   $(document).ready(function() {
     waktu();
+
+    $('.radio_jawaban').on('click', function() {
+      var jawaban = $(this).val();
+      var id_penugasan = $(this).attr('data-id-penugasan');
+      var kode_tugas = $(this).attr('data-kode');
+      var id_soal = $(this).attr('data-id-soal');
+      var id_kunci = $(this).attr('data-id-kunci');
+      $.ajax({
+        url: 'backend/function.php?action=push_jawaban',
+        type: 'post',
+        data: {
+          jawaban: jawaban,
+          id_penugasan: id_penugasan,
+          kode_tugas: kode_tugas,
+          id_soal: id_soal,
+          id_kunci: id_kunci
+        },
+        success: function(data) {}
+      });
+    })
   });
 </script>
