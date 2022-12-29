@@ -80,52 +80,70 @@
   <span class="fs-1" id="waktu"></span>
 </button>
 <!--end::Exolore drawer toggle-->
+<?php
+$jam_mulai = $dataprosesujian['mulai_ujian'];
+$durasi = 46;
+$jam_berakhir = (new DateTime($jam_mulai))->modify('+' . $durasi . " minutes");
+?>
 <script>
-  function diff_minutes(datetime2, datetime1) {
-    var diff = (datetime2.getTime() - datetime1.getTime()) / 1000;
-    diff /= 60;
-    return Math.abs(Math.round(diff));
-  }
+  function timer() {
+    // // Set the date we're counting down to
+    var countDownDate = new Date("<?= $jam_berakhir->format("D M d Y H:i:s O") ?>").getTime();
+    // Update the count down every 1 second
 
-  function waktu() {
-    var durasi_menit = '<?= $datapenugasan['durasi_menit'] ?>';
-    var mulai_ujian = '<?= $dataprosesujian['mulai_ujian'] ?>';
-    var duration = parseInt(durasi_menit);
-    var start_ujian = new Date(mulai_ujian);
-    var now = new Date();
-    var take_duration = diff_minutes(now, start_ujian);
-    var sisa_menit = duration - take_duration;
-    var countdown = sisa_menit * 60 * 1000;
-    var timerId = setInterval(function() {
-      countdown -= 1000;
-      var min = Math.floor(countdown / (60 * 1000));
-      //var sec = Math.floor(countdown - (min * 60 * 1000));  // wrong
-      var sec = Math.floor((countdown - (min * 60 * 1000)) / 1000); //correct
-      var menit = (min < 10) ? "0" + min : min;
-      var detik = (sec < 10) ? "0" + sec : sec;
-      if (countdown <= 600000 && countdown >= 1000) {
+    var x = setInterval(function() {
+
+      // Get today's date and time
+      var now = new Date().getTime();
+
+      // Find the distance between now and the count down date
+      var distance = countDownDate - now;
+
+      // Time calculations for days, hours, minutes and seconds
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      // Display the result in the element with id="timer"
+      hours = "" + hours;
+      minutes = "" + minutes;
+      seconds = "" + seconds;
+      var timerText = '';
+      if (hours.length == 1) {
+        timerText += "0" + hours + ":";
+      } else {
+        timerText += hours + ":";
+      }
+      if (minutes.length == 1) {
+        timerText += "0" + minutes + ":";
+      } else {
+        timerText += minutes + ":";
+      }
+      if (seconds.length == 1) {
+        timerText += "0" + seconds;
+      } else {
+        timerText += seconds;
+      }
+      document.getElementById("waktu").innerHTML = timerText;
+
+      // If the count down is finished, write some text
+      if (distance <= 0) {
+        clearInterval(x);
+        document.getElementById("waktu").innerHTML = "00:00:00";
+      }
+      if (distance <= 600000 && distance >= 1000) {
         $("#timer").removeClass("bg-body");
         $("#timer").addClass("bg-danger");
-        $("#waktu").html(menit + " : " + detik);
-      } else if (countdown <= 0) {
+      } else if (distance <= 0) {
         alert("30 min!");
-        clearInterval(timerId);
+        clearInterval(x);
         //doSomething();
-      } else {
-        var minute_count = min.length;
-        if (minute_count == 1) {
-          var menit = "0" + min;
-        } else {
-          var menit = min;
-        }
-        $("#waktu").html(menit + " : " + detik);
       }
-
-    }, 1000); //1000ms. = 1sec.
+    }, 1000);
   }
-
   $(document).ready(function() {
-    waktu();
+    timer();
 
     $('.radio_jawaban').on('click', function() {
       var jawaban = $(this).val();
