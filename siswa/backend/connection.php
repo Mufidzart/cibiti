@@ -27,7 +27,7 @@ $conn = new mysqli($servername, $username, $password, $database);
 // }
 // echo "Connected successfully";
 date_default_timezone_set('Asia/Jakarta');
-$session_id_staf = $_SESSION['username'];
+$nis_siswa = $_SESSION['username'];
 $id_thajaran = 4;
 $semester = 1;
 include 'tanggal_helper.php';

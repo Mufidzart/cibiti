@@ -59,7 +59,8 @@ switch ($_GET['action']) {
       );
     } else {
       $id_jawaban = $datajawaban['id'];
-      $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban='$id_kunci', jawaban='$jawaban', WHERE id=$id_jawaban");
+      $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban=$id_kunci, jawaban='$jawaban' WHERE id=$id_jawaban");
+      var_dump($conn->error);
     }
     break;
 }

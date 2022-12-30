@@ -53,12 +53,19 @@
               <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
               <?php
               $id_soal = $soal['id'];
-              $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-              if ($getjawaban->num_rows !== 0) : ?>
-                <?php while ($jawaban = mysqli_fetch_assoc($getjawaban)) : ?>
+              $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
+              if ($getkunci->num_rows !== 0) : ?>
+                <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
+                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                  if ($getjawaban->num_rows !== 0) {
+                    $datajawaban = mysqli_fetch_assoc($getjawaban);
+                    $selected = ($datajawaban['id_jawaban'] == $kunci['id']) ? "checked" : "";
+                  } else {
+                    $selected = "";
+                  } ?>
                   <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $jawaban['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $jawaban['id'] ?>">
-                    <label class="form-check-label" for="flexRadioDefault"><?= $jawaban['jawaban'] ?></label>
+                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?>>
+                    <label class="form-check-label" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
                   </div>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -82,7 +89,7 @@
 <!--end::Exolore drawer toggle-->
 <?php
 $jam_mulai = $dataprosesujian['mulai_ujian'];
-$durasi = 46;
+$durasi = $datapenugasan['durasi_menit'];
 $jam_berakhir = (new DateTime($jam_mulai))->modify('+' . $durasi . " minutes");
 ?>
 <script>
