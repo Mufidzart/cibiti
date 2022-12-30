@@ -22,17 +22,7 @@ $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_penugas
       require('views/ujian/mulai_ujian.php');
     } else {
       $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
-      $durasi = $datapenugasan['durasi_menit'];
-      $mulai_ujian = $dataprosesujian['mulai_ujian'];
-      $jam_mulai = new DateTime($mulai_ujian);
-      $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
-      $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
-      if ($jam_sekarang <= $jam_berakhir) {
-        require('views/ujian/proses_ujian.php');
-      } else {
-        require('views/ujian/proses_ujian.php');
-        // require('views/ujian/nilai_ujian.php');
-      }
+      require('views/ujian/proses_ujian.php');
     }
     ?>
     <!--end::Card-->

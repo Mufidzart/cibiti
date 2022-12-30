@@ -1,3 +1,16 @@
+<?php
+$durasi = $datapenugasan['durasi_menit'];
+$durasi = 500;
+$mulai_ujian = $dataprosesujian['mulai_ujian'];
+$jam_mulai = new DateTime($mulai_ujian);
+$jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
+$jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
+if ($jam_sekarang > $jam_berakhir) {
+  $disable = "disabled";
+} else {
+  $disable = "";
+}
+?>
 <div class="card">
   <!--begin::Card body-->
   <div class="card-body p-0">
@@ -57,15 +70,29 @@
               if ($getkunci->num_rows !== 0) : ?>
                 <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
                   $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                  if ($kunci['kunci'] == 1) {
+                    // var_dump($kunci['jawaban']);
+                  }
+                  $background = "";
                   if ($getjawaban->num_rows !== 0) {
                     $datajawaban = mysqli_fetch_assoc($getjawaban);
-                    $selected = ($datajawaban['id_jawaban'] == $kunci['id']) ? "checked" : "";
+                    if ($datajawaban['id_jawaban'] == $kunci['id']) {
+                      if ($kunci['kunci'] == 1) {
+                        $selected = "checked";
+                        $background = ($jam_sekarang > $jam_berakhir) ? "bg-success" : "";
+                      } else {
+                        $selected = "checked";
+                        $background = ($jam_sekarang > $jam_berakhir) ? "bg-danger" : "";
+                      }
+                    } else {
+                      $selected = "";
+                    }
                   } else {
                     $selected = "";
                   } ?>
                   <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?>>
-                    <label class="form-check-label" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
+                    <input class="form-check-input radio_jawaban <?= $background ?>" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected . " " . $disable ?>>
+                    <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
                   </div>
                 <?php endwhile; ?>
               <?php endif; ?>
@@ -87,12 +114,11 @@
   <span class="fs-1" id="waktu"></span>
 </button>
 <!--end::Exolore drawer toggle-->
-<?php
-$jam_mulai = $dataprosesujian['mulai_ujian'];
-$durasi = $datapenugasan['durasi_menit'];
-$jam_berakhir = (new DateTime($jam_mulai))->modify('+' . $durasi . " minutes");
-?>
 <script>
+  function timeout() {
+
+  }
+
   function timer() {
     // // Set the date we're counting down to
     var countDownDate = new Date("<?= $jam_berakhir->format("D M d Y H:i:s O") ?>").getTime();
@@ -143,8 +169,8 @@ $jam_berakhir = (new DateTime($jam_mulai))->modify('+' . $durasi . " minutes");
         $("#timer").removeClass("bg-body");
         $("#timer").addClass("bg-danger");
       } else if (distance <= 0) {
-        alert("30 min!");
         clearInterval(x);
+        $("input[type=radio]").attr('disabled', true);
         //doSomething();
       }
     }, 1000);

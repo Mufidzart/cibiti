@@ -60,7 +60,31 @@ switch ($_GET['action']) {
     } else {
       $id_jawaban = $datajawaban['id'];
       $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban=$id_kunci, jawaban='$jawaban' WHERE id=$id_jawaban");
-      var_dump($conn->error);
     }
+
+    // UPDATE NILAI
+    $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+    $getalljawaban = $conn->query(
+      "SELECT * FROM arf_jawaban_siswa 
+      WHERE id_siswa='$nis' 
+      AND id_penugasan=$id_penugasan
+      AND kode_tugas='$kode_tugas'
+      AND tgl_hapus IS NULL"
+    );
+    $jumlah_soal =  $getsoal->num_rows;
+    $jawaban_benar = [];
+    while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
+      $id_soal_jawaban = $jawaban['id_soal'];
+      $getkunci =  $conn->query("SELECT * FROM arf_kunci_soal WHERE id_soal=$id_soal_jawaban AND tgl_hapus IS NULL");
+      while ($kunci = mysqli_fetch_assoc($getkunci)) {
+        if ($kunci['kunci'] == 1) {
+          if ($kunci['jawaban'] == $jawaban['jawaban']) {
+            array_push($jawaban_benar, $jawaban['jawaban']);
+          }
+        }
+      }
+    }
+    $nilai = (sizeof($jawaban_benar) / $jumlah_soal) * 100;
+    var_dump($nilai);
     break;
 }
