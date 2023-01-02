@@ -177,129 +177,13 @@ switch ($_GET['action']) {
     if ($_GET['get'] == 'data_soal') {
       $kode_tugas = $_POST['kode_tugas'];
       $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-      if ($getsoal->num_rows == 0) {
-?>
-        <div class="row">
-          <div class="col-md-12 text-center" style="opacity: 0.5;">
-            <img src="assets/images/no-content.png" alt="No Content">
-            <h3>Belum ada soal</h3>
-          </div>
-        </div>
-        <?php
-      } else {
-        $no = 1;
-        while ($row = mysqli_fetch_assoc($getsoal)) {
-        ?>
-          <li>
-            <div class="col1">
-              <div class="cont">
-                <div class="cont-col1">
-                  <div class="label label-sm label-success" style="width: 20px; height: max-content; color:white;">
-                    <?= $no ?>
-                  </div>
-                </div>
-                <div class="cont-col2">
-                  <div class="desc" style="color:black;">
-                    <?= $row['pertanyaan'] ?>
-                  </div>
-                  <div class="desc" style="color:black;">
-                    <?php
-                    $id_soal = $row['id'];
-                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-                    if ($getjawaban) : ?>
-                      <div class="form-group">
-                        <div class="mt-radio-list">
-                          <?php while ($kunci_row = mysqli_fetch_assoc($getjawaban)) :
-                            if ($kunci_row['kunci'] == "1") {
-                              $check = "checked";
-                              $label = "<b style='background-color:#32c5d254;padding:5px;'>" . $kunci_row['jawaban'] . "</b>";
-                            } else {
-                              $check = "";
-                              $label = $kunci_row['jawaban'];
-                            }
-                          ?>
-                            <label class="mt-radio">
-                              <input type="radio" name="kunci_<?= $kunci_row['id'] ?>" id="kunci_<?= $kunci_row['id'] ?>" value="<?= $kunci_row['jawaban'] ?>" disabled <?= $check ?>>
-                              <?= $label ?>
-                              <span></span>
-                            </label>
-                          <?php endwhile; ?>
-                        </div>
-                      </div>
-                    <?php endif; ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col2">
-              <a href="javascript:;" class="btn btn-circle btn-icon-only green edit-soal" data-id="<?= $row['id'] ?>"><i class="fa fa-edit"></i></a>
-              <a href="javascript:;" class="btn btn-circle btn-icon-only red hapus-soal" data-id="<?= $row['id'] ?>"><i class="fa fa-trash"></i></a>
-            </div>
-          </li>
-        <?php
-          $no++;
-        }
-      }
+      require('../views/data_soal.php');
     } elseif ($_GET['get'] == 'data_soal_id') {
       $id_soal = $_POST['id_soal'];
       $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
       $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$id_soal' AND tgl_hapus IS NULL");
       $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-      if ($getsoal) {
-        $soal = mysqli_fetch_assoc($getsoal);
-        ?>
-        <form role="form" class="form-edit-soal" id="form-edit-soal">
-          <input type="hidden" class="form-control" name="id_soal" value="<?= $soal['id'] ?>">
-          <div class="form-body">
-            <div class="form-group" id="form-edit-tipe-soal">
-              <label class="control-label">Tipe Pertanyaan</label>
-              <select class="form-control" id="tipe-soal" name="tipe-soal">
-                <?php while ($row = mysqli_fetch_assoc($tipe_soal)) :
-                  $select = ($row['tipe_soal'] == $soal['tipe_soal']) ? "selected" : ""; ?>
-                  <option value="<?= $row['tipe_soal'] ?>" <?= $select ?>><?= $row['tipe_soal'] ?></option>
-                <?php endwhile; ?>
-              </select>
-              <div id="pesan-edit-tipe-soal"></div>
-            </div>
-            <div class="form-group" id="form-edit-pertanyaan">
-              <label class="control-label">Pertanyaan</label>
-              <textarea class="form-control col-md-4" id="pertanyaan" name="pertanyaan" rows="3" style="margin-bottom: 20px;"><?= $soal['pertanyaan'] ?></textarea>
-              <div id="pesan-edit-pertanyaan"></div>
-            </div>
-            <div id="jawaban-edit" style="padding: 20px;">
-              <div class="form-group">
-                <label class="control-label">Pilihan Jawaban</label>
-              </div>
-              <?php $no = 1;
-              while ($row = mysqli_fetch_assoc($getjawaban)) :
-                $check = ($row['kunci'] == "1") ? "checked" : ""; ?>
-                <div class="form-group" id="form-edit-pilihan-<?= $no ?>">
-                  <div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
-                    <span class="input-group-addon">
-                      <input type="radio" name="radio-pilihan" value="<?= $no ?>" <?= $check ?>>
-                      <span></span>
-                    </span>
-                    <input type="text" class="form-control" name="pilihan-<?= $no ?>" value="<?= $row['jawaban'] ?>">
-                  </div>
-                  <div id="pesan-edit-pilihan-<?= $no ?>"></div>
-                  <?php if ($no == 4) : ?>
-                    <div id="pesan-edit-radio-pilihan"></div>
-                  <?php endif; ?>
-                </div>
-              <?php $no++;
-              endwhile; ?>
-            </div>
-          </div>
-          <div class="form-actions right">
-            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-            <button type="submit" class="btn green">Simpan</button>
-          </div>
-        </form>
-      <?php
-      } else {
-        $data = "Gagal Mengambil Data :" . mysqli_error($conn);
-        echo $data;
-      }
+      require('../views/data_soal_id.php');
     } elseif ($_GET['get'] == "data_tugas") {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
@@ -324,189 +208,25 @@ switch ($_GET['action']) {
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY id DESC");
-      if ($getpenugasan->num_rows == 0) {
-      ?>
-        <div class="row">
-          <div class="col-md-12 text-center" style="opacity: 0.5;">
-            <img src="assets/images/no-content.png" alt="No Content">
-            <h3>Belum ada penugasan</h3>
-          </div>
-        </div>
-        <?php
-      } else {
-        while ($row = mysqli_fetch_assoc($getpenugasan)) {
-          $pecahtglinput = explode(" ", $row['tgl_input']);
-          $tgl_input = date("d-m-Y", strtotime($pecahtglinput[0]));
-          $jam_input = date("H:i", strtotime($pecahtglinput[1]));
-          $pecahtglselesai = explode(" ", $row['waktu_selesai']);
-          $tgl_selesai = date("Y-m-d", strtotime($pecahtglselesai[0]));
-          $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
-        ?>
-          <div class="note note-info">
-            <div class="mt-comments">
-              <div class="mt-comment">
-                <div class="mt-comment-body">
-                  <div class="mt-comment-info">
-                    <span class="mt-comment-author"><?= $row['judul'] ?></span>
-                    <span class="mt-comment-date"><?= $tgl_input . ", " . $jam_input ?> WIB</span>
-                  </div>
-                  <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
-                  <div class="alert alert-info" style="margin-top:10px;">
-                    <strong>
-                      <i class="fa fa-calendar"></i> Batas Akhir <?= tgl_indo($tgl_selesai) . ", " . $jam_selesai ?> WIB
-                    </strong>
-                  </div>
-                  <div class="mt-comment-details">
-                    <span class="mt-comment-status mt-comment-status-pending">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['kode_tugas'] ?>"><?= $row['kode_tugas'] ?></a>
-                          <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
-                        </div>
-                      </div>
-                    </span>
-                    <ul class="mt-comment-actions">
-                      <li>
-                        <a href="javascript:;" class="edit-penugasan" data-id="<?= $row['id'] ?>">Edit</a>
-                      </li>
-                      <li>
-                        <a href="javascript:;" class="hapus-penugasan" data-id="<?= $row['id'] ?>">Hapus</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        <?php
-        }
-      }
+      require('../views/data_penugasan.php');
     } elseif ($_GET['get'] == "data_penugasan_akanberakhir") {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
       $datenow = date("Y-m-d H:i:s");
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY waktu_selesai DESC");
-      if ($getpenugasan->num_rows == 0) {
-        ?>
-        <div class="alert alert-info" style="margin-left:30px;">
-          <a href="javascript:;">
-            Tidak ada tugas!
-          </a>
-        </div>
-        <?php
-      } else {
-        while ($row = mysqli_fetch_assoc($getpenugasan)) {
-          $pecahtgl = explode(" ", $row['waktu_selesai']);
-          $tgl_selesai = date("d-m-Y", strtotime($pecahtgl[0]));
-          $jam_selesai = date("H:i", strtotime($pecahtgl[1]));
-        ?>
-          <?php if ($datenow <= $row['waktu_selesai']) : ?>
-            <div class="alert alert-info" style="margin-left:30px;">
-              <a href="javascript:;">
-                <b style="margin-left: -10px;"><?= $tgl_selesai . ", " . $jam_selesai ?> WIB</b><br>
-                (<?= $row['kode_tugas'] ?>) <?= $row['judul'] ?>
-              </a>
-            </div>
-          <?php endif; ?>
-      <?php
-        }
-      }
+      require('../views/data_penugasan_akanberakhir.php');
     } elseif ($_GET['get'] == "lihat_tugas") {
       $kode_tugas = $_POST['kode_tugas'];
       $gettugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
       $datatugas = mysqli_fetch_assoc($gettugas);
-      $id_tugas = $datatugas['id'];
-      ?>
-      <div class="portlet light bordered">
-        <div class="portlet-body">
-          <div class="row">
-            <div class="col-md-12 profile-info" style="padding-right: 50px;padding-left: 50px;margin-bottom: 50px;">
-              <a href="javascript:;" class="btn btn-circle default green-stripe" id="text-kode">KODE: <?= $datatugas['kode_tugas'] ?></a>
-              <h2 class="font-green sbold uppercase" id="text-judul"><?= $datatugas['judul'] ?></h2>
-              <p id="text-deskripsi"><?= $datatugas['deskripsi'] ?></p>
-              <ul class="list-inline">
-                <li id="text-jenis">
-                  <i class="fa fa-briefcase"></i> <?= $datatugas['jenis'] ?>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12 col-sm-12">
-              <div class="portlet light bordered">
-                <div class="portlet-title">
-                  <div class="caption">
-                    <i class="icon-bubble font-green-sharp"></i>
-                    <span class="caption-subject font-green-sharp bold uppercase">SOAL</span>
-                  </div>
-                </div>
-                <div class="portlet-body">
-                  <ul class="feeds">
-                    <?php
-                    $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-                    if ($getsoal) {
-                      $no = 1;
-                      while ($row = mysqli_fetch_assoc($getsoal)) {
-                    ?>
-                        <li>
-                          <div class="col1">
-                            <div class="cont">
-                              <div class="cont-col1">
-                                <div class="label label-sm label-success" style="width: 20px; height: max-content; color:white;">
-                                  <?= $no ?>
-                                </div>
-                              </div>
-                              <div class="cont-col2">
-                                <div class="desc" style="color:black;">
-                                  <?= $row['pertanyaan'] ?>
-                                </div>
-                                <div class="desc" style="color:black;">
-                                  <?php
-                                  $id_soal = $row['id'];
-                                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-                                  if ($getjawaban) : ?>
-                                    <div class="form-group">
-                                      <div class="mt-radio-list">
-                                        <?php while ($kunci_row = mysqli_fetch_assoc($getjawaban)) :
-                                          if ($kunci_row['kunci'] == "1") {
-                                            $check = "checked";
-                                            $label = "<b style='background-color:#32c5d254;padding:5px;'>" . $kunci_row['jawaban'] . "</b>";
-                                          } else {
-                                            $check = "";
-                                            $label = $kunci_row['jawaban'];
-                                          }
-                                        ?>
-                                          <label class="mt-radio">
-                                            <input type="radio" name="kunci_<?= $kunci_row['id'] ?>" id="kunci_<?= $kunci_row['id'] ?>" value="<?= $kunci_row['jawaban'] ?>" disabled <?= $check ?>>
-                                            <?= $label ?>
-                                            <span></span>
-                                          </label>
-                                        <?php endwhile; ?>
-                                      </div>
-                                    </div>
-                                  <?php endif; ?>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                    <?php
-                        $no++;
-                      }
-                    } else {
-                      $data = "Gagal Mengambil Data :" . mysqli_error($conn);
-                      echo $data;
-                    }
-                    ?>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <?php
+      require('../views/lihat_tugas.php');
+    } elseif ($_GET['get'] == "nilai_penugasan") {
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['id_mapel'];
+      $id_kelas = $_POST['id_kelas'];
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY id DESC");
+      require('../views/nilai_penugasan.php');
     }
     break;
 
@@ -713,7 +433,7 @@ switch ($_GET['action']) {
       $get_date = date('Y-m-d', strtotime($penugasan['waktu_selesai']));
       $get_time = date('H:i:s', strtotime($penugasan['waktu_selesai']));
       $current_date = $get_date . 'T' . $get_time . 'Z';
-    ?>
+?>
       <form role="form" class="form-edit-penugasan" id="form-edit-penugasan">
         <input type="hidden" class="form-control" name="id-editpenugasan" value="<?= $penugasan['id'] ?>">
         <div class="form-body">
@@ -796,7 +516,7 @@ switch ($_GET['action']) {
             var id_mapel = '<?= $penugasan['id_mapel'] ?>';
             var jenis_tugas = $(this).val();
             $.ajax({
-              url: 'backend/function_guru.php?action=get_data&get=data_tugas',
+              url: 'backend/function.php?action=get_data&get=data_tugas',
               type: 'post',
               data: {
                 jenis_tugas: jenis_tugas,
@@ -817,7 +537,7 @@ switch ($_GET['action']) {
             event.preventDefault();
             var formdata = $(this).serialize();
             $.ajax({
-              url: 'backend/function_guru.php?action=edit_data_penugasan',
+              url: 'backend/function.php?action=edit_data_penugasan',
               type: 'post',
               data: formdata,
               dataType: 'json',

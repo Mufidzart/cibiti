@@ -223,7 +223,7 @@ require('layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=simpan_data_tugas',
+        url: 'backend/function.php?action=simpan_data_tugas',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -251,7 +251,7 @@ require('layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=hapus_data_tugas',
+        url: 'backend/function.php?action=hapus_data_tugas',
         type: 'post',
         data: formdata,
         dataType: 'json',

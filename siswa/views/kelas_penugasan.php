@@ -40,10 +40,18 @@
             JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
             WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
         );
+        $badge = "";
         if ($getnewnilai->num_rows !== 0) {
           $color = "success";
+          $badge = "<span class='badge badge-light-success fs-7 ms-2'>Sudah dikerjakan</span>";
         } else {
-          $color = "primary";
+          $batas = new DateTime(date("Y-m-d", strtotime($penugasan['waktu_selesai'])));
+          if ($today > $batas) {
+            $color = "danger";
+            $badge = "<span class='badge badge-light-danger fs-7 ms-2'>Terlewat</span>";
+          } else {
+            $color = "primary";
+          }
         } ?>
         <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">
           <h3><?= $penugasan['judul'] ?></h3>
@@ -55,9 +63,7 @@
               <span class="fs-7">klik untuk mengerjakan</span>
             </span>
           </a>
-          <?php if ($getnewnilai->num_rows !== 0) : ?>
-            <span class="badge badge-light-<?= $color ?> fs-7 ms-2">Sudah dikerjakan</span>
-          <?php endif; ?>
+          <?= $badge ?>
         </div>
         <!--end::Text-->
       </div>

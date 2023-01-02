@@ -329,7 +329,7 @@ require('layouts/bodylayout.php');
   function get_soal() {
     var kode_tugas = $('#kode-show').val();
     $.ajax({
-      url: 'backend/function_guru.php?action=get_data&get=data_soal',
+      url: 'backend/function.php?action=get_data&get=data_soal',
       type: 'post',
       data: {
         kode_tugas: kode_tugas,
@@ -357,7 +357,7 @@ require('layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=edit_data_tugas',
+        url: 'backend/function.php?action=edit_data_tugas',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -386,7 +386,7 @@ require('layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=hapus_data_tugas',
+        url: 'backend/function.php?action=hapus_data_tugas',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -401,7 +401,7 @@ require('layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=simpan_data_soal',
+        url: 'backend/function.php?action=simpan_data_soal',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -445,7 +445,7 @@ require('layouts/bodylayout.php');
     $('#tampil_soal').on('click', '.edit-soal', function(event) {
       var id_soal = $(this).attr('data-id');
       $.ajax({
-        url: 'backend/function_guru.php?action=get_data&get=data_soal_id',
+        url: 'backend/function.php?action=get_data&get=data_soal_id',
         type: 'post',
         data: {
           id_soal: id_soal
@@ -465,7 +465,7 @@ require('layouts/bodylayout.php');
       event.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=edit_data_soal',
+        url: 'backend/function.php?action=edit_data_soal',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -504,7 +504,7 @@ require('layouts/bodylayout.php');
       e.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function_guru.php?action=hapus_data_soal',
+        url: 'backend/function.php?action=hapus_data_soal',
         type: 'post',
         data: formdata,
         dataType: 'json',
@@ -514,6 +514,5 @@ require('layouts/bodylayout.php');
         }
       });
     });
-
   })
 </script>
