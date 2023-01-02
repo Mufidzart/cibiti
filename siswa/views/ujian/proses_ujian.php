@@ -5,7 +5,7 @@ $mulai_ujian = $dataprosesujian['mulai_ujian'];
 $jam_mulai = new DateTime($mulai_ujian);
 $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
 $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
-if ($jam_sekarang > $jam_berakhir) {
+if ($jam_sekarang > $jam_berakhir || !empty($dataprosesujian['selesai_ujian'])) {
   $disable = "disabled";
 } else {
   $disable = "";
@@ -133,7 +133,7 @@ if ($jam_sekarang > $jam_berakhir) {
               <!--begin::Buttons-->
               <div class="d-flex flex-center flex-wrap">
                 <a href="javascript:;" data-kt-scrolltop="true" class="btn btn-outline btn-outline-primary btn-active-primary m-2">Cek Jawaban</a>
-                <a href="#" class="btn btn-primary m-2">Submit</a>
+                <button class="btn btn-primary m-2" id="selesai">Submit</button>
               </div>
               <!--end::Buttons-->
             </div>
@@ -341,6 +341,25 @@ if ($jam_sekarang > $jam_berakhir) {
       })
       $('#lihat-jawaban').on('click', function() {
         location.reload();
+      });
+
+      $('#selesai').on('click', function() {
+        Swal.fire({
+          html: `Apakah Anda telah menyelesaikan tugas ini?`,
+          icon: "question",
+          buttonsStyling: false,
+          showCancelButton: true,
+          confirmButtonText: "Selesai",
+          cancelButtonText: 'Batal',
+          customClass: {
+            confirmButton: "btn btn-primary",
+            cancelButton: 'btn btn-danger'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            timeout(0);
+          }
+        });
       });
     });
   </script>

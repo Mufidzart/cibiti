@@ -101,17 +101,18 @@ switch ($_GET['action']) {
         }
       }
     }
-    $nilai = (sizeof($jawaban_benar) / $jumlah_soal) * 100;
+    $jumlah_benar = sizeof($jawaban_benar);
+    $nilai = ($jumlah_benar / $jumlah_soal) * 100;
     $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
     if ($getnilai->num_rows == 0) {
       $query = $conn->query(
-        "INSERT INTO arf_nilai_penugasan(id_penugasan, nilai)
-        VALUES('$id_penugasan','$nilai')"
+        "INSERT INTO arf_nilai_penugasan(id_penugasan, jawaban_benar, nilai)
+        VALUES('$id_penugasan','$jumlah_benar','$nilai')"
       );
     } else {
       $datanilai = mysqli_fetch_assoc($getnilai);
       $id_nilai = $datanilai['id'];
-      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai='$nilai' WHERE id=$id_nilai");
+      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai='$nilai', jawaban_benar=$jumlah_benar WHERE id=$id_nilai");
     }
     break;
 }
