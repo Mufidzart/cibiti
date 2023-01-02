@@ -18,6 +18,23 @@ switch ($_GET['action']) {
         AND ahp.tgl_hapus IS NULL ORDER BY id DESC"
       );
       require('../views/kelas_penugasan.php');
+    } elseif ($_GET['get'] == "nilai_ujian") {
+      $id_penugasan = $_POST['id_penugasan'];
+      $id_proses = $_POST['id_proses'];
+      $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id=$id_proses");
+      $getnilai = $conn->query(
+        "SELECT anp.*,ahp.judul,ahp.kode_tugas FROM arf_nilai_penugasan anp
+        JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
+        WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
+      );
+      $datanilai = mysqli_fetch_assoc($getnilai);
+      $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
+      if (empty($dataprosesujian['selesai_ujian'])) {
+        $datenow = date("Y-m-d H:i:s");
+        $query = $conn->query("UPDATE arf_proses_ujian SET selesai_ujian='$datenow' WHERE id=$id_proses");
+        $dataprosesujian['selesai_ujian'] = $datenow;
+      }
+      require('../views/ujian/nilai_ujian.php');
     }
     break;
   case 'mulai_ujian':

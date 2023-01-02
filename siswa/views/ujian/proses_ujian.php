@@ -1,6 +1,6 @@
 <?php
 // $durasi = $datapenugasan['durasi_menit'];
-$durasi = 6;
+$durasi = 31;
 $mulai_ujian = $dataprosesujian['mulai_ujian'];
 $jam_mulai = new DateTime($mulai_ujian);
 $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
@@ -104,77 +104,79 @@ if ($jam_sekarang > $jam_berakhir) {
       <?php endif; ?>
     </div>
     <!--begin::Wrapper-->
-    <?php if ($jam_sekarang < $jam_berakhir) : ?>
-      <div class="rounded border p-10 pb-0 d-flex flex-column flex-center">
-        <div class="alert alert-dismissible bg-light-primary d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
-          <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-          <!--end::Close-->
-          <!--begin::Icon-->
-          <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-          <span class="svg-icon svg-icon-5tx svg-icon-primary mb-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black"></rect>
-              <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black"></rect>
-              <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black"></rect>
-            </svg>
-          </span>
-          <!--end::Svg Icon-->
-          <!--end::Icon-->
-          <!--begin::Content-->
-          <div class="text-center text-dark">
-            <h1 class="fw-bolder mb-5">Sudah selesai mengerjakan?</h1>
-            <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
-            <div class="mb-9">Pastikan anda telah mengisi semua jawaban sebelum menyelesaikan tugas ini
-              <br>Setelah anda klik tombol <strong class="text-primary">Submit</strong>
-              <br>Nilai akan tampil
-              <br><strong class="text-warning">Anda tidak dapat merubah jawaban Anda</strong>.
+    <div id="info-ujian">
+      <?php if ($jam_sekarang < $jam_berakhir) : ?>
+        <div class="rounded border p-10 pb-0 d-flex flex-column flex-center">
+          <div class="alert alert-dismissible bg-light-primary d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
+            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+            <!--end::Close-->
+            <!--begin::Icon-->
+            <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+            <span class="svg-icon svg-icon-5tx svg-icon-primary mb-5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black"></rect>
+                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black"></rect>
+                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black"></rect>
+              </svg>
+            </span>
+            <!--end::Svg Icon-->
+            <!--end::Icon-->
+            <!--begin::Content-->
+            <div class="text-center text-dark">
+              <h1 class="fw-bolder mb-5">Sudah selesai mengerjakan?</h1>
+              <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
+              <div class="mb-9">Pastikan anda telah mengisi semua jawaban sebelum menyelesaikan tugas ini
+                <br>Setelah anda klik tombol <strong class="text-primary">Submit</strong>
+                <br>Nilai akan tampil
+                <br><strong class="text-warning">Anda tidak dapat merubah jawaban Anda</strong>.
+              </div>
+              <!--begin::Buttons-->
+              <div class="d-flex flex-center flex-wrap">
+                <a href="javascript:;" data-kt-scrolltop="true" class="btn btn-outline btn-outline-primary btn-active-primary m-2">Cek Jawaban</a>
+                <a href="#" class="btn btn-primary m-2">Submit</a>
+              </div>
+              <!--end::Buttons-->
             </div>
-            <!--begin::Buttons-->
-            <div class="d-flex flex-center flex-wrap">
-              <a href="javascript:;" data-kt-scrolltop="true" class="btn btn-outline btn-outline-primary btn-active-primary m-2">Cek Jawaban</a>
-              <a href="#" class="btn btn-primary m-2">Submit</a>
-            </div>
-            <!--end::Buttons-->
+            <!--end::Content-->
           </div>
-          <!--end::Content-->
         </div>
-      </div>
-    <?php else : ?>
-      <div class="rounded border p-10 pb-0 d-flex flex-column flex-center">
-        <div class="alert alert-dismissible bg-light-primary d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
-          <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-          <!--end::Close-->
-          <!--begin::Icon-->
-          <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-          <span class="svg-icon svg-icon-5tx svg-icon-primary mb-5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black"></rect>
-              <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black"></rect>
-              <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black"></rect>
-            </svg>
-          </span>
-          <!--end::Svg Icon-->
-          <!--end::Icon-->
-          <!--begin::Content-->
-          <div class="text-center text-dark">
-            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
-            <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
-            <div class="mb-9">Anda mendapatkan nilai <br>
-              <?php $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
-              $datanilai = mysqli_fetch_assoc($getnilai); ?>
-              <br> <strong class="text-primary fs-1"><?= $datanilai['nilai'] ?></strong>
+      <?php else : ?>
+        <div class="rounded border p-10 pb-0 d-flex flex-column flex-center">
+          <div class="alert alert-dismissible bg-light-primary d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
+            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+            <!--end::Close-->
+            <!--begin::Icon-->
+            <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
+            <span class="svg-icon svg-icon-5tx svg-icon-primary mb-5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black"></rect>
+                <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black"></rect>
+                <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black"></rect>
+              </svg>
+            </span>
+            <!--end::Svg Icon-->
+            <!--end::Icon-->
+            <!--begin::Content-->
+            <div class="text-center text-dark">
+              <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
+              <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
+              <div class="mb-9">Anda mendapatkan nilai <br>
+                <?php $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
+                $datanilai = mysqli_fetch_assoc($getnilai); ?>
+                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai'] ?></strong>
+              </div>
+              <!--begin::Buttons-->
+              <div class="d-flex flex-center flex-wrap">
+                <button class="btn btn-outline btn-outline-primary btn-active-primary m-2" data-kt-scrolltop="true">Cek Jawaban</button>
+                <button class="btn btn-primary m-2" id="lihat-nilai">Lihat Detail Nilai</button>
+              </div>
+              <!--end::Buttons-->
             </div>
-            <!--begin::Buttons-->
-            <div class="d-flex flex-center flex-wrap">
-              <a href="javascript:;" data-kt-scrolltop="true" class="btn btn-outline btn-outline-primary btn-active-primary m-2">Cek Jawaban</a>
-              <a href="#" class="btn btn-primary m-2">Lihat Detail Nilai</a>
-            </div>
-            <!--end::Buttons-->
+            <!--end::Content-->
           </div>
-          <!--end::Content-->
         </div>
-      </div>
-    <?php endif; ?>
+      <?php endif; ?>
+    </div>
   </div>
   <!--end::Wrapper-->
   <!--end::Card body-->
@@ -198,30 +200,18 @@ if ($jam_sekarang > $jam_berakhir) {
         <!--begin::Modal header-->
         <div class="modal-header">
           <!--begin::Modal title-->
-          <h2 class="fw-bolder" data-kt-calendar="title">Add Event</h2>
+          <h2 class="fw-bolder" data-kt-calendar="title"></h2>
           <!--end::Modal title-->
-          <!--begin::Close-->
-          <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Tutup" data-bs-dismiss="modal">
-            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-            <span class="svg-icon svg-icon-1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
-                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
-              </svg>
-            </span>
-            <!--end::Svg Icon-->
-          </div>
-          <!--end::Close-->
         </div>
         <!--end::Modal header-->
         <!--begin::Modal body-->
-        <div class="modal-body py-10 px-lg-17">
+        <div class="modal-body py-10 px-lg-17" id="show_nilai">
         </div>
         <!--end::Modal body-->
         <!--begin::Modal footer-->
         <div class="modal-footer flex-center">
           <!--begin::Button-->
-          <button type="button" id="kt_modal_add_event_submit" class="btn btn-primary" data-kt-scrolltop="true" data-bs-dismiss="modal">
+          <button type="button" id="lihat-jawaban" class="btn btn-primary" data-kt-scrolltop="true" data-bs-dismiss="modal">
             <span class="indicator-label">Lihat Jawaban</span>
           </button>
           <!--end::Button-->
@@ -234,12 +224,35 @@ if ($jam_sekarang > $jam_berakhir) {
 </div>
 <!--end::Modal -->
 <script>
-  function timeout() {
-    $('#modal-nilai').modal('show');
+  function timeout(btn = 0) {
+    var id_penugasan = "<?= $idpenugasan ?>";
+    var id_proses = "<?= $dataprosesujian['id'] ?>";
+    $.ajax({
+      url: 'backend/function.php?action=get_data&get=nilai_ujian',
+      type: 'post',
+      data: {
+        id_penugasan: id_penugasan,
+        id_proses: id_proses
+      },
+      success: function(data) {
+        $('#show_nilai').html(data);
+        $('#modal-nilai').modal('show');
+        if (btn == 0) {
+          $('#spinner').css("display", "block");
+          setTimeout(function() {
+            $('#spinner').css("display", "none");
+            $('#penilaian').css("display", "block");
+          }, 5000);
+        } else {
+          $('#spinner').css("display", "none");
+          $('#penilaian').css("display", "block");
+        }
+      }
+    });
   }
 
-  function timer() {
-    // // Set the date we're counting down to
+  function timer(ujian = 0) {
+    // Set the date we're counting down to
     var countDownDate = new Date("<?= $jam_berakhir->format("D M d Y H:i:s O") ?>").getTime();
     // Update the count down every 1 second
 
@@ -290,32 +303,55 @@ if ($jam_sekarang > $jam_berakhir) {
       } else if (distance <= 0) {
         clearInterval(x);
         $("input[type=radio]").attr('disabled', true);
+        timeout(ujian);
+        if (ujian == 0) {
+          $("#info-ujian").html("");
+        }
         //doSomething();
       }
     }, 1000);
   }
-  $(document).ready(function() {
-    timer();
-    timeout();
-
-    $('.radio_jawaban').on('click', function() {
-      var jawaban = $(this).val();
-      var id_penugasan = $(this).attr('data-id-penugasan');
-      var kode_tugas = $(this).attr('data-kode');
-      var id_soal = $(this).attr('data-id-soal');
-      var id_kunci = $(this).attr('data-id-kunci');
-      $.ajax({
-        url: 'backend/function.php?action=push_jawaban',
-        type: 'post',
-        data: {
-          jawaban: jawaban,
-          id_penugasan: id_penugasan,
-          kode_tugas: kode_tugas,
-          id_soal: id_soal,
-          id_kunci: id_kunci
-        },
-        success: function(data) {}
-      });
-    })
-  });
 </script>
+<?php if ($jam_sekarang < $jam_berakhir) : ?>
+  <script>
+    $(document).ready(function() {
+      timer(0);
+      $('.radio_jawaban').on('click', function() {
+        var jawaban = $(this).val();
+        var id_penugasan = $(this).attr('data-id-penugasan');
+        var kode_tugas = $(this).attr('data-kode');
+        var id_soal = $(this).attr('data-id-soal');
+        var id_kunci = $(this).attr('data-id-kunci');
+        $.ajax({
+          url: 'backend/function.php?action=push_jawaban',
+          type: 'post',
+          data: {
+            jawaban: jawaban,
+            id_penugasan: id_penugasan,
+            kode_tugas: kode_tugas,
+            id_soal: id_soal,
+            id_kunci: id_kunci
+          },
+          success: function(data) {}
+        });
+      });
+      $('#modal-nilai').modal({
+        backdrop: 'static',
+        keyboard: false
+      })
+      $('#lihat-jawaban').on('click', function() {
+        location.reload();
+      });
+    });
+  </script>
+<?php else : ?>
+  <script>
+    $(document).ready(function() {
+      timer(1);
+
+      $('#lihat-nilai').on('click', function() {
+        timeout(1);
+      });
+    });
+  </script>
+<?php endif; ?>
