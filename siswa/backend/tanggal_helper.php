@@ -157,9 +157,9 @@ function humanize($datetime)
     $phrase = abs($minutes) . " Menit";
     $before = $minutes < 0;
   } else {
-    $phrase = "Sekarang";
+    $phrase = "Beberapa detik yang lalu";
   }
-  if ($before) {
+  if (!empty($before)) {
     $return = $phrase . " yang lalu";
   } else {
     $return = $phrase;
