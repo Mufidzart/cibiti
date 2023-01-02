@@ -1,7 +1,7 @@
 <!--begin::Wrapper-->
 <div class="card-px text-center">
   <div id="spinner" style="display: none;">
-    <h2 class="fs-2x my-8">Waktu telah selesai!</h2>
+    <h2 class="fs-2x my-8" id="judul_selesai">Tugas selesai!</h2>
     <div class="spinner-grow text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
@@ -30,15 +30,15 @@
     <!--end::Title-->
     <!--begin::Description-->
     <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
-      <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
+      <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['kode-tugas'] ?>">
         <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
         <span class="d-flex flex-column align-items-start ms-2">
-          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai'] ?></b></span>
+          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai'] ?></b></span>
         </span>
       </a>
-      <br> Jawaban Benar: <b class="text-primary"><?= $datanilai['jawaban_benar']  ?></b>
+      <br> Jawaban Benar: <b class="text-primary"><?= $datanewnilai['jawaban_benar']  ?></b>
       <br>Penugasan
-      <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
+      <br> <b class="text-primary"><?= $datanewnilai['judul']  ?></b>
       <br>Anda mengerjakan soal pada
       <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
       <?php if (!empty($dataprosesujian['selesai_ujian'])) { ?>
