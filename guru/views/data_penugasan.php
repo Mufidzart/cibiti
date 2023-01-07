@@ -15,31 +15,44 @@
     $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
     $batas = new DateTime(date("Y-m-d", strtotime($row['waktu_selesai'])));
     $today = new DateTime(date("Y-m-d"));
-    if ($today > $batas) {
-      $color = "danger";
-    } else {
-      $color = "info";
-    }
+    // $color = "info";
+    // if ($today > $batas) {
+    //   $color = "danger";
+    // } else {
+    //   $color = "info";
+    // }
   ?>
-    <div class="note note-<?= $color ?>">
+    <div class="note note-info">
       <div class="mt-comments">
         <div class="mt-comment">
           <div class="mt-comment-body">
-            <div class="mt-comment-<?= $color ?>">
+            <div class="mt-comment-info">
               <span class="mt-comment-author"><?= $row['judul'] ?></span>
               <span class="mt-comment-date"><?= $tgl_input . ", " . $jam_input ?> WIB</span>
             </div>
             <div class="mt-comment-text"> <?= $row['deskripsi'] ?> </div>
-            <div class="alert alert-<?= $color ?>" style="margin-top:10px;">
+            <div class="alert alert-info" style="margin-top:10px;">
               <strong>
                 <i class="fa fa-calendar"></i> Batas Akhir <?= tgl_indo($tgl_selesai) . ", " . $jam_selesai ?> WIB
               </strong>
             </div>
             <div class="mt-comment-details">
               <span class="mt-comment-status mt-comment-status-pending">
-                <div class="row">
+                <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
                   <div class="col-md-12">
-                    <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['kode_tugas'] ?>"><?= $row['kode_tugas'] ?></a>
+                    <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['tugas_awal'] ?>">Tugas Awal: <?= $row['tugas_awal'] ?></a>
+                    <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+                  <div class="col-md-12">
+                    <a href="javascript:;" class="btn btn-circle default yellow-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['r1'] ?>" style="background-color: #e0ebf9;">Remidi 1: <?= $row['r1'] ?></a>
+                    <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
+                  </div>
+                </div>
+                <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+                  <div class="col-md-12">
+                    <a href="javascript:;" class="btn btn-circle default red-stripe lihat_tugas" id="lihat_tugas" data-kode="<?= $row['r2'] ?>">Remidi 2: <?= $row['r2'] ?></a>
                     <span style="color:#327ad5;padding-top:7px;text-transform: none;">!klik untuk melihat</span>
                   </div>
                 </div>

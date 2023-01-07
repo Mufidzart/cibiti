@@ -36,7 +36,7 @@
         <?php
         $id_penugasan = $penugasan['id'];
         $getnewnilai = $conn->query(
-          "SELECT anp.*,ahp.judul,ahp.kode_tugas FROM arf_nilai_penugasan anp
+          "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
             JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
             WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
         );
@@ -56,10 +56,10 @@
         <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">
           <h3><?= $penugasan['judul'] ?></h3>
           <p><?= $penugasan['deskripsi'] ?></p>
-          <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-<?= $color ?> btn-active-light-<?= $color ?> px-6" data-kode="<?= $penugasan['kode_tugas'] ?>">
+          <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-<?= $color ?> btn-active-light-<?= $color ?> px-6" data-kode="<?= $penugasan['tugas_awal'] ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-<?= $color ?> fs-1"></i></span>
             <span class="d-flex flex-column align-items-start ms-2">
-              <span class="fs-3 fw-bolder"><?= $penugasan['kode_tugas'] ?></span>
+              <span class="fs-3 fw-bolder"><?= $penugasan['tugas_awal'] ?></span>
               <span class="fs-7">klik untuk mengerjakan</span>
             </span>
           </a>

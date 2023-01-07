@@ -7,7 +7,7 @@ $id_penugasan = $_GET['tgs'];
 $getpenugasan =  $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
 $datapenugasan = mysqli_fetch_assoc($getpenugasan);
 $idpenugasan = $datapenugasan['id'];
-$kode_tugas = $datapenugasan['kode_tugas'];
+$kode_tugas = $datapenugasan['tugas_awal'];
 $gettugas =  $conn->query("SELECT * FROM arf_tugas_cbt WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
 $datatugas = mysqli_fetch_assoc($gettugas);
 $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_penugasan=$idpenugasan");

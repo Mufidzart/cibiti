@@ -25,7 +25,7 @@ switch ($_GET['action']) {
       $kode_tugas = $_POST['kode_tugas'];
       $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id=$id_proses");
       $getnilai = $conn->query(
-        "SELECT anp.*,ahp.judul,ahp.kode_tugas FROM arf_nilai_penugasan anp
+        "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
         JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
         WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
       );
@@ -64,7 +64,7 @@ switch ($_GET['action']) {
         $dataprosesujian['selesai_ujian'] = $datenow;
       }
       $getnewnilai = $conn->query(
-        "SELECT anp.*,ahp.judul,ahp.kode_tugas FROM arf_nilai_penugasan anp
+        "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
         JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
         WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
       );
