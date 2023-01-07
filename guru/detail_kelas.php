@@ -259,20 +259,22 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
               </select>
               <div id="pesan-jenis-tugas"></div>
             </div>
-            <div class="form-group" id="form-kode_soal">
-              <label for="kode_soal" class="control-label">Tugas</label>
-              <select class="form-control select2" id="kode_soal" name="kode_soal">
-                <option></option>
-              </select>
-              <div id="pesan-kode_soal"></div>
-            </div>
             <div class="note note-info">
+              <div class="row col-md-12">
+                <div class="form-group" id="form-tugas-awal">
+                  <label for="tugas-awal" class="control-label"><strong>Tugas Awal</strong></label>
+                  <select class="form-control select2" id="tugas-awal" name="tugas-awal">
+                    <option></option>
+                  </select>
+                  <div id="pesan-tugas-awal"></div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-6">
-                  <div class="form-group" id="form-batas-akhir">
-                    <label class="control-label"><strong>Batas akhir penugasan</strong></label><br>
+                  <div class="form-group" id="form-batas-tugas-awal">
+                    <label class="control-label">Batas akhir</label><br>
                     <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
-                      <input type="text" class="form-control" id="batas-akhir" name="batas-akhir">
+                      <input type="text" class="form-control" id="batas-tugas-awal" name="batas-tugas-awal">
                       <span class="input-group-btn">
                         <button class="btn default date-reset" type="button">
                           <i class="fa fa-times"></i>
@@ -282,14 +284,14 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                         </button>
                       </span>
                     </div>
-                    <div id="pesan-batas-akhir"></div>
+                    <div id="pesan-batas-tugas-awal"></div>
                   </div>
                 </div>
                 <div class="col-md-4">
-                  <div class="form-group" id="form-durasi">
-                    <label class="control-label"><strong>Waktu pengerjaan</strong></label><br>
+                  <div class="form-group" id="form-durasi-tugas-awal">
+                    <label class="control-label">Waktu pengerjaan</label><br>
                     <div class="input-group">
-                      <input type="text" class="form-control text-right" id="durasi" name="durasi">
+                      <input type="text" class="form-control text-right" id="durasi-tugas-awal" name="durasi-tugas-awal">
                       <span class="input-group-btn">
                         <button class="btn default date-set" type="button">
                           menit
@@ -297,7 +299,97 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                       </span>
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
-                    <div id="pesan-durasi"></div>
+                    <div id="pesan-durasi-tugas-awal"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="note note-warning" style="background-color: #fcf8e3;">
+              <div class="row col-md-12">
+                <div class="form-group" id="form-r1">
+                  <label for="r1" class="control-label"><strong>Remidi 1</strong></label>
+                  <select class="form-control select2" id="r1" name="r1">
+                    <option></option>
+                  </select>
+                  <div id="pesan-r1"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group" id="form-batas-r1">
+                    <label class="control-label">Batas akhir</label><br>
+                    <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
+                      <input type="text" class="form-control" id="batas-r1" name="batas-r1">
+                      <span class="input-group-btn">
+                        <button class="btn default date-reset" type="button">
+                          <i class="fa fa-times"></i>
+                        </button>
+                        <button class="btn default date-set" type="button">
+                          <i class="fa fa-calendar"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-batas-r1"></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group" id="form-durasi-r1">
+                    <label class="control-label">Waktu pengerjaan</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="durasi-r1" name="durasi-r1">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          menit
+                        </button>
+                      </span>
+                    </div>
+                    <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                    <div id="pesan-durasi-r1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="note note-warning" style="background-color: #fcf8e3;">
+              <div class="row col-md-12">
+                <div class="form-group" id="form-r2">
+                  <label for="r2" class="control-label"><strong>Remidi 2</strong></label>
+                  <select class="form-control select2" id="r2" name="r2">
+                    <option></option>
+                  </select>
+                  <div id="pesan-r2"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group" id="form-batas-r2">
+                    <label class="control-label">Batas akhir</label><br>
+                    <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
+                      <input type="text" class="form-control" id="batas-r2" name="batas-r2">
+                      <span class="input-group-btn">
+                        <button class="btn default date-reset" type="button">
+                          <i class="fa fa-times"></i>
+                        </button>
+                        <button class="btn default date-set" type="button">
+                          <i class="fa fa-calendar"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-batas-r2"></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group" id="form-durasi-r2">
+                    <label class="control-label">Waktu pengerjaan</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="durasi-r2" name="durasi-r2">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          menit
+                        </button>
+                      </span>
+                    </div>
+                    <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                    <div id="pesan-durasi-r2"></div>
                   </div>
                 </div>
               </div>
@@ -447,8 +539,10 @@ require('layouts/bodylayout.php');
           kode_tugas: kode_tugas,
         },
         success: function(data) {
-          $('#show_tugas').html(data);
-          $('#modal-lihat-tugas').modal('show');
+          if (kode_tugas) {
+            $('#show_tugas').html(data);
+            $('#modal-lihat-tugas').modal('show');
+          }
         }
       });
     });
@@ -486,8 +580,12 @@ require('layouts/bodylayout.php');
           for (i = 0; i < data.length; i++) {
             html += '<option value="' + data[i].kode_tugas + '">(' + data[i].kode_tugas + ') ' + data[i].judul + '</option>';
           }
-          $('#kode_soal').html(html);
-          $('#kode_soal').trigger('change');
+          $('#tugas-awal').html(html);
+          $('#r1').html('<option value="">Pilih Tugas</option>' + html);
+          $('#r2').html('<option value="">Pilih Tugas</option>' + html);
+          $('#tugas-awal').trigger('change');
+          $('#r1').trigger('change');
+          $('#r2').trigger('change');
         }
       });
     });
@@ -498,7 +596,17 @@ require('layouts/bodylayout.php');
       width: "100%"
     });
 
-    $("#kode_soal").select2({
+    $("#tugas-awal").select2({
+      placeholder: "Pilih tugas..",
+      allowClear: true,
+      width: "100%"
+    });
+    $("#r1").select2({
+      placeholder: "Pilih tugas..",
+      allowClear: true,
+      width: "100%"
+    });
+    $("#r2").select2({
       placeholder: "Pilih tugas..",
       allowClear: true,
       width: "100%"

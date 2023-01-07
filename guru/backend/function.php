@@ -214,7 +214,7 @@ switch ($_GET['action']) {
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
       $datenow = date("Y-m-d H:i:s");
-      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY waktu_selesai DESC");
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY batas_tugas_awal DESC");
       require('../views/data_penugasan_akanberakhir.php');
     } elseif ($_GET['get'] == "lihat_tugas") {
       $kode_tugas = $_POST['kode_tugas'];
@@ -357,50 +357,120 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "judul-penugasan");
     }
-    if (empty($_POST['kode_soal'])) {
-      $validation = ["input" => "kode_soal", "message" => "Kode tugas tidak boleh kosong."];
+    if (empty($_POST['tugas-awal'])) {
+      $validation = ["input" => "tugas-awal", "message" => "Tugas awal tidak boleh kosong."];
       array_push($data['errors'], $validation);
     } else {
-      array_push($data['success'], "kode_soal");
+      array_push($data['success'], "tugas-awal");
     }
-    if (empty($_POST['batas-akhir'])) {
-      $validation = ["input" => "batas-akhir", "message" => "Batas akhir penugasan tidak boleh kosong."];
+    if (empty($_POST['batas-tugas-awal'])) {
+      $validation = ["input" => "batas-tugas-awal", "message" => "Batas tugas awal tidak boleh kosong."];
       array_push($data['errors'], $validation);
     } else {
-      array_push($data['success'], "batas-akhir");
+      array_push($data['success'], "batas-tugas-awal");
     }
-    if (empty($_POST['durasi'])) {
-      if ($_POST['durasi'] == "0") {
-        array_push($data['success'], "durasi");
+    if (empty($_POST['durasi-tugas-awal'])) {
+      if ($_POST['durasi-tugas-awal'] == "0") {
+        array_push($data['success'], "durasi-tugas-awal");
       } else {
-        $validation = ["input" => "durasi", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        $validation = ["input" => "durasi-tugas-awal", "message" => "Waktu pengerjaan tidak boleh kosong."];
         array_push($data['errors'], $validation);
       }
     } else {
-      array_push($data['success'], "durasi");
+      array_push($data['success'], "durasi-tugas-awal");
+    }
+
+    if (!empty($_POST['r1'])) {
+      if (empty($_POST['batas-r1'])) {
+        $validation = ["input" => "batas-r1", "message" => "Batas remidi 1 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "batas-r1");
+      }
+      if (empty($_POST['durasi-r1'])) {
+        $validation = ["input" => "durasi-r1", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "durasi-r1");
+      }
+    } else {
+      array_push($data['success'], "r1");
+      array_push($data['success'], "batas-r1");
+      array_push($data['success'], "durasi-r1");
+    }
+    if (!empty($_POST['r2'])) {
+      if (empty($_POST['batas-r2'])) {
+        $validation = ["input" => "batas-r2", "message" => "Batas remidi 2 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "batas-r2");
+      }
+      if (empty($_POST['durasi-r2'])) {
+        $validation = ["input" => "durasi-r2", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "durasi-r2");
+      }
+    } else {
+      array_push($data['success'], "r2");
+      array_push($data['success'], "batas-r2");
+      array_push($data['success'], "durasi-r2");
     }
     // End Validation
     if (!empty($data['errors'])) {
       $data['acc'] = false;
       echo json_encode($data);
     } else {
-      $pecahtgl = explode(" - ", $_POST['batas-akhir']);
-      $tgl = date('Y-m-d', strtotime($pecahtgl[0]));
-      $time = date('H:i:s', strtotime($pecahtgl[1]));
-      $tgl_akhir = $tgl . ' ' . $time;
       // Inputan Soal
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['mapel'];
       $id_kelas = $_POST['kelas'];
       $judul = $_POST['judul-penugasan'];
       $deskripsi = $_POST['deskripsi-penugasan'];
-      $kode_tugas = $_POST['kode_soal'];
-      $batas_awal = date("Y-m-d H:i:s");
-      $batas_akhir = $tgl_akhir;
-      $durasi = $_POST['durasi'];
+      $tugas_awal = $_POST['tugas-awal'];
+      $pecahtugasawal = explode(" - ", $_POST['batas-tugas-awal']);
+      $tgl_tugasawal = date('Y-m-d', strtotime($pecahtugasawal[0]));
+      $time_tugasawal = date('H:i:s', strtotime($pecahtugasawal[1]));
+      $batas_tugas_awal = $tgl_tugasawal . ' ' . $time_tugasawal;
+      $durasi_menit_tugas_awal = $_POST['durasi-tugas-awal'];
+      if (!empty($_POST['r1'])) {
+        $pecahr1 = explode(" - ", $_POST['batas-r1']);
+        $tgl_r1 = date('Y-m-d', strtotime($pecahr1[0]));
+        $time_r1 = date('H:i:s', strtotime($pecahr1[1]));
+        $batas_r1 = $tgl_r1 . ' ' . $time_r1;
+        $durasi_r1 = $_POST['durasi-r1'];
+        $r1 = $_POST['r1'];
+        $kolomr1 = ", r1, batas_r1, durasi_menit_r1";
+        $valuer1 = ",'$r1','$batas_r1','$durasi_r1'";
+      } else {
+        $r1 = NULL;
+        $batas_r1 = NULL;
+        $durasi_r1 = NULL;
+        $kolomr1 = "";
+        $valuer1 = "";
+      }
+      if (!empty($_POST['r2'])) {
+        $pecahr2 = explode(" - ", $_POST['batas-r2']);
+        $tgl_r2 = date('Y-m-d', strtotime($pecahr2[0]));
+        $time_r2 = date('H:i:s', strtotime($pecahr2[1]));
+        $batas_r2 = $tgl_r2 . ' ' . $time_r2;
+        $durasi_r2 = $_POST['durasi-r2'];
+        $r2 = $_POST['r2'];
+        $kolomr2 = ", r2, batas_r2, durasi_menit_r2";
+        $valuer2 = ",'$r2','$batas_r2','$durasi_r2'";
+      } else {
+        $r2 = NULL;
+        $batas_r2 = NULL;
+        $durasi_r2 = NULL;
+        $kolomr2 = "";
+        $valuer2 = "";
+      }
       // End Inputan Soal
       // Input Soal
-      $query = mysqli_query($conn, "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, judul, deskripsi, kode_tugas, waktu_mulai, waktu_selesai, durasi_menit) VALUES('$id_staff','$id_mapel','$id_kelas','$judul','$deskripsi','$kode_tugas','$batas_awal','$batas_akhir','$durasi')");
+      $query = $conn->query(
+        "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, judul, deskripsi, tugas_awal, batas_tugas_awal, durasi_menit_tugas_awal $kolomr1 $kolomr2) 
+      VALUES('$id_staff','$id_mapel','$id_kelas','$judul','$deskripsi','$tugas_awal','$batas_tugas_awal','$durasi_menit_tugas_awal' $valuer1 $valuer2)"
+      );
       $last_id = $conn->insert_id;
       // End Input Soal
 
@@ -424,134 +494,32 @@ switch ($_GET['action']) {
     $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan' AND tgl_hapus IS NULL");
     if ($getpenugasan->num_rows !== 0) {
       $penugasan = mysqli_fetch_assoc($getpenugasan);
-      $kode_tugas = $penugasan['kode_tugas'];
-      $gettugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+      $tugas_awal = $penugasan['tugas_awal'];
+      $r1 = $penugasan['r1'];
+      $r2 = $penugasan['r2'];
+      $gettugas = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
       $datatugas = mysqli_fetch_assoc($gettugas);
       $jenis_tugas = $datatugas['jenis'];
       $gettugas_all = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE jenis='$jenis_tugas' AND tgl_hapus IS NULL");
       $getjenis_tugas = mysqli_query($conn, "SELECT * FROM arf_master_tugas WHERE tgl_hapus IS NULL");
-      $get_date = date('Y-m-d', strtotime($penugasan['waktu_selesai']));
-      $get_time = date('H:i:s', strtotime($penugasan['waktu_selesai']));
-      $current_date = $get_date . 'T' . $get_time . 'Z';
-?>
-      <form role="form" class="form-edit-penugasan" id="form-edit-penugasan">
-        <input type="hidden" class="form-control" name="id-editpenugasan" value="<?= $penugasan['id'] ?>">
-        <div class="form-body">
-          <div class="form-group" id="form-judul-editpenugasan">
-            <label class="control-label">Judul Penugasan</label>
-            <input class="form-control spinner" type="text" id="judul-editpenugasan" name="judul-editpenugasan" placeholder="Judul penugasan..." value="<?= $penugasan['judul'] ?>">
-            <div id="pesan-judul-editpenugasan"></div>
-          </div>
-          <div class="form-group" id="form-deskripsi-editpenugasan">
-            <label class="control-label">Deskripsi penugasan</label>
-            <textarea class="form-control" id="deskripsi-editpenugasan" name="deskripsi-editpenugasan" rows="3" placeholder="Deskripsi penugasan..."><?= $penugasan['deskripsi'] ?></textarea>
-            <div id="pesan-deskripsi-editpenugasan"></div>
-          </div>
-          <div class="form-group" id="form-jenis-edittugas">
-            <label class="control-label">Jenis Tugas</label>
-            <select class="form-control jenis-edittugas" id="jenis-edittugas" name="jenis-edittugas">
-              <option></option>
-              <?php while ($jenis = mysqli_fetch_array($getjenis_tugas)) :
-                $select = ($jenis['jenis_tugas'] == $jenis_tugas) ? "selected" : ""; ?>
-                <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
-              <?php endwhile; ?>
-            </select>
-            <div id="pesan-jenis-edittugas"></div>
-          </div>
-          <div class="form-group" id="form-kode_soal-editpenugasan">
-            <label for="kode_soal" class="control-label">Tugas</label>
-            <select class="form-control" id="kode_soal-editpenugasan" name="kode_soal-editpenugasan">
-              <?php while ($tugas = mysqli_fetch_array($gettugas_all)) :
-                $select = ($tugas['kode_tugas'] == $kode_tugas) ? "selected" : ""; ?>
-                <option value="<?= $tugas['kode_tugas'] ?>" <?= $select ?>>(<?= $tugas['kode_tugas'] ?>) <?= $tugas['judul'] ?></option>
-              <?php endwhile; ?>
-            </select>
-            <div id="pesan-kode_soal-editpenugasan"></div>
-          </div>
-          <div class="note note-info">
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group" id="form-batas-akhir-editpenugasan">
-                  <label class="control-label"><strong>Batas akhir penugasan</strong></label><br>
-                  <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
-                    <input type="text" class="form-control" id="batas-akhir-editpenugasan" name="batas-akhir-editpenugasan" value="<?= $penugasan['waktu_selesai'] ?>">
-                    <span class="input-group-btn">
-                      <button class="btn default date-reset" type="button">
-                        <i class="fa fa-times"></i>
-                      </button>
-                      <button class="btn default date-set" type="button">
-                        <i class="fa fa-calendar"></i>
-                      </button>
-                    </span>
-                  </div>
-                  <div id="pesan-batas-akhir-editpenugasan"></div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group" id="form-durasi-editpenugasan">
-                  <label class="control-label"><strong>Waktu pengerjaan</strong></label><br>
-                  <div class="input-group">
-                    <input type="text" class="form-control text-right" id="durasi-editpenugasan" name="durasi-editpenugasan" value="<?= $penugasan['durasi_menit'] ?>">
-                    <span class="input-group-btn">
-                      <button class="btn default date-set" type="button">
-                        menit
-                      </button>
-                    </span>
-                  </div>
-                  <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
-                  <div id="pesan-durasi-editpenugasan"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="form-actions right">
-          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn green btn_simpan_edit">Simpan</button>
-        </div>
-      </form>
-      <script>
-        $(document).ready(function() {
-          $('#jenis-edittugas').on('select2:select', function(e) {
-            var id_mapel = '<?= $penugasan['id_mapel'] ?>';
-            var jenis_tugas = $(this).val();
-            $.ajax({
-              url: 'backend/function.php?action=get_data&get=data_tugas',
-              type: 'post',
-              data: {
-                jenis_tugas: jenis_tugas,
-                id_mapel: id_mapel
-              },
-              dataType: 'json',
-              success: function(data) {
-                var html = '';
-                for (i = 0; i < data.length; i++) {
-                  html += '<option value="' + data[i].kode_tugas + '">(' + data[i].kode_tugas + ') ' + data[i].judul + '</option>';
-                }
-                $('#kode_soal-editpenugasan').html(html);
-                $('#kode_soal-editpenugasan').trigger('change');
-              }
-            });
-          });
-          $("#form-edit-penugasan").on("submit", function(event) {
-            event.preventDefault();
-            var formdata = $(this).serialize();
-            $.ajax({
-              url: 'backend/function.php?action=edit_data_penugasan',
-              type: 'post',
-              data: formdata,
-              dataType: 'json',
-              success: function(data) {
-                $('#modal-edit-penugasan').modal('hide');
-                get_penugasan();
-                get_penugasan_akanberakhir();
-              }
-            });
-          });
-          $('.form_datetime').datetimepicker();
-        });
-      </script>
-<?php
+      $get_date_tugas_awal = date('Y-m-d', strtotime($penugasan['batas_tugas_awal']));
+      $get_time_tugas_awal = date('H:i:s', strtotime($penugasan['batas_tugas_awal']));
+      $date_tugas_awal = $get_date_tugas_awal . 'T' . $get_time_tugas_awal . 'Z';
+      if (!empty($penugasan['r1'])) {
+        $get_date_r1 = date('Y-m-d', strtotime($penugasan['batas_r1']));
+        $get_time_r1 = date('H:i:s', strtotime($penugasan['batas_r1']));
+        $date_r1 = $get_date_r1 . 'T' . $get_time_r1 . 'Z';
+      } else {
+        $date_r1 = date('Y-m-d') . 'T' . date('H:i:s') . 'Z';
+      }
+      if (!empty($penugasan['r2'])) {
+        $get_date_r2 = date('Y-m-d', strtotime($penugasan['batas_r2']));
+        $get_time_r2 = date('H:i:s', strtotime($penugasan['batas_r2']));
+        $date_r2 = $get_date_r2 . 'T' . $get_time_r2 . 'Z';
+      } else {
+        $date_r2 = date('Y-m-d') . 'T' . date('H:i:s') . 'Z';
+      }
+      require('../views/get_data_penugasan_byid.php');
     } else {
       $data = "Gagal Mengambil Data :" . mysqli_error($conn);
       echo $data;
@@ -608,7 +576,7 @@ switch ($_GET['action']) {
       $durasi = $_POST['durasi-editpenugasan'];
       // End Inputan Soal
       // Input Soal
-      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', kode_tugas='$kode_tugas', waktu_mulai='$batas_awal', waktu_selesai='$batas_akhir', durasi_menit='$durasi' WHERE id='$id_penugasan'");
+      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', kode_tugas='$kode_tugas', waktu_mulai='$batas_awal', batas_tugas_awal='$batas_akhir', durasi_menit='$durasi' WHERE id='$id_penugasan'");
       // End Input Soal
 
       if ($query) {
