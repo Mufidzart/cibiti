@@ -357,6 +357,7 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "judul-penugasan");
     }
+
     if (empty($_POST['tugas-awal'])) {
       $validation = ["input" => "tugas-awal", "message" => "Tugas awal tidak boleh kosong."];
       array_push($data['errors'], $validation);
@@ -443,9 +444,6 @@ switch ($_GET['action']) {
         $kolomr1 = ", r1, batas_r1, durasi_menit_r1";
         $valuer1 = ",'$r1','$batas_r1','$durasi_r1'";
       } else {
-        $r1 = NULL;
-        $batas_r1 = NULL;
-        $durasi_r1 = NULL;
         $kolomr1 = "";
         $valuer1 = "";
       }
@@ -459,9 +457,6 @@ switch ($_GET['action']) {
         $kolomr2 = ", r2, batas_r2, durasi_menit_r2";
         $valuer2 = ",'$r2','$batas_r2','$durasi_r2'";
       } else {
-        $r2 = NULL;
-        $batas_r2 = NULL;
-        $durasi_r2 = NULL;
         $kolomr2 = "";
         $valuer2 = "";
       }
@@ -535,48 +530,99 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "judul-editpenugasan");
     }
-    if (empty($_POST['kode_soal-editpenugasan'])) {
-      $validation = ["input" => "kode_soal-editpenugasan", "message" => "Kode tugas tidak boleh kosong."];
+
+
+    if (empty($_POST['tugas-awal-editpenugasan'])) {
+      $validation = ["input" => "tugas-awal-editpenugasan", "message" => "Tugas awal tidak boleh kosong."];
       array_push($data['errors'], $validation);
     } else {
-      array_push($data['success'], "kode_soal-editpenugasan");
+      array_push($data['success'], "tugas-awal-editpenugasan");
     }
-    if (empty($_POST['batas-akhir-editpenugasan'])) {
-      $validation = ["input" => "batas-akhir-editpenugasan", "message" => "Batas akhir penugasan tidak boleh kosong."];
+    if (empty($_POST['batas-tugas-awal-editpenugasan'])) {
+      $validation = ["input" => "batas-tugas-awal-editpenugasan", "message" => "Batas tugas awal tidak boleh kosong."];
       array_push($data['errors'], $validation);
     } else {
-      array_push($data['success'], "batas-akhir-editpenugasan");
+      array_push($data['success'], "batas-tugas-awal-editpenugasan");
     }
-    if (empty($_POST['durasi-editpenugasan'])) {
-      if ($_POST['durasi-editpenugasan'] == "0") {
-        array_push($data['success'], "durasi-editpenugasan");
+    if (empty($_POST['durasi-tugas-awal-editpenugasan'])) {
+      if ($_POST['durasi-tugas-awal-editpenugasan'] == "0") {
+        array_push($data['success'], "durasi-tugas-awal-editpenugasan");
       } else {
-        $validation = ["input" => "durasi-editpenugasan", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        $validation = ["input" => "durasi-tugas-awal-editpenugasan", "message" => "Waktu pengerjaan tidak boleh kosong."];
         array_push($data['errors'], $validation);
       }
     } else {
-      array_push($data['success'], "durasi-editpenugasan");
+      array_push($data['success'], "durasi-tugas-awal-editpenugasan");
     }
+
+    if (!empty($_POST['r1-editpenugasan'])) {
+      if (empty($_POST['batas-r1-editpenugasan'])) {
+        $validation = ["input" => "batas-r1-editpenugasan", "message" => "Batas remidi 1 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "batas-r1-editpenugasan");
+      }
+      if (empty($_POST['durasi-r1-editpenugasan'])) {
+        $validation = ["input" => "durasi-r1-editpenugasan", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "durasi-r1-editpenugasan");
+      }
+    } else {
+      array_push($data['success'], "r1-editpenugasan");
+      array_push($data['success'], "batas-r1-editpenugasan");
+      array_push($data['success'], "durasi-r1-editpenugasan");
+    }
+    if (!empty($_POST['r2-editpenugasan'])) {
+      if (empty($_POST['batas-r2-editpenugasan'])) {
+        $validation = ["input" => "batas-r2-editpenugasan", "message" => "Batas remidi 2 tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "batas-r2-editpenugasan");
+      }
+      if (empty($_POST['durasi-r2-editpenugasan'])) {
+        $validation = ["input" => "durasi-r2-editpenugasan", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "durasi-r2-editpenugasan");
+      }
+    } else {
+      array_push($data['success'], "r2-editpenugasan");
+      array_push($data['success'], "batas-r2-editpenugasan");
+      array_push($data['success'], "durasi-r2-editpenugasan");
+    }
+
     // End Validation
     if (!empty($data['errors'])) {
       $data['acc'] = false;
       echo json_encode($data);
     } else {
-      $pecahtgl = explode(" ", $_POST['batas-akhir-editpenugasan']);
-      $tgl = date('Y-m-d', strtotime($pecahtgl[0]));
-      $time = date('H:i:s', strtotime($pecahtgl[1]));
-      $tgl_akhir = $tgl . ' ' . $time;
       // Inputan Soal
       $id_penugasan = $_POST['id-editpenugasan'];
       $judul = $_POST['judul-editpenugasan'];
       $deskripsi = $_POST['deskripsi-editpenugasan'];
-      $kode_tugas = $_POST['kode_soal-editpenugasan'];
-      $batas_awal = date("Y-m-d H:i:s");
-      $batas_akhir = $tgl_akhir;
-      $durasi = $_POST['durasi-editpenugasan'];
+      $tugas_awal = $_POST['tugas-awal-editpenugasan'];
+      $batas_tugas_awal = $_POST['batas-tugas-awal-editpenugasan'];
+      $durasi_menit_tugas_awal = $_POST['durasi-tugas-awal-editpenugasan'];
+      if (!empty($_POST['r1-editpenugasan'])) {
+        $batas_r1 = $_POST['batas-r1-editpenugasan'];
+        $durasi_r1 = $_POST['durasi-r1-editpenugasan'];
+        $r1 = $_POST['r1-editpenugasan'];
+        $valuer1 = ",r1='$r1',batas_r1='$batas_r1',durasi_menit_r1='$durasi_r1'";
+      } else {
+        $valuer1 = ",r1=null,batas_r1=null,durasi_menit_r1=null";
+      }
+      if (!empty($_POST['r2-editpenugasan'])) {
+        $batas_r2 = $_POST['batas-r2-editpenugasan'];
+        $durasi_r2 = $_POST['durasi-r2-editpenugasan'];
+        $r2 = $_POST['r2-editpenugasan'];
+        $valuer2 = ",r2='$r2',batas_r2='$batas_r2',durasi_menit_r2='$durasi_r2'";
+      } else {
+        $valuer2 = ",r2=null,batas_r2=null,durasi_menit_r2=null";
+      }
       // End Inputan Soal
       // Input Soal
-      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', kode_tugas='$kode_tugas', waktu_mulai='$batas_awal', batas_tugas_awal='$batas_akhir', durasi_menit='$durasi' WHERE id='$id_penugasan'");
+      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', tugas_awal='$tugas_awal',  batas_tugas_awal='$batas_tugas_awal', durasi_menit_tugas_awal='$durasi_menit_tugas_awal' $valuer1 $valuer2 WHERE id='$id_penugasan'");
       // End Input Soal
 
       if ($query) {

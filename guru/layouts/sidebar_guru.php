@@ -17,7 +17,7 @@ $segments = explode('/', $urlArray);
         <li class="nav-item  <?= (end($segments) == 'tugas.php' || end($segments) == 'detail_tugas.php') ? 'active open' : '' ?>">
             <a href="tugas.php" class="nav-link">
                 <i class="icon-puzzle"></i>
-                <span class="title">Tugas</span>
+                <span class="title">Bank Tugas</span>
             </a>
         </li>
     </ul>

@@ -598,7 +598,6 @@ require('layouts/bodylayout.php');
 
     $("#tugas-awal").select2({
       placeholder: "Pilih tugas..",
-      allowClear: true,
       width: "100%"
     });
     $("#r1").select2({

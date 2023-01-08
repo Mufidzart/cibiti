@@ -180,7 +180,6 @@
   $(document).ready(function() {
     $("#tugas-awal-editpenugasan").select2({
       placeholder: "Pilih tugas..",
-      allowClear: true,
       width: "100%"
     });
     $("#r1-editpenugasan").select2({
@@ -227,9 +226,20 @@
         data: formdata,
         dataType: 'json',
         success: function(data) {
-          $('#modal-edit-penugasan').modal('hide');
-          get_penugasan();
-          get_penugasan_akanberakhir();
+          if (data.acc == true) {
+            $('#modal-edit-penugasan').modal('hide');
+            get_penugasan();
+            get_penugasan_akanberakhir();
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-' + data.errors[i].input).addClass('has-error');
+            }
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
+          }
         }
       });
     });
