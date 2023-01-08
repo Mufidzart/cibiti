@@ -270,7 +270,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xl-12">
                   <div class="form-group" id="form-batas-tugas-awal">
                     <label class="control-label">Batas akhir</label><br>
                     <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
@@ -287,7 +287,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-batas-tugas-awal"></div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3 col-xl-12">
                   <div class="form-group" id="form-durasi-tugas-awal">
                     <label class="control-label">Waktu pengerjaan</label><br>
                     <div class="input-group">
@@ -300,6 +300,15 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
                     <div id="pesan-durasi-tugas-awal"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-kkm-tugas-awal">
+                    <label class="control-label">KKM</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="kkm-tugas-awal" name="kkm-tugas-awal">
+                    </div>
+                    <div id="pesan-kkm-tugas-awal"></div>
                   </div>
                 </div>
               </div>
@@ -315,7 +324,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xl-12">
                   <div class="form-group" id="form-batas-r1">
                     <label class="control-label">Batas akhir</label><br>
                     <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
@@ -332,7 +341,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-batas-r1"></div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3 col-xl-12">
                   <div class="form-group" id="form-durasi-r1">
                     <label class="control-label">Waktu pengerjaan</label><br>
                     <div class="input-group">
@@ -345,6 +354,15 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
                     <div id="pesan-durasi-r1"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-kkm-r1">
+                    <label class="control-label">KKM</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="kkm-r1" name="kkm-r1">
+                    </div>
+                    <div id="pesan-kkm-r1"></div>
                   </div>
                 </div>
               </div>
@@ -360,7 +378,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-6 col-xl-12">
                   <div class="form-group" id="form-batas-r2">
                     <label class="control-label">Batas akhir</label><br>
                     <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
@@ -377,7 +395,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-batas-r2"></div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3 col-xl-12">
                   <div class="form-group" id="form-durasi-r2">
                     <label class="control-label">Waktu pengerjaan</label><br>
                     <div class="input-group">
@@ -390,6 +408,15 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
                     <div id="pesan-durasi-r2"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-kkm-r2">
+                    <label class="control-label">KKM</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="kkm-r2" name="kkm-r2">
+                    </div>
+                    <div id="pesan-kkm-r2"></div>
                   </div>
                 </div>
               </div>

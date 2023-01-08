@@ -45,7 +45,7 @@
           $color = "success";
           $badge = "<span class='badge badge-light-success fs-7 ms-2'>Sudah dikerjakan</span>";
         } else {
-          $batas = new DateTime(date("Y-m-d", strtotime($penugasan['waktu_selesai'])));
+          $batas = new DateTime(date("Y-m-d", strtotime($penugasan['batas_tugas_awal'])));
           if ($today > $batas) {
             $color = "danger";
             $badge = "<span class='badge badge-light-danger fs-7 ms-2'>Terlewat</span>";

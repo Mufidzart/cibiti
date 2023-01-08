@@ -36,7 +36,7 @@
             <div id="pesan-tugas-awal-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xl-12">
           <div class="form-group" id="form-batas-tugas-awal-editpenugasan">
             <label class="control-label">Batas akhir penugasan</label><br>
             <div class="input-group date form_datetime" data-date="<?= $date_tugas_awal ?>">
@@ -53,7 +53,7 @@
             <div id="pesan-batas-tugas-awal-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 col-xl-12">
           <div class="form-group" id="form-durasi-tugas-awal-editpenugasan">
             <label class="control-label">Waktu pengerjaan</label><br>
             <div class="input-group">
@@ -66,6 +66,15 @@
             </div>
             <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
             <div id="pesan-durasi-tugas-awal-editpenugasan"></div>
+          </div>
+        </div>
+        <div class="col-md-3 col-xl-12">
+          <div class="form-group" id="form-kkm-tugas-awal-editpenugasan">
+            <label class="control-label">KKM</label><br>
+            <div class="input-group">
+              <input type="text" class="form-control text-right" id="kkm-tugas-awal-editpenugasan" name="kkm-tugas-awal-editpenugasan" value="<?= $penugasan['kkm_tugas_awal'] ?>">
+            </div>
+            <div id="pesan-kkm-tugas-awal-editpenugasan"></div>
           </div>
         </div>
       </div>
@@ -86,7 +95,7 @@
             <div id="pesan-r1-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xl-12">
           <div class="form-group" id="form-batas-r1-editpenugasan">
             <label class="control-label">Batas akhir penugasan</label><br>
             <div class="input-group date form_datetime" data-date="<?= $date_r1 ?>">
@@ -103,7 +112,7 @@
             <div id="pesan-batas-r1-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 col-xl-12">
           <div class="form-group" id="form-durasi-r1-editpenugasan">
             <label class="control-label">Waktu pengerjaan</label><br>
             <div class="input-group">
@@ -116,6 +125,15 @@
             </div>
             <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
             <div id="pesan-durasi-r1-editpenugasan"></div>
+          </div>
+        </div>
+        <div class="col-md-3 col-xl-12">
+          <div class="form-group" id="form-kkm-r1-editpenugasan">
+            <label class="control-label">KKM</label><br>
+            <div class="input-group">
+              <input type="text" class="form-control text-right" id="kkm-r1-editpenugasan" name="kkm-r1-editpenugasan" value="<?= $penugasan['kkm_r1'] ?>">
+            </div>
+            <div id="pesan-kkm-r1-editpenugasan"></div>
           </div>
         </div>
       </div>
@@ -136,7 +154,7 @@
             <div id="pesan-r2-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-xl-12">
           <div class="form-group" id="form-batas-r2-editpenugasan">
             <label class="control-label">Batas akhir penugasan</label><br>
             <div class="input-group date form_datetime" data-date="<?= $date_r2 ?>">
@@ -153,7 +171,7 @@
             <div id="pesan-batas-r2-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3 col-xl-12">
           <div class="form-group" id="form-durasi-r2-editpenugasan">
             <label class="control-label">Waktu pengerjaan</label><br>
             <div class="input-group">
@@ -166,6 +184,15 @@
             </div>
             <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
             <div id="pesan-durasi-r2-editpenugasan"></div>
+          </div>
+        </div>
+        <div class="col-md-3 col-xl-12">
+          <div class="form-group" id="form-kkm-r2-editpenugasan">
+            <label class="control-label">KKM</label><br>
+            <div class="input-group">
+              <input type="text" class="form-control text-right" id="kkm-r2-editpenugasan" name="kkm-r2-editpenugasan" value="<?= $penugasan['kkm_r2'] ?>">
+            </div>
+            <div id="pesan-kkm-r2-editpenugasan"></div>
           </div>
         </div>
       </div>
