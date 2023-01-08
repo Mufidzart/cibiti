@@ -56,7 +56,8 @@ switch ($_GET['action']) {
         }
         $jumlah_benar = sizeof($jawaban_benar);
         $nilai = ($jumlah_benar / $jumlah_soal) * 100;
-        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_penugasan, jawaban_benar, nilai) VALUES('$id_penugasan','$jumlah_benar','$nilai')");
+        $nis = $_SESSION['username'];
+        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_awal) VALUES('$nis','$id_penugasan','$nilai')");
       }
       if (empty($dataprosesujian['selesai_ujian'])) {
         $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
@@ -152,7 +153,7 @@ switch ($_GET['action']) {
     } else {
       $datanilai = mysqli_fetch_assoc($getnilai);
       $id_nilai = $datanilai['id'];
-      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai='$nilai', jawaban_benar=$jumlah_benar WHERE id=$id_nilai");
+      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai_awal='$nilai' WHERE id=$id_nilai");
     }
     break;
 }

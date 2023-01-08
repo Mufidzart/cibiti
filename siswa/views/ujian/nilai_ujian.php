@@ -33,10 +33,9 @@
       <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['kode-tugas'] ?>">
         <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
         <span class="d-flex flex-column align-items-start ms-2">
-          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai'] ?></b></span>
+          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_awal'] ?></b></span>
         </span>
       </a>
-      <br> Jawaban Benar: <b class="text-primary"><?= $datanewnilai['jawaban_benar']  ?></b>
       <br>Penugasan
       <br> <b class="text-primary"><?= $datanewnilai['judul']  ?></b>
       <br>Anda mengerjakan soal pada

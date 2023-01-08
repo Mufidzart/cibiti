@@ -120,7 +120,7 @@
               );
               $datanilai = mysqli_fetch_assoc($getnilai); ?>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai'] ?></strong>
+                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></strong>
               <?php endif; ?>
             </div>
             <!--begin::Buttons-->
@@ -173,10 +173,9 @@
                 <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
                   <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
                   <span class="d-flex flex-column align-items-start ms-2">
-                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai'] ?></b></span>
+                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></b></span>
                   </span>
                 </a>
-                <br> Jawaban Benar: <b class="text-primary"><?= $datanilai['jawaban_benar']  ?></b>
                 <br>Penugasan
                 <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
                 <br>Anda mengerjakan soal pada

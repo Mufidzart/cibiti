@@ -52,8 +52,24 @@
           } else {
             $color = "primary";
           }
-        } ?>
-        <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">
+        }
+
+        $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_penugasan=$id_penugasan");
+        $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
+        if (empty($dataprosesujian['selesai_ujian'])) {
+          $durasi = $penugasan['durasi_menit_tugas_awal'];
+          $mulai_ujian = $dataprosesujian['mulai_ujian'];
+          $jam_mulai = new DateTime($mulai_ujian);
+          $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
+          $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
+          if ($jam_sekarang <= $jam_berakhir) {
+            $color = "info";
+            $badge = "<span class='badge badge-light-info fs-7 ms-2'>Sedang dikerjakan</span>";
+          }
+        }
+
+        ?>
+        <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-900px text-start" data-kt-element="message-text">
           <h3><?= $penugasan['judul'] ?></h3>
           <p><?= $penugasan['deskripsi'] ?></p>
           <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-<?= $color ?> btn-active-light-<?= $color ?> px-6" data-kode="<?= $penugasan['tugas_awal'] ?>">
