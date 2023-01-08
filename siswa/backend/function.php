@@ -59,9 +59,14 @@ switch ($_GET['action']) {
         $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_penugasan, jawaban_benar, nilai) VALUES('$id_penugasan','$jumlah_benar','$nilai')");
       }
       if (empty($dataprosesujian['selesai_ujian'])) {
-        $datenow = date("Y-m-d H:i:s");
-        $query = $conn->query("UPDATE arf_proses_ujian SET selesai_ujian='$datenow' WHERE id=$id_proses");
-        $dataprosesujian['selesai_ujian'] = $datenow;
+        $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+        $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+        $durasi = $datapenugasan['durasi_menit_tugas_awal'];
+        $mulai_ujian = $dataprosesujian['mulai_ujian'];
+        $jam_mulai = new DateTime($mulai_ujian);
+        $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
+        $selesai_ujian = $jam_berakhir->format('Y-m-d H:i:s');
+        $query = $conn->query("UPDATE arf_proses_ujian SET selesai_ujian='$selesai_ujian' WHERE id=$id_proses");
       }
       $getnewnilai = $conn->query(
         "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp

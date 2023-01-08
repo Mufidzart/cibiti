@@ -114,7 +114,7 @@
             <div class="mb-9">Anda mendapatkan nilai <br>
               <?php
               $getnilai = $conn->query(
-                "SELECT anp.*,ahp.judul,ahp.kode_tugas FROM arf_nilai_penugasan anp
+                "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
                 JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
                 WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
               );
@@ -239,7 +239,7 @@
       });
 
       $('#lihat-jawaban').on('click', function() {
-        location.reload(true);
+        // location.reload(true);
       });
 
     });
