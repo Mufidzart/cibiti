@@ -33,53 +33,82 @@
         </div>
         <!--end::User-->
         <!--begin::Text-->
-        <?php
-        $id_penugasan = $penugasan['id'];
-        $getnewnilai = $conn->query(
-          "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
-            JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
-            WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
-        );
-        $badge = "";
-        if ($getnewnilai->num_rows !== 0) {
-          $color = "success";
-          $badge = "<span class='badge badge-light-success fs-7 ms-2'>Sudah dikerjakan</span>";
-        } else {
-          $batas = new DateTime(date("Y-m-d", strtotime($penugasan['batas_tugas_awal'])));
-          if ($today > $batas) {
-            $color = "danger";
-            $badge = "<span class='badge badge-light-danger fs-7 ms-2'>Terlewat</span>";
-          } else {
-            $color = "primary";
-          }
-        }
-
-        $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_penugasan=$id_penugasan");
-        $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
-        if (empty($dataprosesujian['selesai_ujian'])) {
-          $durasi = $penugasan['durasi_menit_tugas_awal'];
-          $mulai_ujian = $dataprosesujian['mulai_ujian'];
-          $jam_mulai = new DateTime($mulai_ujian);
-          $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
-          $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
-          if ($jam_sekarang <= $jam_berakhir) {
-            $color = "info";
-            $badge = "<span class='badge badge-light-info fs-7 ms-2'>Sedang dikerjakan</span>";
-          }
-        }
-
-        ?>
-        <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-900px text-start" data-kt-element="message-text">
+        <div class="p-5 rounded bg-light-info text-dark fw-bold text-start" data-kt-element="message-text">
           <h3><?= $penugasan['judul'] ?></h3>
           <p><?= $penugasan['deskripsi'] ?></p>
-          <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-<?= $color ?> btn-active-light-<?= $color ?> px-6" data-kode="<?= $penugasan['tugas_awal'] ?>">
-            <span class=""><i class="bi bi-file-earmark-richtext-fill text-<?= $color ?> fs-1"></i></span>
-            <span class="d-flex flex-column align-items-start ms-2">
-              <span class="fs-3 fw-bolder"><?= $penugasan['tugas_awal'] ?></span>
-              <span class="fs-7">klik untuk mengerjakan</span>
-            </span>
-          </a>
-          <?= $badge ?>
+          <div class="row">
+            <div class="col-md-12 my-2">
+              <?php
+              $id_penugasan = $penugasan['id'];
+              $getnewnilai = $conn->query(
+                "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
+                JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
+                WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
+              );
+              $badge = "";
+              if ($getnewnilai->num_rows !== 0) {
+                $badge = "<span class='badge badge-light-success fs-7 my-3'>Sudah dikerjakan</span>";
+              } else {
+                $batas = new DateTime(date("Y-m-d", strtotime($penugasan['batas_tugas_awal'])));
+                if ($today > $batas) {
+                  $badge = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
+                }
+              }
+              $datannilai = mysqli_fetch_assoc($getnewnilai);
+              // var_dump($datannilai);
+              $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_penugasan=$id_penugasan");
+              $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
+              if (empty($dataprosesujian['selesai_ujian'])) {
+                $durasi = $penugasan['durasi_menit_tugas_awal'];
+                $mulai_ujian = $dataprosesujian['mulai_ujian'];
+                $jam_mulai = new DateTime($mulai_ujian);
+                $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
+                $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
+                if ($jam_sekarang <= $jam_berakhir) {
+                  $badge = "<span class='badge badge-light-info fs-7 my-3'>Sedang dikerjakan</span>";
+                }
+              }
+
+              ?>
+              <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-success btn-active-light-success px-6" data-kode="<?= $penugasan['tugas_awal'] ?>">
+                <span class=""><i class="bi bi-file-earmark-richtext-fill text-success fs-1"></i></span>
+                <span class="d-flex flex-column align-items-start ms-2">
+                  <span class="fs-3 fw-bolder">Tugas: <?= $penugasan['tugas_awal'] ?></span>
+                  <span class="fs-7">klik untuk mengerjakan</span>
+                </span>
+              </a>
+              <?= $badge ?>
+              <?php if ($datannilai['nilai_awal'] < $penugasan['kkm_tugas_awal']) : ?>
+                <span class='badge badge-light-warning fs-7'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 1.</span>
+              <?php endif; ?>
+            </div>
+            <?php if ($datannilai['nilai_awal'] < $penugasan['kkm_tugas_awal']) : ?>
+              <div class="col-md-12 my-2">
+                <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-info btn-active-light-info px-6" data-kode="<?= $penugasan['r1'] ?>">
+                  <span class=""><i class="bi bi-file-earmark-richtext-fill text-warning fs-1"></i></span>
+                  <span class="d-flex flex-column align-items-start ms-2">
+                    <span class="fs-3 fw-bolder">Remidi 1: <?= $penugasan['r1'] ?></span>
+                    <span class="fs-7">klik untuk mengerjakan</span>
+                  </span>
+                </a>
+                <span class='badge badge-light-warning fs-7 my-5'>Sedang dikerjakan</span>
+              </div>
+            <?php endif; ?>
+            <?php if (!empty($datannilai['nilai_r1'])) : ?>
+              <?php if ($datannilai['nilai_r1'] < $penugasan['kkm_r1']) : ?>
+                <div class="col-md-12 my-2">
+                  <a href="ujian.php?tgs=<?= $penugasan['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning px-6" data-kode="<?= $penugasan['r2'] ?>">
+                    <span class=""><i class="bi bi-file-earmark-richtext-fill text-warning fs-1"></i></span>
+                    <span class="d-flex flex-column align-items-start ms-2">
+                      <span class="fs-3 fw-bolder">Remidi 2: <?= $penugasan['r2'] ?></span>
+                      <span class="fs-7">klik untuk mengerjakan</span>
+                    </span>
+                  </a>
+                  <span class='badge badge-light-warning fs-7 my-5'>Sedang dikerjakan</span>
+                </div>
+              <?php endif; ?>
+            <?php endif; ?>
+          </div>
         </div>
         <!--end::Text-->
       </div>
