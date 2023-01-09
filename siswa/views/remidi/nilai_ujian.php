@@ -33,11 +33,20 @@
       <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['kode-tugas'] ?>">
         <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
         <span class="d-flex flex-column align-items-start ms-2">
-          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_awal'] ?></b></span>
+          <?php
+          if ($jenis_ujian == "r1") {
+            $title = "Remidi 1";
+            $nilai = $datanewnilai['nilai_r1'];
+          } elseif ($jenis_ujian == "r2") {
+            $title = "Remidi 2";
+            $nilai = $datanewnilai['nilai_r2'];
+          }
+          ?>
+          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $nilai ?></b></span>
         </span>
       </a>
       <br>Penugasan
-      <br> <b class="text-primary"><?= $datanewnilai['judul']  ?></b>
+      <br> <b class="text-primary"><?= $title ?></b>
       <br>Anda mengerjakan soal pada
       <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
     </p>

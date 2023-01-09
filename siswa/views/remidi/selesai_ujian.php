@@ -10,7 +10,7 @@
         </p>
       </div>
       <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
       if ($getsoal->num_rows == 0) : ?>
         <!--begin::Notice-->
         <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
@@ -56,7 +56,7 @@
               $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
               if ($getkunci->num_rows !== 0) : ?>
                 <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
                   if ($kunci['kunci'] == 1) {
                     // var_dump($kunci['jawaban']);
                   }
@@ -109,18 +109,23 @@
           <!--end::Icon-->
           <!--begin::Content-->
           <div class="text-center text-dark">
-            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
+            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $title ?></h1>
             <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
             <div class="mb-9">Anda mendapatkan nilai <br>
               <?php
               $getnilai = $conn->query(
-                "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
+                "SELECT anp.*,ahp.judul,ahp.$jenis_ujian FROM arf_nilai_penugasan anp
                 JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
                 WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
               );
-              $datanilai = mysqli_fetch_assoc($getnilai); ?>
+              $datanilai = mysqli_fetch_assoc($getnilai);
+              if ($jenis_ujian == "r1") {
+                $nilai = $datanilai['nilai_r1'];
+              } elseif ($jenis_ujian == "r2") {
+                $nilai = $datanilai['nilai_r2'];
+              } ?>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></strong>
+                <br> <strong class="text-primary fs-1"><?= $nilai ?></strong>
               <?php endif; ?>
             </div>
             <!--begin::Buttons-->
@@ -165,19 +170,19 @@
         <div class="modal-body py-10 px-lg-17" id="show_nilai">
           <div class="card-px text-center">
             <!--begin::Title-->
-            <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan!</h2>
+            <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan <?= $title ?>!</h2>
             <!--end::Title-->
             <!--begin::Description-->
             <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
+                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $kode_tugas ?>">
                   <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
                   <span class="d-flex flex-column align-items-start ms-2">
-                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></b></span>
+                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $nilai ?></b></span>
                   </span>
                 </a>
                 <br>Penugasan
-                <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
+                <br> <b class="text-primary"><?= $title  ?></b>
                 <br>Anda mengerjakan soal pada
                 <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
               <?php endif; ?>
@@ -206,13 +211,15 @@
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
     var kode_tugas = "<?= $kode_tugas ?>";
+    var jenis_ujian = "<?= $jenis_ujian ?>";
     $.ajax({
-      url: 'backend/function.php?action=get_data&get=nilai_ujian',
+      url: 'backend/function.php?action=get_data&get=nilai_ujian_remidi',
       type: 'post',
       data: {
         id_penugasan: id_penugasan,
         id_proses: id_proses,
-        kode_tugas: kode_tugas
+        kode_tugas: kode_tugas,
+        jenis_ujian: jenis_ujian
       },
       success: function(data) {
         $('#show_nilai').html(data);
@@ -231,10 +238,6 @@
       $('#modal-nilai').modal({
         backdrop: 'static',
         keyboard: false
-      });
-
-      $('#lihat-jawaban').on('click', function() {
-        // location.reload(true);
       });
 
     });

@@ -233,10 +233,6 @@
         keyboard: false
       });
 
-      $('#lihat-jawaban').on('click', function() {
-        // location.reload(true);
-      });
-
     });
   </script>
 <?php else : ?>
