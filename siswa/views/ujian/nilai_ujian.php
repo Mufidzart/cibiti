@@ -40,10 +40,6 @@
       <br> <b class="text-primary"><?= $datanewnilai['judul']  ?></b>
       <br>Anda mengerjakan soal pada
       <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
-      <?php if (!empty($dataprosesujian['selesai_ujian'])) { ?>
-        <br>Sampai
-        <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['selesai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['selesai_ujian'])) ?> WIB</b>
-      <?php } ?>
     </p>
     <!--end::Description-->
   </div>

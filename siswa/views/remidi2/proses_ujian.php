@@ -175,7 +175,7 @@
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
     var kode_tugas = "<?= $kode_tugas ?>";
-    var jenis_ujian = "r1";
+    var jenis_ujian = "r2";
     $.ajax({
       url: 'backend/function.php?action=get_data&get=nilai_ujian',
       type: 'post',

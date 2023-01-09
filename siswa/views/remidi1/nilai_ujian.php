@@ -26,24 +26,20 @@
   </div>
   <div id="penilaian" style="display: none;">
     <!--begin::Title-->
-    <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan!</h2>
+    <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan remidi 1!</h2>
     <!--end::Title-->
     <!--begin::Description-->
     <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
-      <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['kode-tugas'] ?>">
+      <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['r1'] ?>">
         <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
         <span class="d-flex flex-column align-items-start ms-2">
-          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_awal'] ?></b></span>
+          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_r1'] ?></b></span>
         </span>
       </a>
       <br>Penugasan
       <br> <b class="text-primary"><?= $datanewnilai['judul']  ?></b>
       <br>Anda mengerjakan soal pada
       <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
-      <?php if (!empty($dataprosesujian['selesai_ujian'])) { ?>
-        <br>Sampai
-        <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['selesai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['selesai_ujian'])) ?> WIB</b>
-      <?php } ?>
     </p>
     <!--end::Description-->
   </div>

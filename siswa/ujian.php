@@ -75,6 +75,7 @@ $datapenugasan = mysqli_fetch_assoc($getpenugasan);
             require('views/remidi1/selesai_ujian.php');
           }
         } else {
+          // var_dump("sjdkgfdrugvhjdbgjdhfbghfgjhbdf hfdbgj dfbgjhfbgjh dfg dfjb");
           require('views/remidi1/selesai_ujian.php');
         }
       }

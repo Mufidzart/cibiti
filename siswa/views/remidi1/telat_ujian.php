@@ -14,14 +14,14 @@
             <span class="fs-3 fw-bolder"><?= $datatugas['kode_tugas'] ?></span>
           </span>
         </a>
-        <?php if ($datapenugasan['durasi_menit'] == 0) : ?>
+        <?php if ($datapenugasan['durasi_menit_r1'] == 0) : ?>
           <br>Kerjakan sebelum
         <?php else : ?>
           <br>Batas waktu mengerjakan adalah
-          <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit'] ?> menit</b>
+          <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit_r1'] ?> menit</b>
           <br>Tugas berakhir pada
         <?php endif; ?>
-        <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['waktu_selesai']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['waktu_selesai'])) ?> WIB</b>
+        <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['batas_r1']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['batas_r1'])) ?> WIB</b>
       </p>
       <!--end::Description-->
     </div>

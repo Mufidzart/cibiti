@@ -120,7 +120,7 @@
               );
               $datanilai = mysqli_fetch_assoc($getnilai); ?>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></strong>
+                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_r2'] ?></strong>
               <?php endif; ?>
             </div>
             <!--begin::Buttons-->
@@ -170,20 +170,16 @@
             <!--begin::Description-->
             <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
+                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['r2'] ?>">
                   <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
                   <span class="d-flex flex-column align-items-start ms-2">
-                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></b></span>
+                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_r2'] ?></b></span>
                   </span>
                 </a>
                 <br>Penugasan
                 <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
                 <br>Anda mengerjakan soal pada
                 <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
-                <?php if (!empty($dataprosesujian['selesai_ujian'])) { ?>
-                  <br>Sampai
-                  <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['selesai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['selesai_ujian'])) ?> WIB</b>
-                <?php } ?>
               <?php endif; ?>
             </p>
             <!--end::Description-->
@@ -210,10 +206,12 @@
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
     var kode_tugas = "<?= $kode_tugas ?>";
+    var jenis_ujian = "r2";
     $.ajax({
       url: 'backend/function.php?action=get_data&get=nilai_ujian',
       type: 'post',
       data: {
+        jenis_ujian: jenis_ujian,
         id_penugasan: id_penugasan,
         id_proses: id_proses,
         kode_tugas: kode_tugas
