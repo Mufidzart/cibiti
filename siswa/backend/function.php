@@ -86,32 +86,33 @@ switch ($_GET['action']) {
       );
       $datanilai = mysqli_fetch_assoc($getnilai);
       $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
-      // UPDATE NILAI
-      $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-      $getalljawaban = $conn->query(
-        "SELECT * FROM arf_jawaban_siswa 
+      if ($getnilai->num_rows == 0) {
+        // UPDATE NILAI
+        $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+        $getalljawaban = $conn->query(
+          "SELECT * FROM arf_jawaban_siswa 
             WHERE id_siswa='$nis' 
             AND id_penugasan=$id_penugasan
             AND jenis_ujian='$jenis_ujian'
             AND kode_tugas='$kode_tugas'
             AND tgl_hapus IS NULL"
-      );
-      $id_nilai = $datanilai['id'];
-      $jumlah_soal =  $getsoal->num_rows;
-      $jawaban_benar = [];
-      while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
-        $id_soal_jawaban = $jawaban['id_soal'];
-        $getkunci =  $conn->query("SELECT * FROM arf_kunci_soal WHERE id_soal=$id_soal_jawaban AND tgl_hapus IS NULL");
-        while ($kunci = mysqli_fetch_assoc($getkunci)) {
-          if ($kunci['kunci'] == 1) {
-            if ($kunci['jawaban'] == $jawaban['jawaban']) {
-              array_push($jawaban_benar, $jawaban['jawaban']);
+        );
+        $jumlah_soal =  $getsoal->num_rows;
+        $jawaban_benar = [];
+        while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
+          $id_soal_jawaban = $jawaban['id_soal'];
+          $getkunci =  $conn->query("SELECT * FROM arf_kunci_soal WHERE id_soal=$id_soal_jawaban AND tgl_hapus IS NULL");
+          while ($kunci = mysqli_fetch_assoc($getkunci)) {
+            if ($kunci['kunci'] == 1) {
+              if ($kunci['jawaban'] == $jawaban['jawaban']) {
+                array_push($jawaban_benar, $jawaban['jawaban']);
+              }
             }
           }
         }
         $jumlah_benar = sizeof($jawaban_benar);
         $nilai = ($jumlah_benar / $jumlah_soal) * 100;
-        $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai_$jenis_ujian='$nilai' WHERE id=$id_nilai");
+        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_$jenis_ujian) VALUES('$nis', '$id_penugasan','$nilai')");
       }
       if (empty($dataprosesujian['selesai_ujian'])) {
         $datenow = date("Y-m-d H:i:s");
