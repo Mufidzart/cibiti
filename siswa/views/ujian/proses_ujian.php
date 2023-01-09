@@ -10,7 +10,7 @@
         </p>
       </div>
       <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
       if ($getsoal->num_rows == 0) : ?>
         <!--begin::Notice-->
         <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
@@ -56,7 +56,7 @@
               $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
               if ($getkunci->num_rows !== 0) : ?>
                 <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
                   if ($kunci['kunci'] == 1) {
                     // var_dump($kunci['jawaban']);
                   }
@@ -75,7 +75,7 @@
                     $selected = "";
                   } ?>
                   <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?>>
+                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $tugas_awal ?>" data-id-soal="<?= $id_soal ?>" data-id-jawaban="<?= $kunci['id'] ?>" <?= $selected ?>>
                     <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
                   </div>
                 <?php endwhile; ?>
@@ -174,13 +174,11 @@
   function timeout() {
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
-    var kode_tugas = "<?= $kode_tugas ?>";
-    var jenis_ujian = "r1";
+    var kode_tugas = "<?= $tugas_awal ?>";
     $.ajax({
-      url: 'backend/function.php?action=get_data&get=nilai_ujian',
+      url: 'backend/function.php?action=get_data&get=nilai_ujian_awal',
       type: 'post',
       data: {
-        jenis_ujian: jenis_ujian,
         id_penugasan: id_penugasan,
         id_proses: id_proses,
         kode_tugas: kode_tugas
@@ -259,22 +257,20 @@
   $(document).ready(function() {
     timer();
     $('.radio_jawaban').on('click', function() {
-      var jenis_ujian = "tugas_awal";
       var jawaban = $(this).val();
       var id_penugasan = $(this).attr('data-id-penugasan');
       var kode_tugas = $(this).attr('data-kode');
       var id_soal = $(this).attr('data-id-soal');
-      var id_kunci = $(this).attr('data-id-kunci');
+      var id_jawaban = $(this).attr('data-id-jawaban');
       $.ajax({
-        url: 'backend/function.php?action=push_jawaban',
+        url: 'backend/function.php?action=push_jawaban_awal',
         type: 'post',
         data: {
-          jenis_ujian: jenis_ujian,
           jawaban: jawaban,
           id_penugasan: id_penugasan,
           kode_tugas: kode_tugas,
           id_soal: id_soal,
-          id_kunci: id_kunci
+          id_jawaban: id_jawaban
         },
         success: function(data) {}
       });

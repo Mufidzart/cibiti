@@ -10,7 +10,7 @@
         </p>
       </div>
       <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
       if ($getsoal->num_rows == 0) : ?>
         <!--begin::Notice-->
         <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
@@ -56,17 +56,20 @@
               $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
               if ($getkunci->num_rows !== 0) : ?>
                 <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
                   if ($kunci['kunci'] == 1) {
                     // var_dump($kunci['jawaban']);
                   }
+                  $background = "bg-secondary";
                   if ($getjawaban->num_rows !== 0) {
                     $datajawaban = mysqli_fetch_assoc($getjawaban);
                     if ($datajawaban['id_jawaban'] == $kunci['id']) {
                       if ($kunci['kunci'] == 1) {
                         $selected = "checked";
+                        $background = "bg-success";
                       } else {
                         $selected = "checked";
+                        $background = "bg-danger";
                       }
                     } else {
                       $selected = "";
@@ -75,7 +78,7 @@
                     $selected = "";
                   } ?>
                   <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?>>
+                    <input class="form-check-input radio_jawaban <?= $background ?>" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?> disabled>
                     <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
                   </div>
                 <?php endwhile; ?>
@@ -106,17 +109,24 @@
           <!--end::Icon-->
           <!--begin::Content-->
           <div class="text-center text-dark">
-            <h1 class="fw-bolder mb-5">Sudah selesai mengerjakan?</h1>
+            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
             <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
-            <div class="mb-9">Pastikan anda telah mengisi semua jawaban sebelum menyelesaikan tugas ini
-              <br>Setelah anda klik tombol <strong class="text-primary">Submit</strong>
-              <br>Nilai akan tampil
-              <br><strong class="text-warning">Anda tidak dapat merubah jawaban Anda</strong>.
+            <div class="mb-9">Anda mendapatkan nilai <br>
+              <?php
+              $getnilai = $conn->query(
+                "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
+                JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
+                WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
+              );
+              $datanilai = mysqli_fetch_assoc($getnilai); ?>
+              <?php if ($getnilai->num_rows !== 0) : ?>
+                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></strong>
+              <?php endif; ?>
             </div>
             <!--begin::Buttons-->
             <div class="d-flex flex-center flex-wrap">
-              <a href="javascript:;" data-kt-scrolltop="true" class="btn btn-outline btn-outline-primary btn-active-primary m-2">Cek Jawaban</a>
-              <button class="btn btn-primary m-2" id="selesai">Submit</button>
+              <button class="btn btn-outline btn-outline-primary btn-active-primary m-2" data-kt-scrolltop="true">Cek Jawaban</button>
+              <button class="btn btn-primary m-2" id="lihat-nilai" data-bs-toggle="modal" data-bs-target="#modal-nilai">Lihat Detail Nilai</button>
             </div>
             <!--end::Buttons-->
           </div>
@@ -132,7 +142,7 @@
 <!--begin::Exolore drawer toggle-->
 <button id="timer" class="btn btn-sm bg-success btn-color-gray-700 btn-active-primary shadow-sm position-fixed px-5 fw-bolder zindex-2 mt-10 end-0 text-white" title="Jawaban tersimpan otomatis" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-trigger="hover" style="top: 20%;">
   <span class="fs-6">Sisa Waktu</span><br>
-  <span class="fs-1" id="waktu"></span>
+  <span class="fs-1" id="waktu">00:00:00</span>
 </button>
 <!--end::Exolore drawer toggle-->
 
@@ -153,6 +163,27 @@
         <!--end::Modal header-->
         <!--begin::Modal body-->
         <div class="modal-body py-10 px-lg-17" id="show_nilai">
+          <div class="card-px text-center">
+            <!--begin::Title-->
+            <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan!</h2>
+            <!--end::Title-->
+            <!--begin::Description-->
+            <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
+              <?php if ($getnilai->num_rows !== 0) : ?>
+                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
+                  <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
+                  <span class="d-flex flex-column align-items-start ms-2">
+                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></b></span>
+                  </span>
+                </a>
+                <br>Penugasan
+                <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
+                <br>Anda mengerjakan soal pada
+                <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
+              <?php endif; ?>
+            </p>
+            <!--end::Description-->
+          </div>
         </div>
         <!--end::Modal body-->
         <!--begin::Modal footer-->
@@ -175,12 +206,10 @@
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
     var kode_tugas = "<?= $kode_tugas ?>";
-    var jenis_ujian = "r2";
     $.ajax({
       url: 'backend/function.php?action=get_data&get=nilai_ujian',
       type: 'post',
       data: {
-        jenis_ujian: jenis_ujian,
         id_penugasan: id_penugasan,
         id_proses: id_proses,
         kode_tugas: kode_tugas
@@ -188,123 +217,32 @@
       success: function(data) {
         $('#show_nilai').html(data);
         $('#modal-nilai').modal('show');
-        $('#spinner').css("display", "block");
-        setTimeout(function() {
-          $('#spinner').css("display", "none");
-          $('#penilaian').css("display", "block");
-        }, 3000);
+        $('#spinner').css("display", "none");
+        $('#penilaian').css("display", "block");
       }
     });
   }
-
-  function timer() {
-    // Set the date we're counting down to
-    var countDownDate = new Date("<?= $jam_berakhir->format("D M d Y H:i:s O") ?>").getTime();
-    // Update the count down every 1 second
-
-    var x = setInterval(function() {
-
-      // Get today's date and time
-      var now = new Date().getTime();
-
-      // Find the distance between now and the count down date
-      var distance = countDownDate - now;
-
-      // Time calculations for days, hours, minutes and seconds
-      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      // Display the result in the element with id="timer"
-      hours = "" + hours;
-      minutes = "" + minutes;
-      seconds = "" + seconds;
-      var timerText = '';
-      if (hours.length == 1) {
-        timerText += "0" + hours + ":";
-      } else {
-        timerText += hours + ":";
-      }
-      if (minutes.length == 1) {
-        timerText += "0" + minutes + ":";
-      } else {
-        timerText += minutes + ":";
-      }
-      if (seconds.length == 1) {
-        timerText += "0" + seconds;
-      } else {
-        timerText += seconds;
-      }
-      document.getElementById("waktu").innerHTML = timerText;
-
-      // If the count down is finished, write some text
-      if (distance <= 0) {
-        clearInterval(x);
-        document.getElementById("waktu").innerHTML = "00:00:00";
-      }
-      if (distance <= 600000 && distance >= 1000) {
-        $("#timer").removeClass("bg-body");
-        $("#timer").addClass("bg-danger");
-      } else if (distance <= 0) {
-        clearInterval(x);
-        $("input[type=radio]").attr('disabled', true);
-        timeout();
-        $("#info-ujian").html("");
-        $("#judul_selesai").html("Waktu telah selesai");
-        //doSomething();
-      }
-    }, 1000);
-  }
-  $(document).ready(function() {
-    timer();
-    $('.radio_jawaban').on('click', function() {
-      var jenis_ujian = "r2";
-      var jawaban = $(this).val();
-      var id_penugasan = $(this).attr('data-id-penugasan');
-      var kode_tugas = $(this).attr('data-kode');
-      var id_soal = $(this).attr('data-id-soal');
-      var id_kunci = $(this).attr('data-id-kunci');
-      $.ajax({
-        url: 'backend/function.php?action=push_jawaban',
-        type: 'post',
-        data: {
-          jenis_ujian: jenis_ujian,
-          jawaban: jawaban,
-          id_penugasan: id_penugasan,
-          kode_tugas: kode_tugas,
-          id_soal: id_soal,
-          id_kunci: id_kunci
-        },
-        success: function(data) {}
-      });
-    });
-
-    $('#modal-nilai').modal({
-      backdrop: 'static',
-      keyboard: false
-    })
-    $('#lihat-jawaban').on('click', function() {
-      location.reload(true);
-    });
-
-    $('#selesai').on('click', function() {
-      Swal.fire({
-        html: `Apakah Anda telah menyelesaikan tugas ini?`,
-        icon: "question",
-        buttonsStyling: false,
-        showCancelButton: true,
-        confirmButtonText: "Selesai",
-        cancelButtonText: 'Batal',
-        customClass: {
-          confirmButton: "btn btn-primary",
-          cancelButton: 'btn btn-danger'
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          timeout();
-        }
-      });
-    });
-  });
 </script>
+<?php if ($getnilai->num_rows == 0) : ?>
+  <script>
+    $(document).ready(function() {
+      timeout();
+
+      $('#modal-nilai').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+
+      $('#lihat-jawaban').on('click', function() {
+        // location.reload(true);
+      });
+
+    });
+  </script>
+<?php else : ?>
+  <script>
+    $(document).ready(function() {
+      $('#modal-nilai').modal('show');
+    });
+  </script>
+<?php endif; ?>

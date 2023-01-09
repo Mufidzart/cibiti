@@ -10,7 +10,7 @@
         </p>
       </div>
       <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
+      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
       if ($getsoal->num_rows == 0) : ?>
         <!--begin::Notice-->
         <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
@@ -56,7 +56,7 @@
               $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
               if ($getkunci->num_rows !== 0) : ?>
                 <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
                   if ($kunci['kunci'] == 1) {
                     // var_dump($kunci['jawaban']);
                   }

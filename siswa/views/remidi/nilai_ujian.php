@@ -26,14 +26,14 @@
   </div>
   <div id="penilaian" style="display: none;">
     <!--begin::Title-->
-    <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan Remidi 2!</h2>
+    <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan!</h2>
     <!--end::Title-->
     <!--begin::Description-->
     <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
-      <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['r2'] ?>">
+      <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['kode-tugas'] ?>">
         <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
         <span class="d-flex flex-column align-items-start ms-2">
-          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_r2'] ?></b></span>
+          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_awal'] ?></b></span>
         </span>
       </a>
       <br>Penugasan

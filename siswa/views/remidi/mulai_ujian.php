@@ -4,24 +4,24 @@
       <!--begin::Wrapper-->
       <div class="card-px text-center py-20 my-10">
         <!--begin::Title-->
-        <h2 class="fs-2x fw-bolder mb-10">Mulai Mengerjakan Remidi 1!</h2>
+        <h2 class="fs-2x fw-bolder mb-10">Mulai Mengerjakan <?= $title ?>!</h2>
         <!--end::Title-->
         <!--begin::Description-->
         <p class="text-gray-400 fs-4 fw-bold mb-10">Pastikan Kode Soal sudah sesuai<br>
-          <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $penugasan['kode_tugas'] ?>">
+          <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $kode_tugas ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span>
             <span class="d-flex flex-column align-items-start ms-2">
-              <span class="fs-3 fw-bolder"><?= $datatugas['kode_tugas'] ?></span>
+              <span class="fs-3 fw-bolder"><?= $kode_tugas ?></span>
             </span>
           </a>
-          <?php if ($datapenugasan['durasi_menit_r1'] == 0) : ?>
+          <?php if ($durasi == 0) : ?>
             <br>Kerjakan sebelum
           <?php else : ?>
             <br>Batas waktu mengerjakan adalah
-            <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit_r1'] ?> menit</b>
+            <br> <b class="text-primary fs-1"><?= $durasi ?> menit</b>
             <br>Tugas akan berakhir pada
           <?php endif; ?>
-          <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['batas_r1']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['batas_r1'])) ?> WIB</b>
+          <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($batas))) ?> pukul <?= date("H:i", strtotime($batas)) ?> WIB</b>
         </p>
         <!--end::Description-->
         <!--begin::Action-->
@@ -41,9 +41,9 @@
     $(document).ready(function() {
       $('#mulai_ujian').on('click', function(event) {
         var id_penugasan = $(this).attr("data-penugasan");
-        var jenis_ujian = "r1";
+        var jenis_ujian = '<?= $_GET['act'] ?>';
         $.ajax({
-          url: 'backend/function.php?action=mulai_ujian',
+          url: 'backend/function.php?action=mulai_ujian_remidi',
           type: 'post',
           data: {
             id_penugasan: id_penugasan,

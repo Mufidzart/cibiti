@@ -8,10 +8,10 @@
         <!--end::Title-->
         <!--begin::Description-->
         <p class="text-gray-400 fs-4 fw-bold mb-10">Pastikan Kode Soal sudah sesuai<br>
-          <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $penugasan['kode_tugas'] ?>">
+          <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $tugas_awal ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span>
             <span class="d-flex flex-column align-items-start ms-2">
-              <span class="fs-3 fw-bolder"><?= $datatugas['kode_tugas'] ?></span>
+              <span class="fs-3 fw-bolder"><?= $tugas_awal ?></span>
             </span>
           </a>
           <?php if ($datapenugasan['durasi_menit_tugas_awal'] == 0) : ?>
@@ -41,13 +41,11 @@
     $(document).ready(function() {
       $('#mulai_ujian').on('click', function(event) {
         var id_penugasan = $(this).attr("data-penugasan");
-        var jenis_ujian = "tugas_awal";
         $.ajax({
-          url: 'backend/function.php?action=mulai_ujian',
+          url: 'backend/function.php?action=mulai_ujian_awal',
           type: 'post',
           data: {
             id_penugasan: id_penugasan,
-            jenis_ujian: jenis_ujian
           },
           success: function(data) {
             location.reload();
