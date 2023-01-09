@@ -4,7 +4,7 @@
       <!--begin::Wrapper-->
       <div class="card-px text-center py-20 my-10">
         <!--begin::Title-->
-        <h2 class="fs-2x fw-bolder mb-10">Mulai Mengerjakan!</h2>
+        <h2 class="fs-2x fw-bolder mb-10">Mulai Mengerjakan Remidi 1!</h2>
         <!--end::Title-->
         <!--begin::Description-->
         <p class="text-gray-400 fs-4 fw-bold mb-10">Pastikan Kode Soal sudah sesuai<br>
@@ -14,14 +14,14 @@
               <span class="fs-3 fw-bolder"><?= $datatugas['kode_tugas'] ?></span>
             </span>
           </a>
-          <?php if ($datapenugasan['durasi_menit_tugas_awal'] == 0) : ?>
+          <?php if ($datapenugasan['durasi_menit_r1'] == 0) : ?>
             <br>Kerjakan sebelum
           <?php else : ?>
             <br>Batas waktu mengerjakan adalah
-            <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit_tugas_awal'] ?> menit</b>
+            <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit_r1'] ?> menit</b>
             <br>Tugas akan berakhir pada
           <?php endif; ?>
-          <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['batas_tugas_awal']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['batas_tugas_awal'])) ?> WIB</b>
+          <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['batas_r1']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['batas_r1'])) ?> WIB</b>
         </p>
         <!--end::Description-->
         <!--begin::Action-->
@@ -41,7 +41,7 @@
     $(document).ready(function() {
       $('#mulai_ujian').on('click', function(event) {
         var id_penugasan = $(this).attr("data-penugasan");
-        var jenis_ujian = "tugas_awal";
+        var jenis_ujian = "r1";
         $.ajax({
           url: 'backend/function.php?action=mulai_ujian',
           type: 'post',

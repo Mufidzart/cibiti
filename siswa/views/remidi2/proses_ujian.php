@@ -259,7 +259,7 @@
   $(document).ready(function() {
     timer();
     $('.radio_jawaban').on('click', function() {
-      var jenis_ujian = "tugas_awal";
+      var jenis_ujian = "r2";
       var jawaban = $(this).val();
       var id_penugasan = $(this).attr('data-id-penugasan');
       var kode_tugas = $(this).attr('data-kode');
