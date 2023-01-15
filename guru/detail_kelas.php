@@ -302,15 +302,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-durasi-tugas-awal"></div>
                   </div>
                 </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-kkm-tugas-awal">
-                    <label class="control-label">KKM</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="kkm-tugas-awal" name="kkm-tugas-awal">
-                    </div>
-                    <div id="pesan-kkm-tugas-awal"></div>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="note note-warning" style="background-color: #fcf8e3;">
@@ -356,15 +347,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-durasi-r1"></div>
                   </div>
                 </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-kkm-r1">
-                    <label class="control-label">KKM</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="kkm-r1" name="kkm-r1">
-                    </div>
-                    <div id="pesan-kkm-r1"></div>
-                  </div>
-                </div>
               </div>
             </div>
             <div class="note note-warning" style="background-color: #fcf8e3;">
@@ -408,15 +390,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
                     <div id="pesan-durasi-r2"></div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-kkm-r2">
-                    <label class="control-label">KKM</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="kkm-r2" name="kkm-r2">
-                    </div>
-                    <div id="pesan-kkm-r2"></div>
                   </div>
                 </div>
               </div>

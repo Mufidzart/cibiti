@@ -40,6 +40,9 @@
             <div class="col-md-12 my-2">
               <?php
               $id_penugasan = $penugasan['id'];
+              $id_mapel = $penugasan['id_mapel'];
+              $getmapel = $conn->query("SELECT * FROM arf_mapel WHERE id=$id_mapel");
+              $datamapel = mysqli_fetch_assoc($getmapel);
               $getnewnilai = $conn->query(
                 "SELECT anp.*,ahp.judul,ahp.tugas_awal,ahp.r1,ahp.r2 FROM arf_nilai_penugasan anp
                 JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
@@ -59,7 +62,7 @@
                 } else {
                   $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
                 }
-                if ($nilai_awal < $penugasan['kkm_tugas_awal']) {
+                if ($nilai_awal < $datamapel['kb_pengetahuan']) {
                   $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 1.</span>";
                   $remidi_1 = true;
                 } else {
@@ -111,7 +114,7 @@
                 $remidi_2 = false;
                 if (isset($nilai_r1)) {
                   $status_ujian = "<span class='badge badge-light-info fs-7 my-3'>Sudah dikerjakan</span>";
-                  if ($nilai_r1 < $penugasan['kkm_r1']) {
+                  if ($nilai_r1 < $datamapel['kb_pengetahuan']) {
                     $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 2.</span>";
                     $remidi_2 = true;
                   } else {
@@ -168,7 +171,7 @@
                 $status_penilaian = "";
                 if (isset($nilai_r2)) {
                   $status_ujian = "<span class='badge badge-light-primary fs-7 my-3'>Sudah dikerjakan</span>";
-                  if ($nilai_r2 < $penugasan['kkm_r2']) {
+                  if ($nilai_r2 < $datamapel['kb_pengetahuan']) {
                     $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
                   } else {
                     $status_penilaian = "<span class='badge badge-light-primary fs-7 my-3'>Anda lulus di tugas ini.</span>";
