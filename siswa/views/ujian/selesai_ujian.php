@@ -9,86 +9,66 @@
           <?= $datapenugasan['deskripsi'] ?>
         </p>
       </div>
-      <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
-      if ($getsoal->num_rows == 0) : ?>
-        <!--begin::Notice-->
-        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
-          <!--begin::Icon-->
-          <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-          <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
-              <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black" />
-              <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black" />
-            </svg>
-          </span>
-          <!--end::Svg Icon-->
-          <!--end::Icon-->
-          <!--begin::Wrapper-->
-          <div class="d-flex flex-stack flex-grow-1">
-            <!--begin::Content-->
-            <div class="fw-bold">
-              <h4 class="text-gray-900 fw-bolder">Soal tidak ditemukan!</h4>
-            </div>
-          </div>
-          <!--end::Content-->
-        </div>
-        <!--end::Notice-->
-      <?php else : ?>
-        <?php $no = 1;
-        while ($soal = mysqli_fetch_assoc($getsoal)) : ?>
-          <div class="d-flex my-10">
-            <!--begin::Arrow-->
-            <div class="me-3">
-              <div class="btn btn-light py-2 px-5 fw-bold">
-                <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                <?= $no ?>
-                <!--end::Svg Icon-->
+      <div class="stepper stepper-pills stepper-column">
+        <div class="stepper-nav ps-lg-10">
+          <?php
+          $no = 1;
+          $id_soal = json_decode($dataprosesujian['id_soal']);
+          foreach ($id_soal as $value) :
+            $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$value' AND tgl_hapus IS NULL");
+            $soal = mysqli_fetch_assoc($getsoal); ?>
+            <div class="d-flex my-10">
+              <!--begin::Arrow-->
+              <div class="me-3">
+                <div class="stepper-item">
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="stepper-check fas fa-check"></i>
+                    <span class="stepper-number"><?= $no ?></span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <!--end::Arrow-->
-            <!--begin::Summary-->
-            <div class="me-3 mt-2">
-              <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
-              <?php
-              $id_soal = $soal['id'];
-              $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-              if ($getkunci->num_rows !== 0) : ?>
-                <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
-                  if ($kunci['kunci'] == 1) {
-                    // var_dump($kunci['jawaban']);
-                  }
-                  $background = "bg-secondary";
-                  if ($getjawaban->num_rows !== 0) {
-                    $datajawaban = mysqli_fetch_assoc($getjawaban);
-                    if ($datajawaban['id_jawaban'] == $kunci['id']) {
-                      if ($kunci['kunci'] == 1) {
-                        $selected = "checked";
-                        $background = "bg-success";
+              <!--end::Arrow-->
+              <!--begin::Summary-->
+              <div class="me-3 mt-2">
+                <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
+                <?php
+                $id_soal = $soal['id'];
+                $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
+                if ($getkunci->num_rows !== 0) : ?>
+                  <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
+                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                    if ($kunci['kunci'] == 1) {
+                    }
+                    $background = "bg-secondary";
+                    if ($getjawaban->num_rows !== 0) {
+                      $datajawaban = mysqli_fetch_assoc($getjawaban);
+                      if ($datajawaban['id_jawaban'] == $kunci['id']) {
+                        if ($kunci['kunci'] == 1) {
+                          $selected = "checked";
+                          $background = "bg-success";
+                        } else {
+                          $selected = "checked";
+                          $background = "bg-danger";
+                        }
                       } else {
-                        $selected = "checked";
-                        $background = "bg-danger";
+                        $selected = "";
                       }
                     } else {
                       $selected = "";
-                    }
-                  } else {
-                    $selected = "";
-                  } ?>
-                  <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban <?= $background ?>" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?> disabled>
-                    <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
-                  </div>
-                <?php endwhile; ?>
-              <?php endif; ?>
+                    }  ?>
+                    <div class="form-check form-check-custom form-check-solid p-2">
+                      <input class="form-check-input radio_jawaban <?= $background ?>" type="radio" value="<?= $kunci['id'] ?>" name="jawaban_<?= $id_soal ?>" <?= $selected ?> disabled>
+                      <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
+                    </div>
+                  <?php endwhile; ?>
+                <?php endif; ?>
+              </div>
+              <!--end::Summary-->
             </div>
-            <!--end::Summary-->
-          </div>
-        <?php $no++;
-        endwhile; ?>
-      <?php endif; ?>
+          <?php $no++;
+          endforeach; ?>
+        </div>
+      </div>
     </div>
     <!--begin::Wrapper-->
     <div id="info-ujian">

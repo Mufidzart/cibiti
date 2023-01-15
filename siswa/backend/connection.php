@@ -30,4 +30,5 @@ date_default_timezone_set('Asia/Jakarta');
 $nis_siswa = $_SESSION['username'];
 $id_thajaran = 4;
 $semester = 1;
+include 'helpers.php';
 include 'tanggal_helper.php';

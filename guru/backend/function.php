@@ -380,6 +380,17 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "durasi-tugas-awal");
     }
+    if (empty($_POST['jumlah_soal-tugas-awal'])) {
+      $validation = ["input" => "jumlah_soal-tugas-awal", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+      array_push($data['errors'], $validation);
+    } else {
+      if ($_POST['jumlah_soal-tugas-awal'] == "0") {
+        $validation = ["input" => "jumlah_soal-tugas-awal", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "jumlah_soal-tugas-awal");
+      }
+    }
 
     if (!empty($_POST['r1'])) {
       if (empty($_POST['batas-r1'])) {
@@ -394,10 +405,22 @@ switch ($_GET['action']) {
       } else {
         array_push($data['success'], "durasi-r1");
       }
+      if (empty($_POST['jumlah_soal-r1'])) {
+        $validation = ["input" => "jumlah_soal-r1", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        if ($_POST['jumlah_soal-r1'] == "0") {
+          $validation = ["input" => "jumlah_soal-r1", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "jumlah_soal-r1");
+        }
+      }
     } else {
       array_push($data['success'], "r1");
       array_push($data['success'], "batas-r1");
       array_push($data['success'], "durasi-r1");
+      array_push($data['success'], "jumlah_soal-r1");
     }
     if (!empty($_POST['r2'])) {
       if (empty($_POST['batas-r2'])) {
@@ -412,10 +435,22 @@ switch ($_GET['action']) {
       } else {
         array_push($data['success'], "durasi-r2");
       }
+      if (empty($_POST['jumlah_soal-r2'])) {
+        $validation = ["input" => "jumlah_soal-r2", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        if ($_POST['jumlah_soal-r2'] == "0") {
+          $validation = ["input" => "jumlah_soal-r2", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "jumlah_soal-r2");
+        }
+      }
     } else {
       array_push($data['success'], "r2");
       array_push($data['success'], "batas-r2");
       array_push($data['success'], "durasi-r2");
+      array_push($data['success'], "jumlah_soal-r2");
     }
     // End Validation
     if (!empty($data['errors'])) {
@@ -434,6 +469,7 @@ switch ($_GET['action']) {
       $time_tugasawal = date('H:i:s', strtotime($pecahtugasawal[1]));
       $batas_tugas_awal = $tgl_tugasawal . ' ' . $time_tugasawal;
       $durasi_menit_tugas_awal = $_POST['durasi-tugas-awal'];
+      $jumlah_soal_tugas_awal = $_POST['jumlah_soal-tugas-awal'];
       if (!empty($_POST['r1'])) {
         $pecahr1 = explode(" - ", $_POST['batas-r1']);
         $tgl_r1 = date('Y-m-d', strtotime($pecahr1[0]));
@@ -441,8 +477,9 @@ switch ($_GET['action']) {
         $r1 = $_POST['r1'];
         $batas_r1 = $tgl_r1 . ' ' . $time_r1;
         $durasi_r1 = $_POST['durasi-r1'];
-        $kolomr1 = ", r1, batas_r1, durasi_menit_r1";
-        $valuer1 = ",'$r1','$batas_r1','$durasi_r1'";
+        $jumlah_soal_r1 = $_POST['jumlah_soal-r1'];
+        $kolomr1 = ", r1, batas_r1, durasi_menit_r1, jumlah_soal_r1";
+        $valuer1 = ",'$r1','$batas_r1','$durasi_r1','$jumlah_soal_r1";
       } else {
         $kolomr1 = "";
         $valuer1 = "";
@@ -454,8 +491,9 @@ switch ($_GET['action']) {
         $r2 = $_POST['r2'];
         $batas_r2 = $tgl_r2 . ' ' . $time_r2;
         $durasi_r2 = $_POST['durasi-r2'];
-        $kolomr2 = ", r2, batas_r2, durasi_menit_r2";
-        $valuer2 = ",'$r2','$batas_r2','$durasi_r2'";
+        $jumlah_soal_r2 = $_POST['jumlah_soal-r2'];
+        $kolomr2 = ", r2, batas_r2, durasi_menit_r2, jumlah_soal_r2";
+        $valuer2 = ",'$r2','$batas_r2','$durasi_r2', '$jumlah_soal_r2'";
       } else {
         $kolomr2 = "";
         $valuer2 = "";
@@ -463,8 +501,8 @@ switch ($_GET['action']) {
       // End Inputan Soal
       // Input Soal
       $query = $conn->query(
-        "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, judul, deskripsi, tugas_awal, batas_tugas_awal, durasi_menit_tugas_awal $kolomr1 $kolomr2) 
-      VALUES('$id_staff','$id_mapel','$id_kelas','$judul','$deskripsi','$tugas_awal','$batas_tugas_awal','$durasi_menit_tugas_awal' $valuer1 $valuer2)"
+        "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, id_tahunajaran, judul, deskripsi, tugas_awal, batas_tugas_awal, durasi_menit_tugas_awal, jumlah_soal_tugas_awal $kolomr1 $kolomr2) 
+      VALUES('$id_staff','$id_mapel','$id_kelas','$id_thajaran','$judul','$deskripsi','$tugas_awal','$batas_tugas_awal','$durasi_menit_tugas_awal','$jumlah_soal_tugas_awal' $valuer1 $valuer2)"
       );
       $last_id = $conn->insert_id;
       // End Input Soal
@@ -531,7 +569,6 @@ switch ($_GET['action']) {
       array_push($data['success'], "judul-editpenugasan");
     }
 
-
     if (empty($_POST['tugas-awal-editpenugasan'])) {
       $validation = ["input" => "tugas-awal-editpenugasan", "message" => "Tugas awal tidak boleh kosong."];
       array_push($data['errors'], $validation);
@@ -554,6 +591,17 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "durasi-tugas-awal-editpenugasan");
     }
+    if (empty($_POST['jumlah_soal-tugas-awal-editpenugasan'])) {
+      $validation = ["input" => "jumlah_soal-tugas-awal-editpenugasan", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+      array_push($data['errors'], $validation);
+    } else {
+      if ($_POST['jumlah_soal-tugas-awal-editpenugasan'] == "0") {
+        $validation = ["input" => "jumlah_soal-tugas-awal-editpenugasan", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "jumlah_soal-tugas-awal-editpenugasan");
+      }
+    }
 
     if (!empty($_POST['r1-editpenugasan'])) {
       if (empty($_POST['batas-r1-editpenugasan'])) {
@@ -567,6 +615,17 @@ switch ($_GET['action']) {
         array_push($data['errors'], $validation);
       } else {
         array_push($data['success'], "durasi-r1-editpenugasan");
+      }
+      if (empty($_POST['jumlah_soal-r1-editpenugasan'])) {
+        $validation = ["input" => "jumlah_soal-r1-editpenugasan", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        if ($_POST['jumlah_soal-r1-editpenugasan'] == "0") {
+          $validation = ["input" => "jumlah_soal-r1-editpenugasan", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "jumlah_soal-r1-editpenugasan");
+        }
       }
     } else {
       array_push($data['success'], "r1-editpenugasan");
@@ -586,6 +645,17 @@ switch ($_GET['action']) {
       } else {
         array_push($data['success'], "durasi-r2-editpenugasan");
       }
+      if (empty($_POST['jumlah_soal-r2-editpenugasan'])) {
+        $validation = ["input" => "jumlah_soal-r2-editpenugasan", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        if ($_POST['jumlah_soal-r2-editpenugasan'] == "0") {
+          $validation = ["input" => "jumlah_soal-r2-editpenugasan", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "jumlah_soal-r2-editpenugasan");
+        }
+      }
     } else {
       array_push($data['success'], "r2-editpenugasan");
       array_push($data['success'], "batas-r2-editpenugasan");
@@ -604,25 +674,28 @@ switch ($_GET['action']) {
       $tugas_awal = $_POST['tugas-awal-editpenugasan'];
       $batas_tugas_awal = $_POST['batas-tugas-awal-editpenugasan'];
       $durasi_menit_tugas_awal = $_POST['durasi-tugas-awal-editpenugasan'];
+      $jumlah_soal_tugas_awal = $_POST['jumlah_soal-tugas-awal-editpenugasan'];
       if (!empty($_POST['r1-editpenugasan'])) {
         $r1 = $_POST['r1-editpenugasan'];
         $batas_r1 = $_POST['batas-r1-editpenugasan'];
         $durasi_r1 = $_POST['durasi-r1-editpenugasan'];
-        $valuer1 = ",r1='$r1',batas_r1='$batas_r1',durasi_menit_r1='$durasi_r1'";
+        $jumlah_soal_r1 = $_POST['jumlah_soal-r1-editpenugasan'];
+        $valuer1 = ",r1='$r1',batas_r1='$batas_r1',durasi_menit_r1='$durasi_r1',jumlah_soal_r1=$jumlah_soal_r1";
       } else {
-        $valuer1 = ",r1=null,batas_r1=null,durasi_menit_r1=null";
+        $valuer1 = ",r1=null,batas_r1=null,durasi_menit_r1=null,jumlah_soal_r1=null";
       }
       if (!empty($_POST['r2-editpenugasan'])) {
         $r2 = $_POST['r2-editpenugasan'];
         $batas_r2 = $_POST['batas-r2-editpenugasan'];
         $durasi_r2 = $_POST['durasi-r2-editpenugasan'];
-        $valuer2 = ",r2='$r2',batas_r2='$batas_r2',durasi_menit_r2='$durasi_r2'";
+        $jumlah_soal_r2 = $_POST['jumlah_soal-r2-editpenugasan'];
+        $valuer2 = ",r2='$r2',batas_r2='$batas_r2',durasi_menit_r2='$durasi_r2',jumlah_soal_r2=$jumlah_soal_r2";
       } else {
-        $valuer2 = ",r2=null,batas_r2=null,durasi_menit_r2=null";
+        $valuer2 = ",r2=null,batas_r2=null,durasi_menit_r2=null,jumlah_soal_r2=null";
       }
       // End Inputan Soal
       // Input Soal
-      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', tugas_awal='$tugas_awal',  batas_tugas_awal='$batas_tugas_awal', durasi_menit_tugas_awal='$durasi_menit_tugas_awal' $valuer1 $valuer2 WHERE id='$id_penugasan'");
+      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', tugas_awal='$tugas_awal',  batas_tugas_awal='$batas_tugas_awal', durasi_menit_tugas_awal='$durasi_menit_tugas_awal',jumlah_soal_tugas_awal=$jumlah_soal_tugas_awal $valuer1 $valuer2 WHERE id='$id_penugasan'");
       // End Input Soal
 
       if ($query) {

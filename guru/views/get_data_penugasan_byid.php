@@ -36,7 +36,7 @@
             <div id="pesan-tugas-awal-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-6 col-xl-12">
+        <div class="col-md-5 col-xl-12">
           <div class="form-group" id="form-batas-tugas-awal-editpenugasan">
             <label class="control-label">Batas akhir penugasan</label><br>
             <div class="input-group date form_datetime" data-date="<?= $date_tugas_awal ?>">
@@ -53,7 +53,7 @@
             <div id="pesan-batas-tugas-awal-editpenugasan"></div>
           </div>
         </div>
-        <div class="col-md-3 col-xl-12">
+        <div class="col-md-4 col-xl-12">
           <div class="form-group" id="form-durasi-tugas-awal-editpenugasan">
             <label class="control-label">Waktu pengerjaan</label><br>
             <div class="input-group">
@@ -69,12 +69,17 @@
           </div>
         </div>
         <div class="col-md-3 col-xl-12">
-          <div class="form-group" id="form-kkm-tugas-awal-editpenugasan">
-            <label class="control-label">KKM</label><br>
+          <div class="form-group" id="form-jumlah_soal-tugas-awal-editpenugasan">
+            <label class="control-label">Jumlah Soal</label><br>
             <div class="input-group">
-              <input type="text" class="form-control text-right" id="kkm-tugas-awal-editpenugasan" name="kkm-tugas-awal-editpenugasan" value="<?= $penugasan['kkm_tugas_awal'] ?>">
+              <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal-editpenugasan" name="jumlah_soal-tugas-awal-editpenugasan" value="<?= $penugasan['jumlah_soal_tugas_awal'] ?>">
+              <span class="input-group-btn">
+                <button class="btn default date-set" type="button">
+                  soal
+                </button>
+              </span>
             </div>
-            <div id="pesan-kkm-tugas-awal-editpenugasan"></div>
+            <div id="pesan-jumlah_soal-tugas-awal-editpenugasan"></div>
           </div>
         </div>
       </div>
@@ -128,12 +133,17 @@
           </div>
         </div>
         <div class="col-md-3 col-xl-12">
-          <div class="form-group" id="form-kkm-r1-editpenugasan">
-            <label class="control-label">KKM</label><br>
+          <div class="form-group" id="form-jumlah_soal-r1-editpenugasan">
+            <label class="control-label">Jumlah Soal</label><br>
             <div class="input-group">
-              <input type="text" class="form-control text-right" id="kkm-r1-editpenugasan" name="kkm-r1-editpenugasan" value="<?= $penugasan['kkm_r1'] ?>">
+              <input type="text" class="form-control text-right" id="jumlah_soal-r1-editpenugasan" name="jumlah_soal-r1-editpenugasan" value="<?= $penugasan['jumlah_soal_r1'] ?>">
+              <span class="input-group-btn">
+                <button class="btn default date-set" type="button">
+                  soal
+                </button>
+              </span>
             </div>
-            <div id="pesan-kkm-r1-editpenugasan"></div>
+            <div id="pesan-jumlah_soal-r1-editpenugasan"></div>
           </div>
         </div>
       </div>
@@ -187,12 +197,17 @@
           </div>
         </div>
         <div class="col-md-3 col-xl-12">
-          <div class="form-group" id="form-kkm-r2-editpenugasan">
-            <label class="control-label">KKM</label><br>
+          <div class="form-group" id="form-jumlah_soal-r2-editpenugasan">
+            <label class="control-label">Jumlah Soal</label><br>
             <div class="input-group">
-              <input type="text" class="form-control text-right" id="kkm-r2-editpenugasan" name="kkm-r2-editpenugasan" value="<?= $penugasan['kkm_r2'] ?>">
+              <input type="text" class="form-control text-right" id="jumlah_soal-r2-editpenugasan" name="jumlah_soal-r2-editpenugasan" value="<?= $penugasan['jumlah_soal_r2'] ?>">
+              <span class="input-group-btn">
+                <button class="btn default date-set" type="button">
+                  soal
+                </button>
+              </span>
             </div>
-            <div id="pesan-kkm-r2-editpenugasan"></div>
+            <div id="pesan-jumlah_soal-r2-editpenugasan"></div>
           </div>
         </div>
       </div>

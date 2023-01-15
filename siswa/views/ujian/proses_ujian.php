@@ -9,86 +9,111 @@
           <?= $datapenugasan['deskripsi'] ?>
         </p>
       </div>
-      <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$tugas_awal' AND tgl_hapus IS NULL");
-      if ($getsoal->num_rows == 0) : ?>
-        <!--begin::Notice-->
-        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
-          <!--begin::Icon-->
-          <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-          <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
-              <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black" />
-              <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black" />
-            </svg>
-          </span>
-          <!--end::Svg Icon-->
-          <!--end::Icon-->
-          <!--begin::Wrapper-->
-          <div class="d-flex flex-stack flex-grow-1">
-            <!--begin::Content-->
-            <div class="fw-bold">
-              <h4 class="text-gray-900 fw-bolder">Soal tidak ditemukan!</h4>
-            </div>
-          </div>
-          <!--end::Content-->
-        </div>
-        <!--end::Notice-->
-      <?php else : ?>
-        <?php $no = 1;
-        while ($soal = mysqli_fetch_assoc($getsoal)) : ?>
-          <div class="d-flex my-10">
-            <!--begin::Arrow-->
-            <div class="me-3">
-              <div class="btn btn-light py-2 px-5 fw-bold">
-                <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                <?= $no ?>
-                <!--end::Svg Icon-->
-              </div>
-            </div>
-            <!--end::Arrow-->
-            <!--begin::Summary-->
-            <div class="me-3 mt-2">
-              <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
-              <?php
-              $id_soal = $soal['id'];
-              $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-              if ($getkunci->num_rows !== 0) : ?>
-                <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
-                  if ($kunci['kunci'] == 1) {
-                    // var_dump($kunci['jawaban']);
-                  }
-                  if ($getjawaban->num_rows !== 0) {
-                    $datajawaban = mysqli_fetch_assoc($getjawaban);
-                    if ($datajawaban['id_jawaban'] == $kunci['id']) {
-                      if ($kunci['kunci'] == 1) {
-                        $selected = "checked";
-                      } else {
-                        $selected = "checked";
-                      }
-                    } else {
-                      $selected = "";
-                    }
-                  } else {
-                    $selected = "";
-                  } ?>
-                  <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $tugas_awal ?>" data-id-soal="<?= $id_soal ?>" data-id-jawaban="<?= $kunci['id'] ?>" <?= $selected ?>>
-                    <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
+      <?php $no = 1;
+      $id_soal = json_decode($dataprosesujian['id_soal']);
+      $split_soal = sizeof($id_soal) / 2;
+      $split_soal_explode = explode(".", $split_soal);
+      if (isset($split_soal_explode[1])) {
+        $jumlah_tab = $split_soal_explode[0] + 1;
+      } else {
+        $jumlah_tab = $split_soal_explode[0];
+      }
+      $array_terpecah = array_split($id_soal, $jumlah_tab);
+      $no_tab = 1;
+      $no = 1;
+      ?>
+      <form class="form" id="form-jawaban">
+        <input type="hidden" name="id_penugasan" value="<?= $idpenugasan ?>">
+        <input type="hidden" name="id_prosesujian" value="<?= $dataprosesujian['id'] ?>">
+        <div class="stepper stepper-pills stepper-column">
+          <div class="stepper-nav ps-lg-10">
+            <?php foreach ($array_terpecah as $item) : ?>
+              <?php if ($no_tab == 1) {
+                $display = "block";
+              } else {
+                $display = "none";
+              } ?>
+              <div id="soal_<?= $no_tab ?>" style="display: <?= $display ?>;">
+                <?php foreach ($item as $key => $value) :
+                  $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$value' AND tgl_hapus IS NULL");
+                  $soal = mysqli_fetch_assoc($getsoal); ?>
+                  <div class="d-flex my-10">
+                    <!--begin::Arrow-->
+                    <div class="me-3">
+                      <div class="stepper-item">
+                        <div class="stepper-icon w-40px h-40px">
+                          <i class="stepper-check fas fa-check"></i>
+                          <span class="stepper-number"><?= $no ?></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!--end::Arrow-->
+                    <!--begin::Summary-->
+                    <div class="me-3 mt-2">
+                      <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
+                      <?php
+                      $id_soal = $soal['id'];
+                      $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
+                      if ($getkunci->num_rows !== 0) : ?>
+                        <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
+                          $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                          if ($kunci['kunci'] == 1) {
+                          }
+                          if ($getjawaban->num_rows !== 0) {
+                            $datajawaban = mysqli_fetch_assoc($getjawaban);
+                            if ($datajawaban['id_jawaban'] == $kunci['id']) {
+                              if ($kunci['kunci'] == 1) {
+                                $selected = "checked";
+                              } else {
+                                $selected = "checked";
+                              }
+                            } else {
+                              $selected = "";
+                            }
+                          } else {
+                            $selected = "";
+                          } ?>
+                          <div class="form-check form-check-custom form-check-solid p-2">
+                            <input class="form-check-input radio_jawaban" type="radio" value="<?= $kunci['id'] ?>" name="jawaban_<?= $id_soal ?>" <?= $selected ?>>
+                            <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
+                          </div>
+                        <?php endwhile; ?>
+                      <?php endif; ?>
+                    </div>
+                    <!--end::Summary-->
                   </div>
-                <?php endwhile; ?>
-              <?php endif; ?>
-            </div>
-            <!--end::Summary-->
+                <?php $no++;
+                endforeach; ?>
+              </div>
+              <div id="next_<?= $no_tab ?>" style="display: <?= $display ?>;">
+                <!--begin::Actions-->
+                <div class="d-flex justify-content-end">
+                  <!--begin::Wrapper-->
+                  <button type="button" class="btn btn-primary btn_next" data-no="<?= $no_tab ?>">
+                    <span class="indicator-label label-next-<?= $no_tab ?>">Selanjutnya
+                      <span class="svg-icon svg-icon-3 ms-1 me-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <rect opacity="0.5" x="18" y="13" width="13" height="2" rx="1" transform="rotate(-180 18 13)" fill="black" />
+                          <path d="M15.4343 12.5657L11.25 16.75C10.8358 17.1642 10.8358 17.8358 11.25 18.25C11.6642 18.6642 12.3358 18.6642 12.75 18.25L18.2929 12.7071C18.6834 12.3166 18.6834 11.6834 18.2929 11.2929L12.75 5.75C12.3358 5.33579 11.6642 5.33579 11.25 5.75C10.8358 6.16421 10.8358 6.83579 11.25 7.25L15.4343 11.4343C15.7467 11.7467 15.7467 12.2533 15.4343 12.5657Z" fill="black" />
+                        </svg>
+                      </span>
+                    </span>
+                    <span class="indicator-progress progress-next-<?= $no_tab ?>">Mohon tunggu...
+                      <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                  </button>
+                  <!--end::Wrapper-->
+                </div>
+                <!--end::Actions-->
+              </div>
+            <?php $no_tab++;
+            endforeach; ?>
           </div>
-        <?php $no++;
-        endwhile; ?>
-      <?php endif; ?>
+        </div>
+      </form>
     </div>
     <!--begin::Wrapper-->
-    <div id="info-ujian">
+    <div id="info-ujian" style="display: none;">
       <div class="rounded border p-10 pb-0 d-flex flex-column flex-center">
         <div class="alert alert-dismissible bg-light-primary d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
           <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
@@ -171,6 +196,17 @@
 </div>
 <!--end::Modal -->
 <script>
+  function form_post() {
+    var formdata = $('#form-jawaban').serialize();
+    $.ajax({
+      url: 'backend/function.php?action=simpan_data_jawaban',
+      type: 'post',
+      data: formdata,
+      dataType: 'json',
+      success: function(data) {}
+    });
+  }
+
   function timeout() {
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
@@ -248,38 +284,43 @@
         clearInterval(x);
         $("input[type=radio]").attr('disabled', true);
         timeout();
+        form_post();
         $("#info-ujian").html("");
         $("#judul_selesai").html("Waktu telah selesai");
         //doSomething();
       }
     }, 1000);
   }
+
+
   $(document).ready(function() {
     timer();
-    $('.radio_jawaban').on('click', function() {
-      var jawaban = $(this).val();
-      var id_penugasan = $(this).attr('data-id-penugasan');
-      var kode_tugas = $(this).attr('data-kode');
-      var id_soal = $(this).attr('data-id-soal');
-      var id_jawaban = $(this).attr('data-id-jawaban');
-      $.ajax({
-        url: 'backend/function.php?action=push_jawaban_awal',
-        type: 'post',
-        data: {
-          jawaban: jawaban,
-          id_penugasan: id_penugasan,
-          kode_tugas: kode_tugas,
-          id_soal: id_soal,
-          id_jawaban: id_jawaban
-        },
-        success: function(data) {}
-      });
+    $('.btn_next').on('click', function() {
+      var max_tab = parseInt("<?= $jumlah_tab ?>");
+      var nomor = $(this).attr("data-no");
+      let new_nomor = parseInt(nomor) + 1;
+      $('.label-next-' + nomor).css("display", "none");
+      $('.progress-next-' + nomor).css("display", "block");
+      setTimeout(function() {
+        form_post();
+        $('#next_' + nomor).css("display", "none");
+        $('#soal_' + new_nomor).css("display", "block");
+        if (new_nomor < max_tab) {
+          $('#next_' + new_nomor).css("display", "block");
+        }
+        if (new_nomor >= max_tab) {
+          $('#info-ujian').css("display", "block");
+        }
+        $('.label-next-' + nomor).css("display", "block");
+        $('.progress-next-' + nomor).css("display", "none");
+      }, 500);
     });
 
     $('#modal-nilai').modal({
       backdrop: 'static',
       keyboard: false
-    })
+    });
+
     $('#lihat-jawaban').on('click', function() {
       location.reload(true);
     });
@@ -298,6 +339,7 @@
         }
       }).then((result) => {
         if (result.isConfirmed) {
+          form_post();
           timeout();
         }
       });

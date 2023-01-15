@@ -63,7 +63,7 @@
                   $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
                 }
                 if ($nilai_awal < $datamapel['kb_pengetahuan']) {
-                  $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 1.</span>";
+                  $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
                   $remidi_1 = true;
                 } else {
                   $status_penilaian = "<span class='badge badge-light-success fs-7 my-3'>Anda lulus di tugas ini.</span>";
@@ -73,7 +73,7 @@
                 $batas = new DateTime(date("Y-m-d", strtotime($penugasan['batas_tugas_awal'])));
                 if ($today > $batas) {
                   $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
-                  $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 1.</span>";
+                  $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
                   $remidi_1 = true;
                 }
               }
@@ -115,7 +115,7 @@
                 if (isset($nilai_r1)) {
                   $status_ujian = "<span class='badge badge-light-info fs-7 my-3'>Sudah dikerjakan</span>";
                   if ($nilai_r1 < $datamapel['kb_pengetahuan']) {
-                    $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 2.</span>";
+                    $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
                     $remidi_2 = true;
                   } else {
                     $status_penilaian = "<span class='badge badge-light-info fs-7 my-3'>Anda lulus di tugas ini.</span>";
@@ -125,7 +125,7 @@
                   $batas = new DateTime(date("Y-m-d", strtotime($penugasan['batas_r1'])));
                   if ($today > $batas) {
                     $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
-                    $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini, silahkan kerjakan Remidi 2.</span>";
+                    $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
                     $remidi_2 = true;
                   }
                 }

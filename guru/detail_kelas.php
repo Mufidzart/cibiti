@@ -302,6 +302,20 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-durasi-tugas-awal"></div>
                   </div>
                 </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-jumlah_soal-tugas-awal">
+                    <label class="control-label">Jumlah Soal</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal" name="jumlah_soal-tugas-awal">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          soal
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-jumlah_soal-tugas-awal"></div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="note note-warning" style="background-color: #fcf8e3;">
@@ -347,6 +361,20 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <div id="pesan-durasi-r1"></div>
                   </div>
                 </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-jumlah_soal-r1">
+                    <label class="control-label">Jumlah Soal</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="jumlah_soal-r1" name="jumlah_soal-r1">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          soal
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-jumlah_soal-r1"></div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="note note-warning" style="background-color: #fcf8e3;">
@@ -390,6 +418,20 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </div>
                     <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
                     <div id="pesan-durasi-r2"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-jumlah_soal-r2">
+                    <label class="control-label">Jumlah Soal</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="jumlah_soal-r2" name="jumlah_soal-r2">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          soal
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-jumlah_soal-r2"></div>
                   </div>
                 </div>
               </div>
