@@ -34,7 +34,6 @@ switch ($_GET['action']) {
       $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
       if ($getnilai->num_rows == 0) {
         // UPDATE NILAI
-        $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
         $getalljawaban = $conn->query(
           "SELECT * FROM arf_jawaban_siswa 
             WHERE id_siswa='$nis' 
@@ -43,7 +42,7 @@ switch ($_GET['action']) {
             AND kode_tugas='$kode_tugas'
             AND tgl_hapus IS NULL"
         );
-        $jumlah_soal =  $getsoal->num_rows;
+        $jumlah_soal =  $datapenugasan['jumlah_soal_tugas_awal'];
         $jawaban_benar = [];
         while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
           $id_soal_jawaban = $jawaban['id_soal'];
@@ -88,7 +87,6 @@ switch ($_GET['action']) {
       $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
       if ($getnilai->num_rows == 0) {
         // UPDATE NILAI
-        $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
         $getalljawaban = $conn->query(
           "SELECT * FROM arf_jawaban_siswa 
             WHERE id_siswa='$nis' 
@@ -97,7 +95,7 @@ switch ($_GET['action']) {
             AND kode_tugas='$kode_tugas'
             AND tgl_hapus IS NULL"
         );
-        $jumlah_soal =  $getsoal->num_rows;
+        $jumlah_soal =  $datapenugasan['jumlah_soal_' . $jenis_ujian];
         $jawaban_benar = [];
         while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
           $id_soal_jawaban = $jawaban['id_soal'];
@@ -132,12 +130,6 @@ switch ($_GET['action']) {
     $id_penugasan = $_POST['id_penugasan'];
     $jenis_ujian = "tugas_awal";
     $nis = $_SESSION['username'];
-    // $getsoalujian =  $conn->query(
-    //   "SELECT asl.* FROM arf_soal asl
-    //     JOIN arf_tugas_cbt atc ON asl.kode_tugas=atc.kode_tugas
-    //     JOIN arf_history_penugasan ahp ON atc.kode_tugas=ahp.tugas_awal
-    //    WHERE ahp.id='$id_penugasan'"
-    // );
     $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
     $datapenugasan = mysqli_fetch_assoc($getpenugasan);
     $jumlah_soal = $datapenugasan['jumlah_soal_tugas_awal'];
@@ -168,12 +160,28 @@ switch ($_GET['action']) {
     $id_penugasan = $_POST['id_penugasan'];
     $jenis_ujian = $_POST['jenis_ujian'];
     $nis = $_SESSION['username'];
+    $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+    $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+    $jumlah_soal = $datapenugasan['jumlah_soal_' . $jenis_ujian];
+    $getsoalujian =  $conn->query(
+      "SELECT asl.id FROM arf_soal asl
+        JOIN arf_tugas_cbt atc ON asl.kode_tugas=atc.kode_tugas
+        JOIN arf_history_penugasan ahp ON atc.kode_tugas=ahp.$jenis_ujian
+        WHERE ahp.id='$id_penugasan'
+        ORDER BY RAND()
+        LIMIT $jumlah_soal"
+    );
+    $randomsoal = [];
+    while ($soal = mysqli_fetch_assoc($getsoalujian)) {
+      array_push($randomsoal, $soal['id']);
+    }
+    $id_soal = json_encode($randomsoal);
     $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id_siswa='$nis' AND id_penugasan=$id_penugasan AND jenis_ujian='$jenis_ujian'");
     if ($getprosesujian->num_rows == 0) {
       $mulai_ujian = date("Y-m-d H:i:s");
       $query = $conn->query(
-        "INSERT INTO arf_proses_ujian(id_siswa, id_penugasan, jenis_ujian, mulai_ujian) 
-        VALUES('$nis','$id_penugasan','$jenis_ujian','$mulai_ujian')"
+        "INSERT INTO arf_proses_ujian(id_siswa, id_penugasan, id_soal, jenis_ujian, mulai_ujian) 
+        VALUES('$nis','$id_penugasan','$id_soal','$jenis_ujian','$mulai_ujian')"
       );
     }
     break;
@@ -378,6 +386,82 @@ switch ($_GET['action']) {
       $datanilai = mysqli_fetch_assoc($getnilai);
       $id_nilai = $datanilai['id'];
       $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai_awal='$nilai' WHERE id=$id_nilai");
+    }
+    break;
+  case 'simpan_data_jawaban_remidi':
+    $id_penugasan = $_POST['id_penugasan'];
+    $id_prosesujian = $_POST['id_prosesujian'];
+    $jenis_ujian = $_POST['jenis_ujian'];
+    $nis = $_SESSION['username'];
+    $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+    $getprosesujian =  $conn->query("SELECT * FROM arf_proses_ujian WHERE id=$id_prosesujian AND tgl_hapus IS NULL");
+    $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+    $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
+    $kode_tugas = $datapenugasan[$jenis_ujian];
+    $allid_soal = json_decode($dataprosesujian['id_soal']);
+    if ($getpenugasan->num_rows !== 0) {
+      foreach ($allid_soal as $id_soal) {
+        if (isset($_POST['jawaban_' . $id_soal])) {
+          $id_pilihan_siswa = $_POST['jawaban_' . $id_soal];
+          $getjawaban = $conn->query(
+            "SELECT * FROM arf_jawaban_siswa 
+              WHERE id_siswa='$nis' 
+              AND id_penugasan=$id_penugasan
+              AND kode_tugas='$kode_tugas'
+              AND id_soal=$id_soal
+              AND tgl_hapus IS NULL"
+          );
+          $getkunci = $conn->query("SELECT * FROM arf_kunci_soal WHERE id='$id_pilihan_siswa' AND tgl_hapus IS NULL");
+          $datajawaban = mysqli_fetch_assoc($getjawaban);
+          $datakunci = mysqli_fetch_assoc($getkunci);
+          $jawaban = $datakunci['jawaban'];
+          if ($getjawaban->num_rows == 0) {
+            $query = $conn->query(
+              "INSERT INTO arf_jawaban_siswa(id_siswa, id_penugasan, jenis_ujian, kode_tugas, id_soal, id_jawaban, jawaban) 
+            VALUES('$nis','$id_penugasan','$jenis_ujian','$kode_tugas','$id_soal','$id_pilihan_siswa','$jawaban')"
+            );
+          } else {
+            $id_jawaban = $datajawaban['id'];
+            $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban=$id_pilihan_siswa, jawaban='$jawaban' WHERE id=$id_jawaban");
+          }
+        }
+      }
+    }
+
+    // UPDATE NILAI
+    $getalljawaban = $conn->query(
+      "SELECT * FROM arf_jawaban_siswa 
+      WHERE id_siswa='$nis' 
+      AND id_penugasan=$id_penugasan
+      AND jenis_ujian='$jenis_ujian'
+      AND kode_tugas='$kode_tugas'
+      AND tgl_hapus IS NULL"
+    );
+    $jumlah_soal =  $datapenugasan['jumlah_soal_' . $jenis_ujian];
+    $jawaban_benar = [];
+    while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
+      $id_soal_jawaban = $jawaban['id_soal'];
+      $getkunci =  $conn->query("SELECT * FROM arf_kunci_soal WHERE id_soal=$id_soal_jawaban AND tgl_hapus IS NULL");
+      while ($kunci = mysqli_fetch_assoc($getkunci)) {
+        if ($kunci['kunci'] == 1) {
+          if ($kunci['jawaban'] == $jawaban['jawaban']) {
+            array_push($jawaban_benar, $jawaban['jawaban']);
+          }
+        }
+      }
+    }
+    $jumlah_benar = sizeof($jawaban_benar);
+    $nilai = ($jumlah_benar / $jumlah_soal) * 100;
+    $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_siswa='$nis' AND id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
+    if ($getnilai->num_rows == 0) {
+      $query = $conn->query(
+        "INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_$jenis_ujian)
+        VALUES('$nis','$id_penugasan','$nilai')"
+      );
+    } else {
+      $datanilai = mysqli_fetch_assoc($getnilai);
+      $id_nilai = $datanilai['id'];
+      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai_$jenis_ujian='$nilai' WHERE id=$id_nilai");
     }
     break;
 }

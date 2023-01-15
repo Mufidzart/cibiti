@@ -9,86 +9,66 @@
           <?= $datapenugasan['deskripsi'] ?>
         </p>
       </div>
-      <?php
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-      if ($getsoal->num_rows == 0) : ?>
-        <!--begin::Notice-->
-        <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
-          <!--begin::Icon-->
-          <!--begin::Svg Icon | path: icons/duotune/general/gen044.svg-->
-          <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="black" />
-              <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="black" />
-              <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="black" />
-            </svg>
-          </span>
-          <!--end::Svg Icon-->
-          <!--end::Icon-->
-          <!--begin::Wrapper-->
-          <div class="d-flex flex-stack flex-grow-1">
-            <!--begin::Content-->
-            <div class="fw-bold">
-              <h4 class="text-gray-900 fw-bolder">Soal tidak ditemukan!</h4>
-            </div>
-          </div>
-          <!--end::Content-->
-        </div>
-        <!--end::Notice-->
-      <?php else : ?>
-        <?php $no = 1;
-        while ($soal = mysqli_fetch_assoc($getsoal)) : ?>
-          <div class="d-flex my-10">
-            <!--begin::Arrow-->
-            <div class="me-3">
-              <div class="btn btn-light py-2 px-5 fw-bold">
-                <!--begin::Svg Icon | path: icons/duotune/general/gen035.svg-->
-                <?= $no ?>
-                <!--end::Svg Icon-->
+      <div class="stepper stepper-pills stepper-column">
+        <div class="stepper-nav ps-lg-10">
+          <?php
+          $no = 1;
+          $id_soal = json_decode($dataprosesujian['id_soal']);
+          foreach ($id_soal as $value) :
+            $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$value' AND tgl_hapus IS NULL");
+            $soal = mysqli_fetch_assoc($getsoal); ?>
+            <div class="d-flex my-10">
+              <!--begin::Arrow-->
+              <div class="me-3">
+                <div class="stepper-item">
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="stepper-check fas fa-check"></i>
+                    <span class="stepper-number"><?= $no ?></span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <!--end::Arrow-->
-            <!--begin::Summary-->
-            <div class="me-3 mt-2">
-              <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
-              <?php
-              $id_soal = $soal['id'];
-              $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
-              if ($getkunci->num_rows !== 0) : ?>
-                <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                  $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
-                  if ($kunci['kunci'] == 1) {
-                    // var_dump($kunci['jawaban']);
-                  }
-                  $background = "bg-secondary";
-                  if ($getjawaban->num_rows !== 0) {
-                    $datajawaban = mysqli_fetch_assoc($getjawaban);
-                    if ($datajawaban['id_jawaban'] == $kunci['id']) {
-                      if ($kunci['kunci'] == 1) {
-                        $selected = "checked";
-                        $background = "bg-success";
+              <!--end::Arrow-->
+              <!--begin::Summary-->
+              <div class="me-3 mt-2">
+                <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
+                <?php
+                $id_soal = $soal['id'];
+                $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
+                if ($getkunci->num_rows !== 0) : ?>
+                  <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
+                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$kode_tugas' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                    if ($kunci['kunci'] == 1) {
+                    }
+                    $background = "bg-secondary";
+                    if ($getjawaban->num_rows !== 0) {
+                      $datajawaban = mysqli_fetch_assoc($getjawaban);
+                      if ($datajawaban['id_jawaban'] == $kunci['id']) {
+                        if ($kunci['kunci'] == 1) {
+                          $selected = "checked";
+                          $background = "bg-success";
+                        } else {
+                          $selected = "checked";
+                          $background = "bg-danger";
+                        }
                       } else {
-                        $selected = "checked";
-                        $background = "bg-danger";
+                        $selected = "";
                       }
                     } else {
                       $selected = "";
-                    }
-                  } else {
-                    $selected = "";
-                  } ?>
-                  <div class="form-check form-check-custom form-check-solid p-2">
-                    <input class="form-check-input radio_jawaban <?= $background ?>" type="radio" value="<?= $kunci['jawaban'] ?>" name="jawaban_<?= $id_soal ?>" data-id-penugasan="<?= $idpenugasan ?>" data-kode="<?= $kode_tugas ?>" data-id-soal="<?= $id_soal ?>" data-id-kunci="<?= $kunci['id'] ?>" <?= $selected ?> disabled>
-                    <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
-                  </div>
-                <?php endwhile; ?>
-              <?php endif; ?>
+                    }  ?>
+                    <div class="form-check form-check-custom form-check-solid p-2">
+                      <input class="form-check-input radio_jawaban <?= $background ?>" type="radio" value="<?= $kunci['id'] ?>" name="jawaban_<?= $id_soal ?>" <?= $selected ?> disabled>
+                      <label class="form-check-label text-dark opacity-100" for="flexRadioDefault"><?= $kunci['jawaban'] ?></label>
+                    </div>
+                  <?php endwhile; ?>
+                <?php endif; ?>
+              </div>
+              <!--end::Summary-->
             </div>
-            <!--end::Summary-->
-          </div>
-        <?php $no++;
-        endwhile; ?>
-      <?php endif; ?>
+          <?php $no++;
+          endforeach; ?>
+        </div>
+      </div>
     </div>
     <!--begin::Wrapper-->
     <div id="info-ujian">
@@ -109,7 +89,7 @@
           <!--end::Icon-->
           <!--begin::Content-->
           <div class="text-center text-dark">
-            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $title ?></h1>
+            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
             <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
             <div class="mb-9">Anda mendapatkan nilai <br>
               <?php
@@ -118,14 +98,9 @@
                 JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
                 WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
               );
-              $datanilai = mysqli_fetch_assoc($getnilai);
-              if ($jenis_ujian == "r1") {
-                $nilai = $datanilai['nilai_r1'];
-              } elseif ($jenis_ujian == "r2") {
-                $nilai = $datanilai['nilai_r2'];
-              } ?>
+              $datanilai = mysqli_fetch_assoc($getnilai); ?>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <br> <strong class="text-primary fs-1"><?= $nilai ?></strong>
+                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_' . $jenis_ujian] ?></strong>
               <?php endif; ?>
             </div>
             <!--begin::Buttons-->
@@ -170,19 +145,19 @@
         <div class="modal-body py-10 px-lg-17" id="show_nilai">
           <div class="card-px text-center">
             <!--begin::Title-->
-            <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan <?= $title ?>!</h2>
+            <h2 class="fs-2x fw-bolder mb-10">Anda telah selesai mengerjakan!</h2>
             <!--end::Title-->
             <!--begin::Description-->
             <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
               <?php if ($getnilai->num_rows !== 0) : ?>
-                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $kode_tugas ?>">
+                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
                   <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
                   <span class="d-flex flex-column align-items-start ms-2">
-                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $nilai ?></b></span>
+                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_' . $jenis_ujian] ?></b></span>
                   </span>
                 </a>
                 <br>Penugasan
-                <br> <b class="text-primary"><?= $title  ?></b>
+                <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
                 <br>Anda mengerjakan soal pada
                 <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
               <?php endif; ?>
@@ -211,7 +186,7 @@
     var id_penugasan = "<?= $idpenugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
     var kode_tugas = "<?= $kode_tugas ?>";
-    var jenis_ujian = "<?= $jenis_ujian ?>";
+    var jenis_ujian = "<?= $_GET['act'] ?>";
     $.ajax({
       url: 'backend/function.php?action=get_data&get=nilai_ujian_remidi',
       type: 'post',
