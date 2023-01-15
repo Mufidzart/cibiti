@@ -11,16 +11,16 @@
       <textarea class="form-control" id="deskripsi-editpenugasan" name="deskripsi-editpenugasan" rows="3" placeholder="Deskripsi penugasan..."><?= $penugasan['deskripsi'] ?></textarea>
       <div id="pesan-deskripsi-editpenugasan"></div>
     </div>
-    <div class="form-group" id="form-jenis-edittugas">
+    <div class="form-group" id="form-jenis-editpenugasan">
       <label class="control-label">Jenis Tugas</label>
-      <select class="form-control jenis-edittugas" id="jenis-edittugas" name="jenis-edittugas">
+      <select class="form-control jenis-editpenugasan" id="jenis-editpenugasan" name="jenis-editpenugasan">
         <option></option>
         <?php while ($jenis = mysqli_fetch_array($getjenis_tugas)) :
           $select = ($jenis['jenis_tugas'] == $jenis_tugas) ? "selected" : ""; ?>
           <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
         <?php endwhile; ?>
       </select>
-      <div id="pesan-jenis-edittugas"></div>
+      <div id="pesan-jenis-editpenugasan"></div>
     </div>
     <div class="note note-info">
       <div class="row">
@@ -220,6 +220,11 @@
 </form>
 <script>
   $(document).ready(function() {
+    $("#jenis-editpenugasan").select2({
+      placeholder: "Pilih jenis tugas..",
+      allowClear: true,
+      width: "100%"
+    });
     $("#tugas-awal-editpenugasan").select2({
       placeholder: "Pilih tugas..",
       width: "100%"
@@ -234,7 +239,7 @@
       allowClear: true,
       width: "100%"
     });
-    $('#jenis-edittugas').on('select2:select', function(e) {
+    $('#jenis-editpenugasan').on('select2:select', function(e) {
       var id_mapel = '<?= $penugasan['id_mapel'] ?>';
       var jenis_tugas = $(this).val();
       $.ajax({

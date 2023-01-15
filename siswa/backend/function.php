@@ -57,7 +57,13 @@ switch ($_GET['action']) {
         }
         $jumlah_benar = sizeof($jawaban_benar);
         $nilai = ($jumlah_benar / $jumlah_soal) * 100;
-        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_awal) VALUES('$nis', '$id_penugasan','$nilai')");
+        $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+        $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+        $id_tahunajaran = $datapenugasan['id_tahunajaran'];
+        $id_mapel = $datapenugasan['id_mapel'];
+        $jenis_tugas = $datapenugasan['jenis_tugas'];
+        $nh_ke = $datapenugasan['nh_ke'];
+        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_thajaran, id_penugasan, id_mapel, jenis_tugas, nh_ke, nilai_awal) VALUES('$nis','$id_tahunajaran','$id_penugasan','$id_mapel','$jenis_tugas','$nh_ke','$nilai')");
       }
       if (empty($dataprosesujian['selesai_ujian'])) {
         $datenow = date("Y-m-d H:i:s");
@@ -110,7 +116,13 @@ switch ($_GET['action']) {
         }
         $jumlah_benar = sizeof($jawaban_benar);
         $nilai = ($jumlah_benar / $jumlah_soal) * 100;
-        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_$jenis_ujian) VALUES('$nis', '$id_penugasan','$nilai')");
+        $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+        $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+        $id_tahunajaran = $datapenugasan['id_tahunajaran'];
+        $id_mapel = $datapenugasan['id_mapel'];
+        $jenis_tugas = $datapenugasan['jenis_tugas'];
+        $nh_ke = $datapenugasan['nh_ke'];
+        $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_thajaran, id_penugasan, id_mapel, jenis_tugas, nh_ke, nilai_$jenis_ujian) VALUES('$nis','$id_tahunajaran','$id_penugasan','$id_mapel','$jenis_tugas','$nh_ke','$nilai')");
       }
       if (empty($dataprosesujian['selesai_ujian'])) {
         $datenow = date("Y-m-d H:i:s");
@@ -186,132 +198,6 @@ switch ($_GET['action']) {
     }
     break;
 
-  case 'push_jawaban_awal':
-    $id_penugasan = $_POST['id_penugasan'];
-    $kode_tugas = $_POST['kode_tugas'];
-    $id_soal = $_POST['id_soal'];
-    $id_jawaban = $_POST['id_jawaban'];
-    $jawaban = $_POST['jawaban'];
-    $nis = $_SESSION['username'];
-    $jenis_ujian = "tugas_awal";
-    $getjawaban = $conn->query(
-      "SELECT * FROM arf_jawaban_siswa 
-      WHERE id_siswa='$nis' 
-      AND id_penugasan=$id_penugasan
-      AND kode_tugas='$kode_tugas'
-      AND id_soal=$id_soal
-      AND tgl_hapus IS NULL"
-    );
-    $datajawaban = mysqli_fetch_assoc($getjawaban);
-    if ($getjawaban->num_rows == 0) {
-      $query = $conn->query(
-        "INSERT INTO arf_jawaban_siswa(id_siswa, id_penugasan, jenis_ujian, kode_tugas, id_soal, id_jawaban, jawaban) 
-        VALUES('$nis','$id_penugasan','$jenis_ujian','$kode_tugas','$id_soal','$id_jawaban','$jawaban')"
-      );
-    } else {
-      $id_jawaban = $datajawaban['id'];
-      $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban=$id_jawaban, jawaban='$jawaban' WHERE id=$id_jawaban");
-    }
-
-    // UPDATE NILAI
-    $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-    $getalljawaban = $conn->query(
-      "SELECT * FROM arf_jawaban_siswa 
-      WHERE id_siswa='$nis' 
-      AND id_penugasan=$id_penugasan
-      AND jenis_ujian='$jenis_ujian'
-      AND kode_tugas='$kode_tugas'
-      AND tgl_hapus IS NULL"
-    );
-    $jumlah_soal =  $getsoal->num_rows;
-    $jawaban_benar = [];
-    while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
-      $id_soal_jawaban = $jawaban['id_soal'];
-      $getkunci =  $conn->query("SELECT * FROM arf_kunci_soal WHERE id_soal=$id_soal_jawaban AND tgl_hapus IS NULL");
-      while ($kunci = mysqli_fetch_assoc($getkunci)) {
-        if ($kunci['kunci'] == 1) {
-          if ($kunci['jawaban'] == $jawaban['jawaban']) {
-            array_push($jawaban_benar, $jawaban['jawaban']);
-          }
-        }
-      }
-    }
-    $jumlah_benar = sizeof($jawaban_benar);
-    $nilai = ($jumlah_benar / $jumlah_soal) * 100;
-    $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_siswa='$nis' AND id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
-    if ($getnilai->num_rows == 0) {
-      $query = $conn->query(
-        "INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_awal)
-        VALUES('$nis','$id_penugasan','$nilai')"
-      );
-    } else {
-      $datanilai = mysqli_fetch_assoc($getnilai);
-      $id_nilai = $datanilai['id'];
-      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai_awal='$nilai' WHERE id=$id_nilai");
-    }
-    break;
-
-  case 'push_jawaban_remidi':
-    $id_penugasan = $_POST['id_penugasan'];
-    $kode_tugas = $_POST['kode_tugas'];
-    $id_soal = $_POST['id_soal'];
-    $id_jawaban = $_POST['id_jawaban'];
-    $jawaban = $_POST['jawaban'];
-    $nis = $_SESSION['username'];
-    $jenis_ujian = $_POST['jenis_ujian'];
-    $getjawaban = $conn->query(
-      "SELECT * FROM arf_jawaban_siswa 
-      WHERE id_siswa='$nis' 
-      AND id_penugasan=$id_penugasan
-      AND kode_tugas='$kode_tugas'
-      AND id_soal=$id_soal
-      AND tgl_hapus IS NULL"
-    );
-    $datajawaban = mysqli_fetch_assoc($getjawaban);
-    // UPDATE JAWABAN
-    if ($getjawaban->num_rows == 0) {
-      $query = $conn->query(
-        "INSERT INTO arf_jawaban_siswa(id_siswa, id_penugasan, jenis_ujian, kode_tugas, id_soal, id_jawaban, jawaban) 
-        VALUES('$nis','$id_penugasan','$jenis_ujian','$kode_tugas','$id_soal','$id_jawaban','$jawaban')"
-      );
-    } else {
-      $id_jawaban = $datajawaban['id'];
-      $query = $conn->query("UPDATE arf_jawaban_siswa SET id_jawaban=$id_jawaban, jawaban='$jawaban' WHERE id=$id_jawaban");
-    }
-
-    // UPDATE NILAI
-    $getsoal =  $conn->query("SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-    $getalljawaban = $conn->query(
-      "SELECT * FROM arf_jawaban_siswa 
-      WHERE id_siswa='$nis' 
-      AND id_penugasan=$id_penugasan
-      AND jenis_ujian='$jenis_ujian'
-      AND kode_tugas='$kode_tugas'
-      AND tgl_hapus IS NULL"
-    );
-    $jumlah_soal =  $getsoal->num_rows;
-    $jawaban_benar = [];
-    while ($jawaban = mysqli_fetch_assoc($getalljawaban)) {
-      $id_soal_jawaban = $jawaban['id_soal'];
-      $getkunci =  $conn->query("SELECT * FROM arf_kunci_soal WHERE id_soal=$id_soal_jawaban AND tgl_hapus IS NULL");
-      while ($kunci = mysqli_fetch_assoc($getkunci)) {
-        if ($kunci['kunci'] == 1) {
-          if ($kunci['jawaban'] == $jawaban['jawaban']) {
-            array_push($jawaban_benar, $jawaban['jawaban']);
-          }
-        }
-      }
-    }
-    $jumlah_benar = sizeof($jawaban_benar);
-    $nilai = ($jumlah_benar / $jumlah_soal) * 100;
-    $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_siswa='$nis' AND id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
-    if ($getnilai->num_rows !== 0) {
-      $datanilai = mysqli_fetch_assoc($getnilai);
-      $id_nilai = $datanilai['id'];
-      $query = $conn->query("UPDATE arf_nilai_penugasan SET nilai_$jenis_ujian='$nilai' WHERE id=$id_nilai");
-    }
-    break;
-
   case 'simpan_data_jawaban':
     $id_penugasan = $_POST['id_penugasan'];
     $id_prosesujian = $_POST['id_prosesujian'];
@@ -378,10 +264,11 @@ switch ($_GET['action']) {
     $nilai = ($jumlah_benar / $jumlah_soal) * 100;
     $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_siswa='$nis' AND id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
     if ($getnilai->num_rows == 0) {
-      $query = $conn->query(
-        "INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_awal)
-        VALUES('$nis','$id_penugasan','$nilai')"
-      );
+      $id_tahunajaran = $datapenugasan['id_tahunajaran'];
+      $id_mapel = $datapenugasan['id_mapel'];
+      $jenis_tugas = $datapenugasan['jenis_tugas'];
+      $nh_ke = $datapenugasan['nh_ke'];
+      $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_thajaran, id_penugasan, id_mapel, jenis_tugas, nh_ke, nilai_awal) VALUES('$nis','$id_tahunajaran','$id_penugasan','$id_mapel','$jenis_tugas','$nh_ke','$nilai')");
     } else {
       $datanilai = mysqli_fetch_assoc($getnilai);
       $id_nilai = $datanilai['id'];
@@ -454,10 +341,11 @@ switch ($_GET['action']) {
     $nilai = ($jumlah_benar / $jumlah_soal) * 100;
     $getnilai =  $conn->query("SELECT * FROM arf_nilai_penugasan WHERE id_siswa='$nis' AND id_penugasan=$id_penugasan AND tgl_hapus IS NULL");
     if ($getnilai->num_rows == 0) {
-      $query = $conn->query(
-        "INSERT INTO arf_nilai_penugasan(id_siswa, id_penugasan, nilai_$jenis_ujian)
-        VALUES('$nis','$id_penugasan','$nilai')"
-      );
+      $id_tahunajaran = $datapenugasan['id_tahunajaran'];
+      $id_mapel = $datapenugasan['id_mapel'];
+      $jenis_tugas = $datapenugasan['jenis_tugas'];
+      $nh_ke = $datapenugasan['nh_ke'];
+      $query = $conn->query("INSERT INTO arf_nilai_penugasan(id_siswa, id_thajaran, id_penugasan, id_mapel, jenis_tugas, nh_ke, nilai_$jenis_ujian) VALUES('$nis','$id_tahunajaran','$id_penugasan','$id_mapel','$jenis_tugas','$nh_ke','$nilai')");
     } else {
       $datanilai = mysqli_fetch_assoc($getnilai);
       $id_nilai = $datanilai['id'];

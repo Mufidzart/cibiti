@@ -357,6 +357,12 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "judul-penugasan");
     }
+    if (empty($_POST['jenis-tugas'])) {
+      $validation = ["input" => "jenis-tugas", "message" => "Jenis tugas tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "jenis-tugas");
+    }
 
     if (empty($_POST['tugas-awal'])) {
       $validation = ["input" => "tugas-awal", "message" => "Tugas awal tidak boleh kosong."];
@@ -462,6 +468,7 @@ switch ($_GET['action']) {
       $id_mapel = $_POST['mapel'];
       $id_kelas = $_POST['kelas'];
       $judul = $_POST['judul-penugasan'];
+      $jenis_tugas = $_POST['jenis-tugas'];
       $deskripsi = $_POST['deskripsi-penugasan'];
       $tugas_awal = $_POST['tugas-awal'];
       $pecahtugasawal = explode(" - ", $_POST['batas-tugas-awal']);
@@ -470,6 +477,12 @@ switch ($_GET['action']) {
       $batas_tugas_awal = $tgl_tugasawal . ' ' . $time_tugasawal;
       $durasi_menit_tugas_awal = $_POST['durasi-tugas-awal'];
       $jumlah_soal_tugas_awal = $_POST['jumlah_soal-tugas-awal'];
+      if ($jenis_tugas == "Tugas Harian") {
+        $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND jenis_tugas='Tugas Harian' AND id_tahunajaran='$id_thajaran' AND tgl_hapus IS NULL");
+        $nh_ke = $getpenugasan->num_rows + 1;
+      } else {
+        $nh_ke = 0;
+      }
       if (!empty($_POST['r1'])) {
         $pecahr1 = explode(" - ", $_POST['batas-r1']);
         $tgl_r1 = date('Y-m-d', strtotime($pecahr1[0]));
@@ -501,8 +514,8 @@ switch ($_GET['action']) {
       // End Inputan Soal
       // Input Soal
       $query = $conn->query(
-        "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, id_tahunajaran, judul, deskripsi, tugas_awal, batas_tugas_awal, durasi_menit_tugas_awal, jumlah_soal_tugas_awal $kolomr1 $kolomr2) 
-      VALUES('$id_staff','$id_mapel','$id_kelas','$id_thajaran','$judul','$deskripsi','$tugas_awal','$batas_tugas_awal','$durasi_menit_tugas_awal','$jumlah_soal_tugas_awal' $valuer1 $valuer2)"
+        "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, id_tahunajaran, judul, deskripsi, jenis_tugas, nh_ke, tugas_awal, batas_tugas_awal, durasi_menit_tugas_awal, jumlah_soal_tugas_awal $kolomr1 $kolomr2) 
+      VALUES('$id_staff','$id_mapel','$id_kelas','$id_thajaran','$judul','$deskripsi','$jenis_tugas','$nh_ke','$tugas_awal','$batas_tugas_awal','$durasi_menit_tugas_awal','$jumlah_soal_tugas_awal' $valuer1 $valuer2)"
       );
       $last_id = $conn->insert_id;
       // End Input Soal
@@ -567,6 +580,12 @@ switch ($_GET['action']) {
       array_push($data['errors'], $validation);
     } else {
       array_push($data['success'], "judul-editpenugasan");
+    }
+    if (empty($_POST['jenis-editpenugasan'])) {
+      $validation = ["input" => "jenis-editpenugasan", "message" => "Jenis tugas tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "jenis-editpenugasan");
     }
 
     if (empty($_POST['tugas-awal-editpenugasan'])) {
@@ -670,6 +689,7 @@ switch ($_GET['action']) {
       // Inputan Soal
       $id_penugasan = $_POST['id-editpenugasan'];
       $judul = $_POST['judul-editpenugasan'];
+      $jenis_tugas = $_POST['jeni$jenis-editpenugasan'];
       $deskripsi = $_POST['deskripsi-editpenugasan'];
       $tugas_awal = $_POST['tugas-awal-editpenugasan'];
       $batas_tugas_awal = $_POST['batas-tugas-awal-editpenugasan'];
@@ -695,7 +715,7 @@ switch ($_GET['action']) {
       }
       // End Inputan Soal
       // Input Soal
-      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', tugas_awal='$tugas_awal',  batas_tugas_awal='$batas_tugas_awal', durasi_menit_tugas_awal='$durasi_menit_tugas_awal',jumlah_soal_tugas_awal=$jumlah_soal_tugas_awal $valuer1 $valuer2 WHERE id='$id_penugasan'");
+      $query = mysqli_query($conn, "UPDATE arf_history_penugasan SET judul='$judul', deskripsi='$deskripsi', jenis_tugas='$jenis_tugas', tugas_awal='$tugas_awal',  batas_tugas_awal='$batas_tugas_awal', durasi_menit_tugas_awal='$durasi_menit_tugas_awal',jumlah_soal_tugas_awal=$jumlah_soal_tugas_awal $valuer1 $valuer2 WHERE id='$id_penugasan'");
       // End Input Soal
 
       if ($query) {

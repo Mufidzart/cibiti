@@ -11,7 +11,8 @@
       </div>
       <?php $no = 1;
       $id_soal = json_decode($dataprosesujian['id_soal']);
-      $split_soal = sizeof($id_soal) / 2;
+      $tampil_per_page = 10; // Ganti untuk menampilkan jumlah soal per halaman
+      $split_soal = sizeof($id_soal) / $tampil_per_page;
       $split_soal_explode = explode(".", $split_soal);
       if (isset($split_soal_explode[1])) {
         $jumlah_tab = $split_soal_explode[0] + 1;
