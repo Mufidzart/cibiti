@@ -600,7 +600,8 @@
 <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
 <script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
 <script src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-<!-- END PAGE LEVEL SCRIPTS -->
+<script src="assets/global/plugins/cubeportfolio/js/jquery.cubeportfolio.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN THEME GLOBAL SCRIPTS -->
 <script src="assets/global/scripts/app.min.js" type="text/javascript"></script>
 <!-- END THEME GLOBAL SCRIPTS -->
@@ -611,6 +612,7 @@
 <script src="assets/apps/scripts/calendar.min.js" type="text/javascript"></script>
 <script src="assets/apps/scripts/todo-2.min.js" type="text/javascript"></script>
 <script src="assets/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+<script src="assets/pages/scripts/portfolio-3.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
 <script src="assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
