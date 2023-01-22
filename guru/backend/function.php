@@ -689,7 +689,7 @@ switch ($_GET['action']) {
       // Inputan Soal
       $id_penugasan = $_POST['id-editpenugasan'];
       $judul = $_POST['judul-editpenugasan'];
-      $jenis_tugas = $_POST['jeni$jenis-editpenugasan'];
+      $jenis_tugas = $_POST['jenis-editpenugasan'];
       $deskripsi = $_POST['deskripsi-editpenugasan'];
       $tugas_awal = $_POST['tugas-awal-editpenugasan'];
       $batas_tugas_awal = $_POST['batas-tugas-awal-editpenugasan'];
@@ -744,5 +744,29 @@ switch ($_GET['action']) {
       $data = "Hapus Data Gagal: " . mysqli_error($conn);
       echo json_encode($data);
     }
+    break;
+  case 'media_upload':
+    $folder = "../uploads/";
+    if (!file_exists($folder)) {
+      mkdir($folder, 0777);
+    }
+    for ($f = 0; $f < count($_FILES["upload_file"]["tmp_name"]); $f++) {
+      $filename   = uniqid() . "-" . time(); // 5dab1961e93a7-1571494241
+      $extension  = pathinfo($_FILES["upload_file"]["name"][$f], PATHINFO_EXTENSION);
+      $basename   = $filename . "." . $extension; // 5dab1961e93a7_1571494241.jpg
+
+      $source       = $_FILES["upload_file"]["tmp_name"][$f];
+      $destination  = $folder . $basename;
+
+      /* move the file */
+      move_uploaded_file($source, $destination);
+      $query = mysqli_query($conn, "INSERT INTO arf_media_upload(nama) VALUES('$basename')");
+    }
+    if ($query) {
+      $data = ['acc' => true];
+    } else {
+      $data = ['acc' => false];
+    }
+    echo json_encode($data);
     break;
 }

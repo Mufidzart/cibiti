@@ -2,7 +2,57 @@
 require('backend/connection.php');
 $page_title = "Media Learning Management System (LMS)";
 require('layouts/headlayout.php');
+$getfile = mysqli_query($conn, "SELECT * FROM arf_media_upload");
 ?>
+<style>
+  .gallery-title {
+    font-size: 36px;
+    color: #42B32F;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 70px;
+  }
+
+  .gallery-title:after {
+    content: "";
+    position: absolute;
+    width: 7.5%;
+    left: 46.5%;
+    height: 45px;
+    border-bottom: 1px solid #5e5e5e;
+  }
+
+  .filter-button {
+    font-size: 18px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 30px;
+
+  }
+
+  .filter-button:hover {
+    font-size: 18px;
+    border: 1px solid #42B32F;
+    border-radius: 5px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #42B32F;
+
+  }
+
+  .btn-default:active .filter-button:active {
+    background-color: #42B32F;
+    color: white;
+  }
+
+  .port-image {
+    width: 100%;
+  }
+
+  .gallery_product {
+    margin-bottom: 30px;
+  }
+</style>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
   <!-- BEGIN CONTENT BODY -->
@@ -33,177 +83,54 @@ require('layouts/headlayout.php');
     </ul>
     <!-- END PAGE BREADCRUMB -->
     <!-- BEGIN PAGE BASE CONTENT -->
-    <div class="portfolio-content portfolio-3">
-      <div class="clearfix">
-        <div id="js-filters-lightbox-gallery1" class="cbp-l-filters-dropdown cbp-l-filters-dropdown-floated">
-          <div class="cbp-l-filters-dropdownWrap border-grey-salsa">
-            <div class="cbp-l-filters-dropdownHeader uppercase">Sort Gallery</div>
-            <div class="cbp-l-filters-dropdownList">
-              <div data-filter="*" class="cbp-filter-item-active cbp-filter-item uppercase"> All (
-                <div class="cbp-filter-counter"></div> items)
-              </div>
-              <div data-filter=".identity" class="cbp-filter-item uppercase"> Identity (
-                <div class="cbp-filter-counter"></div> items)
-              </div>
-              <div data-filter=".web-design" class="cbp-filter-item uppercase"> Web Design (
-                <div class="cbp-filter-counter"></div> items)
-              </div>
-              <div data-filter=".print" class="cbp-filter-item uppercase"> Print (
-                <div class="cbp-filter-counter"></div> items)
-              </div>
-            </div>
+    <a class="btn btn-circle green" data-toggle="modal" href="#tambah-media">Tambah Media <i class="fa fa-plus"></i></a>
+    <div class="container">
+      <div class="row">
+        <div align="left" style="margin-top:20px;">
+          <button class="btn btn-default filter-button" data-filter="all">All</button>
+          <button class="btn btn-default filter-button" data-filter="image">Gambar</button>
+          <button class="btn btn-default filter-button" data-filter="record">Audio</button>
+        </div>
+        <br />
+        <?php $no = 1;
+        while ($row = mysqli_fetch_assoc($getfile)) :
+          $extension  = pathinfo($row["nama"], PATHINFO_EXTENSION);
+          $image = ['jpg', 'jpeg', 'png'];
+          if (in_array($extension, $image)) {
+            $label = "image";
+            $src = $baseurl . "/guru/uploads/" . $row["nama"];
+            $url_link = $src;
+            $player = "";
+          } else {
+            $label = "record";
+            $src = $baseurl . "/guru/assets/images/audio-bg.png";
+            $url_link = $baseurl . "/guru/uploads/" . $row["nama"];
+            $player = '<audio controlssrc="' . $url_link . '"></audio>';
+          }
+        ?>
+          <div class="gallery_product col-lg-3 col-md-4 col-sm-4 col-xs-6 filter <?= $label ?>">
+            <img src="<?= $src ?>" class="img-responsive">
+            <div class="player_<?= $no ?>"></div>
+            <?php if (!in_array($extension, $image)) : ?>
+              <script>
+                $(document).ready(function() {
+                  $(".player_<?= $no ?>").vpplayer({
+                    src: "<?= $baseurl . "/guru/uploads/" . $row["nama"] ?>",
+                    view: "minimal", // or basic
+                  });
+                });
+              </script>
+            <?php endif; ?>
+            <br><span><?= $row["nama"] ?></span>
+            <br>
+            <a href="javascript:;" class="btn btn-sm grey-cascade copy-url-link" style="margin-top: 10px;" data-no="<?= $no ?>" url-link="<?= $url_link ?>"> Copy Link
+              <i class="fa fa-link"></i>
+            </a>
+            <br>
+            <a class=" btn btn-circle green" id="notice-<?= $no ?>" style="display: none;margin-top: 10px;">Berhasil copy url</a>
           </div>
-        </div>
-        <div id="js-filters-lightbox-gallery2" class="cbp-l-filters-button cbp-l-filters-left">
-          <div data-filter="*" class="cbp-filter-item-active cbp-filter-item btn blue btn-outline uppercase">All</div>
-          <div data-filter=".graphic" class="cbp-filter-item btn blue btn-outline uppercase">Graphic</div>
-          <div data-filter=".logos" class="cbp-filter-item btn blue btn-outline uppercase">Logo</div>
-          <div data-filter=".motion" class="cbp-filter-item btn blue btn-outline uppercase">Motion</div>
-        </div>
-      </div>
-      <div id="js-grid-lightbox-gallery" class="cbp">
-        <div class="cbp-item web-design graphic print motion">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project3.html" class="cbp-caption cbp-singlePageInline" data-title="World Clock Widget<br>by Paul Flavius Nechita" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/01.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">World Clock Widget</div>
-                  <div class="cbp-l-caption-desc">by Paul Flavius Nechita</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item web-design logos identity graphic">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project4.html" class="cbp-caption cbp-singlePageInline" data-title="Bolt UI<br>by Tiberiu Neamu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/1.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">Bolt UI</div>
-                  <div class="cbp-l-caption-desc">by Tiberiu Neamu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item graphic print identity">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project3.html" class="cbp-caption cbp-singlePageInline" data-title="WhereTO App<br>by Tiberiu Neamu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/02.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">WhereTO App</div>
-                  <div class="cbp-l-caption-desc">by Tiberiu Neamu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item web-design motion logos">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project4.html" class="cbp-caption cbp-singlePageInline" data-title="iDevices<br>by Tiberiu Neamu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/2.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">iDevices</div>
-                  <div class="cbp-l-caption-desc">by Tiberiu Neamu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item identity graphic print">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project3.html" class="cbp-caption cbp-singlePageInline" data-title="Seemple* Music for iPad<br>by Tiberiu Neamu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/03.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">Seemple* Music for iPad</div>
-                  <div class="cbp-l-caption-desc">by Tiberiu Neamu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item motion print logos web-design">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project4.html" class="cbp-caption cbp-singlePageInline" data-title="Remind~Me Widget<br>by Tiberiu Neamu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/3.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">Remind~Me Widget</div>
-                  <div class="cbp-l-caption-desc">by Tiberiu Neamu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item graphic logos">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project3.html" class="cbp-caption cbp-singlePageInline" data-title="Workout Buddy<br>by Tiberiu Neamu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/04.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">Workout Buddy</div>
-                  <div class="cbp-l-caption-desc">by Tiberiu Neamu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item identity print logos motion">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project4.html" class="cbp-caption cbp-singlePageInline" data-title="Digital Menu<br>by Cosmin Capitanu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/4.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">Digital Menu</div>
-                  <div class="cbp-l-caption-desc">by Cosmin Capitanu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        <div class="cbp-item identity motion web-design">
-          <a href="assets/global/plugins/cubeportfolio/ajax/project3.html" class="cbp-caption cbp-singlePageInline" data-title="Holiday Selector<br>by Cosmin Capitanu" rel="nofollow">
-            <div class="cbp-caption-defaultWrap">
-              <img src="assets/global/img/portfolio/600x600/05.jpg" alt="">
-            </div>
-            <div class="cbp-caption-activeWrap">
-              <div class="cbp-l-caption-alignLeft">
-                <div class="cbp-l-caption-body">
-                  <div class="cbp-l-caption-title">Holiday Selector</div>
-                  <div class="cbp-l-caption-desc">by Cosmin Capitanu</div>
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-      <div id="js-loadMore-lightbox-gallery" class="cbp-l-loadMore-button">
-        <a href="assets/global/plugins/cubeportfolio/ajax/loadMore3.html" class="cbp-l-loadMore-link btn grey-mint btn-outline" rel="nofollow">
-          <span class="cbp-l-loadMore-defaultText">LOAD MORE</span>
-          <span class="cbp-l-loadMore-loadingText">LOADING...</span>
-          <span class="cbp-l-loadMore-noMoreLoading">NO MORE WORKS</span>
-        </a>
+        <?php $no++;
+        endwhile; ?>
       </div>
     </div>
     <!-- END PAGE BASE CONTENT -->
@@ -211,3 +138,170 @@ require('layouts/headlayout.php');
   <!-- END CONTENT BODY -->
 </div>
 <!-- END CONTENT -->
+<!-- /.modal -->
+<div class=" modal fade bs-modal-lg" id="tambah-media" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Tambah Media Baru</h4>
+      </div>
+      <form role="form" id="form-tambah-tugas">
+        <div class="modal-body">
+          <div id="pesan"></div>
+          <div class="form-body text-center">
+            <div id="drop_zone">
+              <p>Drop file here</p>
+              <p>or</p>
+              <p><button type="button" id="btn_file_pick" class="btn btn-primary" style="display: block;"><span class="glyphicon glyphicon-folder-open"></span> Select File</button></p>
+              <p id="file_info"></p>
+              <input type="file" style="display: none;" id="selectfile" multiple="true">
+              <p id="message_info"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          <button type="button" id="btn_upload" class="btn green" style="display: none;">Buat Tugas</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<script>
+  var fileobj;
+  $(document).ready(function() {
+    $('.copy-url-link').on('click', function() {
+      var temp = $("<input>");
+      $("body").append(temp);
+      temp.val($(this).attr('url-link')).select();
+      document.execCommand("copy");
+      temp.remove();
+      var no = $(this).attr('data-no');
+      console.log(no)
+      $('#notice-' + no).attr("style", "display: block");
+      setTimeout(function() {
+        $('#notice-' + no).attr("display", "display: none");
+      }, 2000);
+    })
+
+    $("#drop_zone").on("dragover", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    });
+
+    $("#drop_zone").on("drop", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      fileobj = event.originalEvent.dataTransfer.files;
+      if (fileobj.length > 0) {
+        for (var f = 0; f < fileobj.length; f++) {
+          var fname = fileobj[f].name;
+          var fsize = fileobj[f].size;
+          if (fname.length > 0) {
+            document.getElementById('file_info').innerHTML += "File name : " + fname + ' (<b>' + bytesToSize(fsize) + '</b>)<br>';
+          }
+        }
+      }
+      document.getElementById('selectfile').files = fileobj;
+      document.getElementById('btn_upload').style.display = "inline";
+    });
+
+    $('#btn_file_pick').click(function() {
+      /*normal file pick*/
+      document.getElementById('selectfile').click();
+      document.getElementById('selectfile').onchange = function() {
+        fileobj = document.getElementById('selectfile').files;
+        if (fileobj.length > 0) {
+          for (var f = 0; f < fileobj.length; f++) {
+            var fname = fileobj[f].name;
+            var fsize = fileobj[f].size;
+            if (fname.length > 0) {
+              document.getElementById('file_info').innerHTML += "File name : " + fname + ' (<b>' + bytesToSize(fsize) + '</b>)<br>';
+            }
+          }
+        }
+        document.getElementById('btn_upload').style.display = "inline";
+      };
+    });
+    $('#btn_upload').click(function() {
+      if (fileobj == "" || fileobj == null) {
+        alert("Please select a file");
+        return false;
+      } else {
+        ajax_file_upload(fileobj);
+      }
+    });
+
+    $(".filter-button").click(function() {
+      var value = $(this).attr('data-filter');
+
+      if (value == "all") {
+        //$('.filter').removeClass('hidden');
+        $('.filter').show('1000');
+      } else {
+        //            $('.filter[filter-item="'+value+'"]').removeClass('hidden');
+        //            $(".filter").not('.filter[filter-item="'+value+'"]').addClass('hidden');
+        $(".filter").not('.' + value).hide('3000');
+        $('.filter').filter('.' + value).show('3000');
+
+      }
+    });
+
+    if ($(".filter-button").removeClass("active")) {
+      $(this).removeClass("active");
+    }
+    $(this).addClass("active");
+
+  });
+
+  function ajax_file_upload(file_obj) {
+    if (file_obj != undefined) {
+      var form_data = new FormData();
+      if (fileobj.length > 0) {
+        for (var f = 0; f < fileobj.length; f++) {
+          form_data.append('upload_file[]', file_obj[f]);
+        }
+      }
+      $.ajax({
+        type: 'POST',
+        url: 'backend/function.php?action=media_upload',
+        contentType: false,
+        processData: false,
+        data: form_data,
+        dataType: 'json',
+        beforeSend: function(response) {
+          $('#message_info').html("Uploading your file, please wait...");
+        },
+        success: function(response) {
+          if (response.acc == true) {
+            $('#message_info').html("Berhasil");
+            $('#selectfile').val('');
+            $('#tambah-media').modal('hide');
+          } else {
+            $('#message_info').html("Gagal Upload");
+            $('#selectfile').val('');
+          }
+        }
+      });
+    }
+  }
+
+  $('#tambah-media').on('hidden.bs.modal', function() {
+    $('#file_info').html(" ");
+    $('#message_info').html(" ");
+    $('#selectfile').val('');
+  })
+
+  function bytesToSize(bytes) {
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return '0 Byte';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+  }
+</script>
