@@ -206,20 +206,18 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
           <div class="form-body">
             <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
             <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
-            <div class="form-group" id="form-soal" style="margin-bottom: 20px;">
-              <div class="alert alert-danger alert-soal" style="display: none;">Jumlah soal tidak boleh kosong</div>
-              <div class="alert alert-danger alert-jawaban" style="display: none;">Jumlah Jawaban tidak boleh kosong</div>
-            </div>
-            <div class="form-group" id="form-soal" style="margin-bottom: 20px;">
+            <div class="alert alert-danger alert-soal" style="display: none;">Jumlah soal tidak boleh kosong</div>
+            <div class="alert alert-danger alert-jawaban" style="display: none;">Jumlah Jawaban tidak boleh kosong</div>
+            <div class="form-group" id="form-soal">
               <label class="control-label">Jumlah Soal</label>
-              <input class="form-control col-md-4 jumlah_soal" type="text" name="jumlah_soal" id="jumlah_soal">
+              <input class="form-control col-md-4 jumlah_soal" style="margin-bottom: 10px;" type="text" name="jumlah_soal" id="jumlah_soal">
             </div>
-            <div class="form-group" id="form-jawaban" style="margin-bottom: 20px;">
+            <div class="form-group" id="form-jawaban">
               <label class="control-label">Jumlah pilihan jawaban per soal</label>
-              <input class="form-control col-md-4 jumlah_jawaban" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
+              <input class="form-control col-md-4 jumlah_jawaban" style="margin-bottom: 10px;" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
             </div>
-            <div class="form-group" id="form-jawaban" style="margin-bottom: 20px;">
-              <button type="button" class="btn success btn-outline" id="btn_excel">Generate Excel</button>
+            <div class="form-group" id="form-jawaban">
+              <button type="button" class="btn success btn-outline" style="margin-bottom: 10px;" id="btn_excel">Generate Excel</button>
             </div>
           </div>
           <div class="form-actions right">
@@ -480,6 +478,13 @@ require('layouts/bodylayout.php');
       $("[name=radio-pilihan]").attr("checked", false);
       $('#pesan-radio-pilihan').html('')
       $('#jawaban').removeClass('alert-danger');
+    });
+
+    $('#modal-tambah-soal-excel').on('hidden.bs.modal', function() {
+      $(".jumlah_soal").val("");
+      $(".jumlah_jawaban").val("");
+      $('.alert-soal').css("display", "none");
+      $('.alert-jawaban').css("display", "none");
     });
 
     $('#tampil_soal').on('click', '.edit-soal', function(event) {
