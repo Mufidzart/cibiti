@@ -769,4 +769,12 @@ switch ($_GET['action']) {
     }
     echo json_encode($data);
     break;
+
+  case 'generate_excel_soal':
+    $id_penugasan = $_POST['id_tugas'];
+    $jumlah_soal = $_POST['jumlah_soal'];
+    $jumlah_jawaban = $_POST['jumlah_jawaban'];
+    $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan' AND tgl_hapus");
+    require('../views/generate_document/excel_soal.php');
+    break;
 }

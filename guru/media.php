@@ -100,28 +100,20 @@ $getfile = mysqli_query($conn, "SELECT * FROM arf_media_upload");
             $label = "image";
             $src = $baseurl . "/guru/uploads/" . $row["nama"];
             $url_link = $src;
-            $player = "";
           } else {
             $label = "record";
             $src = $baseurl . "/guru/assets/images/audio-bg.png";
             $url_link = $baseurl . "/guru/uploads/" . $row["nama"];
-            $player = '<audio controlssrc="' . $url_link . '"></audio>';
           }
         ?>
           <div class="gallery_product col-lg-3 col-md-4 col-sm-4 col-xs-6 filter <?= $label ?>">
             <img src="<?= $src ?>" class="img-responsive">
-            <div class="player_<?= $no ?>"></div>
             <?php if (!in_array($extension, $image)) : ?>
-              <script>
-                $(document).ready(function() {
-                  $(".player_<?= $no ?>").vpplayer({
-                    src: "<?= $baseurl . "/guru/uploads/" . $row["nama"] ?>",
-                    view: "minimal", // or basic
-                  });
-                });
-              </script>
+              <audio controls>
+                <source src="<?= $baseurl . "/guru/uploads/" . $row["nama"] ?>" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio>
             <?php endif; ?>
-            <br><span><?= $row["nama"] ?></span>
             <br>
             <a href="javascript:;" class="btn btn-sm grey-cascade copy-url-link" style="margin-top: 10px;" data-no="<?= $no ?>" url-link="<?= $url_link ?>"> Copy Link
               <i class="fa fa-link"></i>
@@ -185,7 +177,7 @@ $getfile = mysqli_query($conn, "SELECT * FROM arf_media_upload");
       console.log(no)
       $('#notice-' + no).attr("style", "display: block");
       setTimeout(function() {
-        $('#notice-' + no).attr("display", "display: none");
+        $('#notice-' + no).attr("style", "display: none");
       }, 2000);
     })
 

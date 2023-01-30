@@ -81,7 +81,7 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
                       </div>
                       <div class="actions">
                         <div class="btn-group">
-                          <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal">Tambah Soal <i class="fa fa-plus"></i></a>
+                          <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-soal-excel">Tambah Soal <i class="fa fa-plus"></i></a>
                         </div>
                       </div>
                     </div>
@@ -193,6 +193,46 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH SOAL -->
+<!-- MODAL TAMBAH SOAL GENERATE EXCEL -->
+<div class="modal fade bs-modal-lg" id="modal-tambah-soal-excel" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Tambah Soal</h4>
+      </div>
+      <div class="modal-body form">
+        <form role="form" id="form-tambah-soal">
+          <div class="form-body">
+            <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
+            <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
+            <div class="form-group" id="form-soal" style="margin-bottom: 20px;">
+              <div class="alert alert-danger alert-soal" style="display: none;">Jumlah soal tidak boleh kosong</div>
+              <div class="alert alert-danger alert-jawaban" style="display: none;">Jumlah Jawaban tidak boleh kosong</div>
+            </div>
+            <div class="form-group" id="form-soal" style="margin-bottom: 20px;">
+              <label class="control-label">Jumlah Soal</label>
+              <input class="form-control col-md-4 jumlah_soal" type="text" name="jumlah_soal" id="jumlah_soal">
+            </div>
+            <div class="form-group" id="form-jawaban" style="margin-bottom: 20px;">
+              <label class="control-label">Jumlah pilihan jawaban per soal</label>
+              <input class="form-control col-md-4 jumlah_jawaban" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
+            </div>
+            <div class="form-group" id="form-jawaban" style="margin-bottom: 20px;">
+              <button type="button" class="btn success btn-outline" id="btn_excel">Generate Excel</button>
+            </div>
+          </div>
+          <div class="form-actions right">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL TAMBAH SOAL GENERATE EXCEL -->
 <!-- MODAL EDIT SOAL -->
 <div class="modal fade bs-modal-lg" id="modal-edit-soal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -514,5 +554,28 @@ require('layouts/bodylayout.php');
         }
       });
     });
+
+    $('#btn_excel').on('click', function(event) {
+      var jumlah_soal = $(".jumlah_soal").val();
+      var jumlah_jawaban = $(".jumlah_jawaban").val();
+      var id_tugas = <?= $tugas['id'] ?>;
+      if ($(".jumlah_soal").is(':empty')) {
+        $('.alert-soal').css("display", "block");
+      } else {
+        $('.alert-soal').css("display", "none");
+      }
+      if ($(".jumlah_jawaban").is(':empty')) {
+        $('.alert-jawaban').css("display", "block");
+      } else {
+        $('.alert-jawaban').css("display", "none");
+      }
+      if (jumlah_soal && jumlah_jawaban) {
+        var popout = window.open('<?= $baseurl ?>/guru/views/generate_document/excel_soal.php?id=' + id_tugas + '&js=' + jumlah_soal + '&jj=' + jumlah_jawaban);
+        // window.setTimeout(function() {
+        //   popout.close();
+        // }, 1000);
+      }
+    });
+
   })
 </script>

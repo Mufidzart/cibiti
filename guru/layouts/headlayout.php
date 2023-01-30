@@ -76,10 +76,6 @@ License: You must have a valid license purchased only from themeforest(the above
     <script src="assets/custom/plugins/maudio/js/maudio.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/custom/plugins/vpplayer/css/vpplayer.css">
     <script src="assets/custom/plugins/vpplayer/lib/vpplayer.js"></script>
-    <link href="assets/custom/plugins/lunaudio/vendor/jquery-uiassets/custom/plugins/lunaudiomin.css" rel="stylesheet" type="text/css" media="screen">
-    <link href="assets/custom/plugins/lunaudio/vendor/jquery-ui.structure.min.css" rel="stylesheet" type="text/css" media="screen">
-    <link href="assets/custom/plugins/lunaudio/css/jquery-luna.css" rel="stylesheet" type="text/css" media="screen">
-    <script src="assets/custom/plugins/lunaudio/js/jquery-luna.js"></script>
     <!-- END CORE PLUGINS -->
 </head>
 </head>
