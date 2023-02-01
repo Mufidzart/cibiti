@@ -1,5 +1,12 @@
 <?php
 require 'connection.php';
+// Load file autoload.php
+require '../../vendor/autoload.php';
+
+// Include librari PhpSpreadsheet
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+
 include 'helpers.php';
 switch ($_GET['action']) {
   case 'simpan_data_tugas':
@@ -754,7 +761,6 @@ switch ($_GET['action']) {
       $filename   = uniqid() . "-" . time(); // 5dab1961e93a7-1571494241
       $extension  = pathinfo($_FILES["upload_file"]["name"][$f], PATHINFO_EXTENSION);
       $basename   = $filename . "." . $extension; // 5dab1961e93a7_1571494241.jpg
-
       $source       = $_FILES["upload_file"]["tmp_name"][$f];
       $destination  = $folder . $basename;
 
@@ -776,5 +782,54 @@ switch ($_GET['action']) {
     $jumlah_jawaban = $_POST['jumlah_jawaban'];
     $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan' AND tgl_hapus");
     require('../views/generate_document/excel_soal.php');
+    break;
+  case 'import_soal':
+    if (isset($_FILES['fileexcel'])) { // Jika user mengklik tombol Import
+      $folder = "../tmp/";
+      if (!file_exists($folder)) {
+        mkdir($folder, 0777);
+      }
+      $file_name = $_FILES['fileexcel']['name'];
+      $source       = $_FILES["fileexcel"]["tmp_name"];
+      $destination  = $folder . $file_name;
+      /* move the file */
+      // move_uploaded_file($source, $destination);
+      // $arr_file = explode('.', $_FILES['fileexcel']['name']);
+      $extension = end($arr_file);
+
+      if ('csv' == $extension) {
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+      } else {
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+      }
+      $spreadsheet = $reader->load($destination); // Load file yang tadi diupload ke folder tmp
+      $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+      var_dump($this->spreadsheet->getActiveSheet()->getHighestRow());
+      die;
+      $numrow = 1;
+      foreach ($sheet as $row) {
+        var_dump($row['A']);
+        die;
+        // Ambil data pada excel sesuai Kolom
+        $no = $row['A']; // Ambil data NIS
+        $soal = $row['B']; // Ambil data nama
+        $jenis_kelamin = $row['C']; // Ambil data jenis kelamin
+        $telp = $row['D']; // Ambil data telepon
+        $alamat = $row['E']; // Ambil data alamat
+
+        // Cek jika semua data tidak diisi
+        if ($nis == "" && $nama == "" && $jenis_kelamin == "" && $telp == "" && $alamat == "")
+          continue; // Lewat data pada baris ini (masuk ke looping selanjutnya / baris selanjutnya)
+        // Cek $numrow apakah lebih dari 1
+        // Artinya karena baris pertama adalah nama-nama kolom
+        // Jadi dilewat saja, tidak usah diimport
+
+        $numrow++; // Tambah 1 setiap kali looping
+      }
+
+      unlink($path); // Hapus file excel yg telah diupload, ini agar tidak terjadi penumpukan file
+    }
+
+    header('location: index.php'); // Redirect ke halaman awal
     break;
 }

@@ -202,28 +202,58 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
         <h4 class="modal-title">Tambah Soal</h4>
       </div>
       <div class="modal-body form">
-        <form role="form" id="form-tambah-soal">
-          <div class="form-body">
-            <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
-            <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
-            <div class="alert alert-danger alert-soal" style="display: none;">Jumlah soal tidak boleh kosong</div>
-            <div class="alert alert-danger alert-jawaban" style="display: none;">Jumlah Jawaban tidak boleh kosong</div>
-            <div class="form-group" id="form-soal">
-              <label class="control-label">Jumlah Soal</label>
-              <input class="form-control col-md-4 jumlah_soal" style="margin-bottom: 10px;" type="text" name="jumlah_soal" id="jumlah_soal">
-            </div>
-            <div class="form-group" id="form-jawaban">
-              <label class="control-label">Jumlah pilihan jawaban per soal</label>
-              <input class="form-control col-md-4 jumlah_jawaban" style="margin-bottom: 10px;" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
-            </div>
-            <div class="form-group" id="form-jawaban">
-              <button type="button" class="btn success btn-outline" style="margin-bottom: 10px;" id="btn_excel">Generate Excel</button>
+        <div class="form-body">
+          <input class="form-control" type="hidden" name="id-mapel-soal" value="<?= $tugas['id_mapel'] ?>">
+          <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
+          <div class="alert alert-danger alert-soal" style="display: none;">Jumlah soal tidak boleh kosong</div>
+          <div class="alert alert-danger alert-jawaban" style="display: none;">Jumlah Jawaban tidak boleh kosong</div>
+          <div class="form-group" id="form-soal">
+            <label class="control-label">Jumlah Soal</label>
+            <input class="form-control col-md-4 jumlah_soal" style="margin-bottom: 10px;" type="text" name="jumlah_soal" id="jumlah_soal">
+          </div>
+          <div class="form-group" id="form-jawaban">
+            <label class="control-label">Jumlah pilihan jawaban per soal</label>
+            <input class="form-control col-md-4 jumlah_jawaban" style="margin-bottom: 10px;" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
+          </div>
+          <div class="form-group" id="form-jawaban">
+            <button type="button" class="btn success btn-outline" style="margin-bottom: 10px;" id="btn_excel">Generate Excel</button>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-success">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Import Soal</h3>
+                </div>
+                <div class="panel-body" style="text-align:center;">
+                  <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                  <div class="row">
+                    <div class="col-lg-7">
+                      <!-- The fileinput-button span is used to style the file input field as button -->
+                      <form id="formexcel">
+                        <div class="form-group">
+                          <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel" id="fileexcel">
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn blue start start_import">
+                            <i class="fa fa-upload"></i>
+                            <span> Start Import </span>
+                          </button>
+                        </div>
+                        <div class="form-group" id="pesan-excel">
+
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="form-actions right">
-            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-          </div>
-        </form>
+        </div>
+        <div class="form-actions right">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+        </div>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -564,12 +594,12 @@ require('layouts/bodylayout.php');
       var jumlah_soal = $(".jumlah_soal").val();
       var jumlah_jawaban = $(".jumlah_jawaban").val();
       var id_tugas = <?= $tugas['id'] ?>;
-      if ($(".jumlah_soal").is(':empty')) {
+      if (!jumlah_soal) {
         $('.alert-soal').css("display", "block");
       } else {
         $('.alert-soal').css("display", "none");
       }
-      if ($(".jumlah_jawaban").is(':empty')) {
+      if (!jumlah_jawaban) {
         $('.alert-jawaban').css("display", "block");
       } else {
         $('.alert-jawaban').css("display", "none");
@@ -582,5 +612,34 @@ require('layouts/bodylayout.php');
       }
     });
 
+    $("#formexcel").on("submit", function(event) {
+      event.preventDefault();
+      var file_data = $('#fileexcel').prop('files')[0];
+      var formData = new FormData($(this)[0]);
+      if (file_data == undefined) {
+        $("#pesan-excel").html('<div class="alert alert-danger">File tidak boleh kosong</div>');
+      } else {
+        $("#pesan-excel").html('');
+        var file_name = file_data.name;
+        var file_extension = file_name.split('.').pop().toLowerCase();
+        console.log(file_extension);
+        if (jQuery.inArray(file_extension, ['xlsx', 'xls', 'csv'])) {
+          $("#pesan-excel").html('<div class="alert alert-danger">File yang diizinkan hanya .xlsx, .xls, dan .csv</div>');
+        } else {
+          $.ajax({
+            url: 'backend/function.php?action=import_soal',
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(data) {
+              get_soal();
+              $('#modal-tambah-soal-excel').modal('hide');
+            }
+          });
+        }
+      }
+    });
   })
 </script>
