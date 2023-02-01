@@ -6,13 +6,14 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $id_penugasan = $_GET['id'];
+$encode = base64_encode($id_penugasan);
+$tipe_soal = $_GET['ts'];
 $jumlah_soal = $_GET['js'];
 $jumlah_jawaban = $_GET['jj'];
 $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id='$id_penugasan' AND tgl_hapus IS NULL");
 $tugas = mysqli_fetch_assoc($getpenugasan);
 $kode_tugas = $tugas['kode_tugas'];
 $judul_tugas = $tugas['judul'];
-$id_mapel = $tugas['id_mapel'];
 $id_mapel = $tugas['id_mapel'];
 $getmapel = mysqli_query($conn, "SELECT * FROM arf_mapel WHERE id='$id_mapel'");
 $datamapel = mysqli_fetch_assoc($getmapel);
@@ -23,6 +24,8 @@ $staf = $datastaf['nama_lengkap'];
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'Kode Tugas: ' . $kode_tugas . "\n" . 'Judul Tugas:  ' . $judul_tugas . "\n" . 'Mata Pelajaran: ' . $mapel . "\n" . 'Guru: ' . $staf);
+$sheet->setCellValue('C1', 'REF:' . $encode);
+$sheet->setCellValue('C2', 'TYPE:' . $tipe_soal);
 $sheet->getStyle('A1')->getAlignment()
   ->setWrapText(true)
   ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP)
@@ -37,18 +40,18 @@ $sheet->getProtection()->setSheet(true);
 $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
 $sheet->getStyle('A1')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
 
-$sheet->setCellValue('A6', 'No')
-  ->setCellValue('B6', 'Soal');
+$sheet->setCellValue('A7', 'No')
+  ->setCellValue('B7', 'Soal');
 $sheet->getColumnDimension('A')->setWidth(30, 'pt');
 $sheet->getColumnDimension('B')->setWidth(300, 'pt');
-$sheet->getStyle('6')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
-$sheet->getStyle('6')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle('7')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+$sheet->getStyle('7')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
 // Setting Jumlah Jawaban
 $char = "C";
 $array_pilihan_jawaban = [];
 for ($i = 1; $i <= $jumlah_jawaban; $i++) {
-  $col = $char . "6";
+  $col = $char . "7";
   $jawaban = 'Jawaban ' . $i;
   $sheet->setCellValue($col, $jawaban);
   $sheet->getColumnDimension($char)->setAutoSize(TRUE);
@@ -57,7 +60,7 @@ for ($i = 1; $i <= $jumlah_jawaban; $i++) {
 }
 // End Setting Jumlah Jawaban
 // Set Posisi Kolom Kunci Jawaban
-$char_kunci = $char . "6";
+$char_kunci = $char . "7";
 $new_char_kunci = $char;
 $sheet->setCellValue($char_kunci, 'Kunci Jawaban');
 $sheet->getColumnDimension($char)->setAutoSize(TRUE);
@@ -67,7 +70,7 @@ $sheet->getColumnDimension($char)->setAutoSize(TRUE);
 $pilihan = implode(", ", $array_pilihan_jawaban);
 
 // Setting Jumlah Soal
-$row = 7;
+$row = 8;
 for ($i = 1; $i <= $jumlah_soal; $i++) {
   $col_no = "A" . $row;
   $col_kunci = $new_char_kunci . $row;

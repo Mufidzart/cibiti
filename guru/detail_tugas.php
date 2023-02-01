@@ -207,6 +207,17 @@ $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus 
           <input class="form-control" type="hidden" name="kode-tugas-soal" value="<?= $tugas['kode_tugas'] ?>">
           <div class="alert alert-danger alert-soal" style="display: none;">Jumlah soal tidak boleh kosong</div>
           <div class="alert alert-danger alert-jawaban" style="display: none;">Jumlah Jawaban tidak boleh kosong</div>
+          <div class="form-group" id="form-tipe-soal">
+            <label class="control-label">Tipe Soal</label>
+            <select class="form-control tipe_soal" id="tipe-soal" name="tipe-soal">
+              <?php
+              $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
+              while ($row = mysqli_fetch_array($tipe_soal)) : ?>
+                <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
+              <?php endwhile; ?>
+            </select>
+            <div id="pesan-tipe-soal"></div>
+          </div>
           <div class="form-group" id="form-soal">
             <label class="control-label">Jumlah Soal</label>
             <input class="form-control col-md-4 jumlah_soal" style="margin-bottom: 10px;" type="text" name="jumlah_soal" id="jumlah_soal">
@@ -593,6 +604,7 @@ require('layouts/bodylayout.php');
     $('#btn_excel').on('click', function(event) {
       var jumlah_soal = $(".jumlah_soal").val();
       var jumlah_jawaban = $(".jumlah_jawaban").val();
+      var tipe_soal = $(".tipe_soal").val();
       var id_tugas = <?= $tugas['id'] ?>;
       if (!jumlah_soal) {
         $('.alert-soal').css("display", "block");
@@ -605,7 +617,7 @@ require('layouts/bodylayout.php');
         $('.alert-jawaban').css("display", "none");
       }
       if (jumlah_soal && jumlah_jawaban) {
-        var popout = window.open('<?= $baseurl ?>/guru/views/generate_document/excel_soal.php?id=' + id_tugas + '&js=' + jumlah_soal + '&jj=' + jumlah_jawaban);
+        var popout = window.open('<?= $baseurl ?>/guru/views/generate_document/excel_soal.php?id=' + id_tugas + '&ts=' + tipe_soal + '&js=' + jumlah_soal + '&jj=' + jumlah_jawaban);
         // window.setTimeout(function() {
         //   popout.close();
         // }, 1000);

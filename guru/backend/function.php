@@ -179,7 +179,6 @@ switch ($_GET['action']) {
     }
 
     break;
-
   case 'get_data':
     if ($_GET['get'] == 'data_soal') {
       $kode_tugas = $_POST['kode_tugas'];
@@ -776,13 +775,6 @@ switch ($_GET['action']) {
     echo json_encode($data);
     break;
 
-  case 'generate_excel_soal':
-    $id_penugasan = $_POST['id_tugas'];
-    $jumlah_soal = $_POST['jumlah_soal'];
-    $jumlah_jawaban = $_POST['jumlah_jawaban'];
-    $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan' AND tgl_hapus");
-    require('../views/generate_document/excel_soal.php');
-    break;
   case 'import_soal':
     if (isset($_FILES['fileexcel'])) { // Jika user mengklik tombol Import
       $folder = "../tmp/";
@@ -808,21 +800,44 @@ switch ($_GET['action']) {
       $count_pilihan_jawaban = (ord(strtolower($last_column)) - 96) - 3;
       $numrow = 1;
       $start_pilihan = "C";
+      $explode_pilihan = explode(":", $sheet[1]['C']);
+      $explode_tipe = explode(":", $sheet[2]['C']);
+      $id_penugasan = base64_decode($explode_pilihan[1]);
+      $tipe_soal = $explode_tipe[1];
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_tugas_cbt WHERE id='$id_penugasan' AND tgl_hapus IS NULL");
+      $tugas = mysqli_fetch_assoc($getpenugasan);
+      $id_staff = $tugas['id_staff'];
+      $kode_tugas = $tugas['kode_tugas'];
+      $judul_tugas = $tugas['judul'];
+      $id_mapel = $tugas['id_mapel'];
       foreach ($sheet as $row) {
-        if ($numrow >= 7) {
+        if ($numrow >= 8) {
           $soal = $row['B'];
           $kunci_jawaban = $row[$last_column];
+          // Cek jika semua data tidak diisi
+          if ($soal == "" && $kunci_jawaban == "") continue; // Lewat data pada baris ini (masuk ke looping selanjutnya / baris selanjutnya
+          $explode_kunci = explode(" ", $kunci_jawaban);
+          $kunci = $explode_kunci[1];
+          $query = mysqli_query($conn, "INSERT INTO arf_soal(id_staff, id_mapel, kode_tugas, tipe_soal, pertanyaan) VALUES('$id_staff','$id_mapel','$kode_tugas','$tipe_soal', '$soal')");
+          $last_id = $conn->insert_id;
           for ($i = 1; $i <= $count_pilihan_jawaban; $i++) {
-            var_dump($row[$start_pilihan]);
+            $kunci_fix = ($i == $kunci) ? 1 : 0;
+            $pilihan_jawaban = $row[$start_pilihan];
+            $query = mysqli_query($conn, "INSERT INTO arf_kunci_soal(id_soal, jawaban, kunci) VALUE ('$last_id','$pilihan_jawaban','$kunci_fix')");
             $start_pilihan++;
           }
         }
         $start_pilihan = "C";
         $numrow++; // Tambah 1 setiap kali looping
       }
-
       unlink($destination); // Hapus file excel yg telah diupload, ini agar tidak terjadi penumpukan file
-    }
 
+    }
+    if ($query) {
+      $data = ['acc' => true];
+    } else {
+      $data = ['acc' => false];
+    }
+    echo json_encode($data);
     break;
 }
