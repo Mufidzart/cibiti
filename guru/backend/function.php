@@ -793,8 +793,8 @@ switch ($_GET['action']) {
       $source       = $_FILES["fileexcel"]["tmp_name"];
       $destination  = $folder . $file_name;
       /* move the file */
-      // move_uploaded_file($source, $destination);
-      // $arr_file = explode('.', $_FILES['fileexcel']['name']);
+      move_uploaded_file($source, $destination);
+      $arr_file = explode('.', $_FILES['fileexcel']['name']);
       $extension = end($arr_file);
 
       if ('csv' == $extension) {
@@ -804,32 +804,25 @@ switch ($_GET['action']) {
       }
       $spreadsheet = $reader->load($destination); // Load file yang tadi diupload ke folder tmp
       $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-      var_dump($this->spreadsheet->getActiveSheet()->getHighestRow());
-      die;
+      $last_column = $spreadsheet->getActiveSheet()->getHighestColumn();
+      $count_pilihan_jawaban = (ord(strtolower($last_column)) - 96) - 3;
       $numrow = 1;
+      $start_pilihan = "C";
       foreach ($sheet as $row) {
-        var_dump($row['A']);
-        die;
-        // Ambil data pada excel sesuai Kolom
-        $no = $row['A']; // Ambil data NIS
-        $soal = $row['B']; // Ambil data nama
-        $jenis_kelamin = $row['C']; // Ambil data jenis kelamin
-        $telp = $row['D']; // Ambil data telepon
-        $alamat = $row['E']; // Ambil data alamat
-
-        // Cek jika semua data tidak diisi
-        if ($nis == "" && $nama == "" && $jenis_kelamin == "" && $telp == "" && $alamat == "")
-          continue; // Lewat data pada baris ini (masuk ke looping selanjutnya / baris selanjutnya)
-        // Cek $numrow apakah lebih dari 1
-        // Artinya karena baris pertama adalah nama-nama kolom
-        // Jadi dilewat saja, tidak usah diimport
-
+        if ($numrow >= 7) {
+          $soal = $row['B'];
+          $kunci_jawaban = $row[$last_column];
+          for ($i = 1; $i <= $count_pilihan_jawaban; $i++) {
+            var_dump($row[$start_pilihan]);
+            $start_pilihan++;
+          }
+        }
+        $start_pilihan = "C";
         $numrow++; // Tambah 1 setiap kali looping
       }
 
-      unlink($path); // Hapus file excel yg telah diupload, ini agar tidak terjadi penumpukan file
+      unlink($destination); // Hapus file excel yg telah diupload, ini agar tidak terjadi penumpukan file
     }
 
-    header('location: index.php'); // Redirect ke halaman awal
     break;
 }
