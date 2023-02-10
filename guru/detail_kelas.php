@@ -259,6 +259,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
               </select>
               <div id="pesan-jenis-tugas"></div>
             </div>
+            <!-- Tugas Awal -->
             <div class="note note-info">
               <div class="row col-md-12">
                 <div class="form-group" id="form-tugas-awal">
@@ -317,7 +318,57 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6 col-xl-12">
+                  <div class="form-group" id="form-batas-tugas-awal">
+                    <label class="control-label">Batas akhir</label><br>
+                    <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
+                      <input type="text" class="form-control" id="batas-tugas-awal" name="batas-tugas-awal">
+                      <span class="input-group-btn">
+                        <button class="btn default date-reset" type="button">
+                          <i class="fa fa-times"></i>
+                        </button>
+                        <button class="btn default date-set" type="button">
+                          <i class="fa fa-calendar"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-batas-tugas-awal"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-durasi-tugas-awal">
+                    <label class="control-label">Waktu pengerjaan</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="durasi-tugas-awal" name="durasi-tugas-awal">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          menit
+                        </button>
+                      </span>
+                    </div>
+                    <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                    <div id="pesan-durasi-tugas-awal"></div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-12">
+                  <div class="form-group" id="form-jumlah_soal-tugas-awal">
+                    <label class="control-label">Jumlah Soal</label><br>
+                    <div class="input-group">
+                      <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal" name="jumlah_soal-tugas-awal">
+                      <span class="input-group-btn">
+                        <button class="btn default date-set" type="button">
+                          soal
+                        </button>
+                      </span>
+                    </div>
+                    <div id="pesan-jumlah_soal-tugas-awal"></div>
+                  </div>
+                </div>
+              </div>
             </div>
+            <!-- End Tugas Awal -->
+            <!-- Remidi 1 -->
             <div class="note note-warning" style="background-color: #fcf8e3;">
               <div class="row col-md-12">
                 <div class="form-group" id="form-r1">
@@ -377,6 +428,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                 </div>
               </div>
             </div>
+            <!-- End Remidi 1 -->
+            <!-- Remidi 2 -->
             <div class="note note-warning" style="background-color: #fcf8e3;">
               <div class="row col-md-12">
                 <div class="form-group" id="form-r2">
@@ -436,6 +489,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                 </div>
               </div>
             </div>
+            <!-- End Remidi 1 -->
           </div>
         </div>
         <div class="modal-footer">

@@ -38,10 +38,11 @@ $sheet->mergeCells('A1:B4');
 
 $sheet->getProtection()->setSheet(true);
 $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
-$sheet->getStyle('A1')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
+$sheet->getStyle('A1:C6')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
 
 $sheet->setCellValue('A7', 'No')
   ->setCellValue('B7', 'Soal');
+$sheet->getStyle('A7:B7')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
 $sheet->getColumnDimension('A')->setWidth(30, 'pt');
 $sheet->getColumnDimension('B')->setWidth(300, 'pt');
 $sheet->getStyle('7')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
@@ -55,6 +56,7 @@ for ($i = 1; $i <= $jumlah_jawaban; $i++) {
   $jawaban = 'Jawaban ' . $i;
   $sheet->setCellValue($col, $jawaban);
   $sheet->getColumnDimension($char)->setAutoSize(TRUE);
+  $sheet->getStyle($col)->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
   array_push($array_pilihan_jawaban, $jawaban);
   $char++;
 }
@@ -64,6 +66,7 @@ $char_kunci = $char . "7";
 $new_char_kunci = $char;
 $sheet->setCellValue($char_kunci, 'Kunci Jawaban');
 $sheet->getColumnDimension($char)->setAutoSize(TRUE);
+$sheet->getStyle($char_kunci)->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
 // End Posisi Kolom Kunci Jawaban
 
 
