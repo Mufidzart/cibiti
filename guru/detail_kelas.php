@@ -69,162 +69,225 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
     </ul>
     <!-- END PAGE BREADCRUMB -->
     <!-- BEGIN PAGE BASE CONTENT -->
-    <div class="profile">
-      <div class="tabbable-line tabbable-full-width">
-        <ul class="nav nav-tabs">
-          <li class="active">
-            <a href="#tab_overview" data-toggle="tab"> Overview </a>
-          </li>
-          <li>
-            <a href="#tab_peserta" data-toggle="tab"> Peserta Didik </a>
-          </li>
-          <li>
-            <a href="#tab_penugasan" data-toggle="tab"> Penugasan </a>
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane active" id="tab_overview">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="profile-sidebar">
-                  <!-- PORTLET MAIN -->
-                  <div class="portlet light profile-sidebar-portlet">
-                    <!-- SIDEBAR USERPIC -->
-                    <div class="profile-userpic">
-                      <img src="assets/images/admin_avatar.png" class="img-responsive" alt="">
+
+    <div class="portlet light bordered">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-plus-square"></i>
+          <span class="caption-subject font-dark bold uppercase"><?= $page_title ?></span>
+        </div>
+        <div class="actions">
+          <a class="btn btn-circle green" data-toggle="modal" href="#modal-template-soal">Template Soal <i class="icon-wrench"></i></a>
+        </div>
+      </div>
+      <div class="portlet-body">
+        <div class="tabbable-line tabbable-full-width">
+          <ul class="nav nav-tabs">
+            <li class="active">
+              <a href="#tab_overview" data-toggle="tab"> Overview </a>
+            </li>
+            <li>
+              <a href="#tab_peserta" data-toggle="tab"> Peserta Didik </a>
+            </li>
+            <li>
+              <a href="#tab_penugasan" data-toggle="tab"> Penugasan </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_overview">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="profile-sidebar">
+                    <!-- PORTLET MAIN -->
+                    <div class="portlet light profile-sidebar-portlet">
+                      <!-- SIDEBAR USERPIC -->
+                      <div class="profile-userpic">
+                        <img src="assets/images/admin_avatar.png" class="img-responsive" alt="">
+                      </div>
+                      <!-- END SIDEBAR USERPIC -->
+                      <!-- SIDEBAR USER TITLE -->
+                      <div class="profile-usertitle">
+                        <div class="profile-usertitle-name"> <?= $datakelas['nama_lengkap'] ?> </div>
+                        <div class="profile-usertitle-job"> Guru </div>
+                        <div class="profile-desc-link">
+                          <i class="fa fa-envelope"></i>
+                          <a href="mailto:<?= $datakelas['nama_kelas'] ?>"><?= $datakelas['email'] ?></a>
+                        </div>
+                      </div>
+                      <!-- END SIDEBAR USER TITLE -->
+                      <!-- SIDEBAR BUTTONS -->
+                      <div class="margin-top-20 profile-userbuttons">
+                        <button type="button" class="btn btn-circle green btn-sm">Follow</button>
+                        <button type="button" class="btn btn-circle red btn-sm">Message</button>
+                      </div>
+                      <!-- END SIDEBAR BUTTONS -->
                     </div>
-                    <!-- END SIDEBAR USERPIC -->
-                    <!-- SIDEBAR USER TITLE -->
-                    <div class="profile-usertitle">
-                      <div class="profile-usertitle-name"> <?= $datakelas['nama_lengkap'] ?> </div>
-                      <div class="profile-usertitle-job"> Guru </div>
-                      <div class="profile-desc-link">
-                        <i class="fa fa-envelope"></i>
-                        <a href="mailto:<?= $datakelas['nama_kelas'] ?>"><?= $datakelas['email'] ?></a>
+                    <!-- END PORTLET MAIN -->
+                  </div>
+                  <div class="profile-info">
+                    <h1 class="font-green sbold uppercase"><?= $datakelas['nama_mapel'] ?></h1>
+                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet dolore magna aliquam tincidunt erat volutpat laoreet dolore magna aliquam tincidunt erat volutpat.
+                    </p>
+                    <p>
+                      <a href="javascript:;"> www.mywebsite.com </a>
+                    </p>
+                    <ul class="list-inline">
+                      <li>
+                        <i class="fa fa-map-marker"></i> <?= $grade . " " . $datakelas['nama_kelas'] ?>
+                      </li>
+                      <li>
+                        <i class="fa fa-users"></i> <?= $countsiswa ?> Siswa
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--tab_1_2-->
+            <div class="tab-pane" id="tab_peserta">
+              <div class="mt-comments">
+                <?php $no = 1;
+                while ($datasiswa = mysqli_fetch_array($getsiswa)) : ?>
+                  <div class="mt-comment">
+                    <div class="mt-comment-img">
+                      <?= $no ?>
+                      <img src="assets/images/person_avatar.png" style="width:100%;">
+                    </div>
+                    <div class="mt-comment-body">
+                      <div class="mt-comment-info">
+                        <span class="mt-comment-author"><?= $datasiswa['nama_siswa'] ?></span>
+                        <!-- <span class="mt-comment-date">26 Feb, 10:30AM</span> -->
+                      </div>
+                      <?php
+                      if ($datasiswa['id_kelas_induk'] == 1) {
+                        $grade = "X";
+                      } elseif ($datasiswa['id_kelas_induk'] == 2) {
+                        $grade = "XI";
+                      } elseif ($datasiswa['id_kelas_induk'] == 3) {
+                        $grade = "XII";
+                      } ?>
+                      <div class="mt-comment-text">NIS: <?= $datasiswa['nis'] ?> <?= (!empty($datasiswa['email_siswa'])) ? "- EMAIL : " . $datasiswa['email_siswa'] : "" ?> <br>Kelas: <?= $grade . " " . $datasiswa['nama_kelas'] . " (" . $datasiswa['program_keahlian'] . ")" ?></div>
+                    </div>
+                  </div>
+                  <?php $no++; ?>
+                <?php endwhile; ?>
+              </div>
+            </div>
+            <!--end tab-pane-->
+            <div class="tab-pane" id="tab_penugasan">
+              <div class="todo-ui">
+                <div class="todo-sidebar">
+                  <div class="portlet light bordered">
+                    <div class="portlet-title">
+                      <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
+                        <span class="caption-subject font-green-sharp bold uppercase">Menu </span>
+                        <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">Klik untuk melihat menu</span>
                       </div>
                     </div>
-                    <!-- END SIDEBAR USER TITLE -->
-                    <!-- SIDEBAR BUTTONS -->
-                    <div class="margin-top-20 profile-userbuttons">
-                      <button type="button" class="btn btn-circle green btn-sm">Follow</button>
-                      <button type="button" class="btn btn-circle red btn-sm">Message</button>
-                    </div>
-                    <!-- END SIDEBAR BUTTONS -->
-                  </div>
-                  <!-- END PORTLET MAIN -->
-                </div>
-                <div class="profile-info">
-                  <h1 class="font-green sbold uppercase"><?= $datakelas['nama_mapel'] ?></h1>
-                  <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet dolore magna aliquam tincidunt erat volutpat laoreet dolore magna aliquam tincidunt erat volutpat.
-                  </p>
-                  <p>
-                    <a href="javascript:;"> www.mywebsite.com </a>
-                  </p>
-                  <ul class="list-inline">
-                    <li>
-                      <i class="fa fa-map-marker"></i> <?= $grade . " " . $datakelas['nama_kelas'] ?>
-                    </li>
-                    <li>
-                      <i class="fa fa-users"></i> <?= $countsiswa ?> Siswa
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!--tab_1_2-->
-          <div class="tab-pane" id="tab_peserta">
-            <div class="mt-comments">
-              <?php $no = 1;
-              while ($datasiswa = mysqli_fetch_array($getsiswa)) : ?>
-                <div class="mt-comment">
-                  <div class="mt-comment-img">
-                    <?= $no ?>
-                    <img src="assets/images/person_avatar.png" style="width:100%;">
-                  </div>
-                  <div class="mt-comment-body">
-                    <div class="mt-comment-info">
-                      <span class="mt-comment-author"><?= $datasiswa['nama_siswa'] ?></span>
-                      <!-- <span class="mt-comment-date">26 Feb, 10:30AM</span> -->
-                    </div>
-                    <?php
-                    if ($datasiswa['id_kelas_induk'] == 1) {
-                      $grade = "X";
-                    } elseif ($datasiswa['id_kelas_induk'] == 2) {
-                      $grade = "XI";
-                    } elseif ($datasiswa['id_kelas_induk'] == 3) {
-                      $grade = "XII";
-                    } ?>
-                    <div class="mt-comment-text">NIS: <?= $datasiswa['nis'] ?> <?= (!empty($datasiswa['email_siswa'])) ? "- EMAIL : " . $datasiswa['email_siswa'] : "" ?> <br>Kelas: <?= $grade . " " . $datasiswa['nama_kelas'] . " (" . $datasiswa['program_keahlian'] . ")" ?></div>
-                  </div>
-                </div>
-                <?php $no++; ?>
-              <?php endwhile; ?>
-            </div>
-          </div>
-          <!--end tab-pane-->
-          <div class="tab-pane" id="tab_penugasan">
-            <div class="todo-ui">
-              <div class="todo-sidebar">
-                <div class="portlet light bordered">
-                  <div class="portlet-title">
-                    <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
-                      <span class="caption-subject font-green-sharp bold uppercase">Menu </span>
-                      <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">Klik untuk melihat menu</span>
-                    </div>
-                  </div>
-                  <div class="portlet-body todo-project-list-content" style="height: auto;">
-                    <div class="todo-project-list">
-                      <ul class="nav nav-stacked">
-                        <li>
-                          <a href="javascript:;" data-toggle="collapse" data-target=".akan-berakhir"> Tugas Akan Berakhir </a>
-                          <div id="show_akan_berakhir">
+                    <div class="portlet-body todo-project-list-content" style="height: auto;">
+                      <div class="todo-project-list">
+                        <ul class="nav nav-stacked">
+                          <li>
+                            <a href="javascript:;" data-toggle="collapse" data-target=".akan-berakhir"> Tugas Akan Berakhir </a>
+                            <div id="show_akan_berakhir">
 
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="portlet light bordered">
-                  <div class="portlet-title">
-                    <div class="caption">
-                      <button type="button" class="btn btn-circle green" id="btn-nilai">Nilai</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="todo-content">
-                <form class="form-horizontal" role="form" id="form-edit-tugas">
-                  <div class="form-body">
-                    <div class="form-group">
-                      <label class="col-md-1 control-label vcenter">
-                        <img alt="" class="img-circle bg-white" style="padding:2px;width:40px;" src="assets/images/admin_avatar.png" />
-                      </label>
-                      <div class="col-md-9 vcenter" style="padding-top:7px;">
-                        <input class="form-control" type="hidden" id="id_tugas" name="id_tugas" value="">
-                        <input class="form-control spinner input-circle" type="text" id="tambah-penugasan" name="tambah-penugasan" placeholder="Tambah penugasan..." value="">
+                            </div>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
-                </form>
-                <hr>
-                <div id="show_penugasan">
+                  <div class="portlet light bordered">
+                    <div class="portlet-title">
+                      <div class="caption">
+                        <button type="button" class="btn btn-circle green" id="btn-nilai">Nilai</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="todo-content">
+                  <form class="form-horizontal" role="form" id="form-edit-tugas">
+                    <div class="form-body">
+                      <div class="form-group">
+                        <label class="col-md-1 control-label vcenter">
+                          <img alt="" class="img-circle bg-white" style="padding:2px;width:40px;" src="assets/images/admin_avatar.png" />
+                        </label>
+                        <div class="col-md-9 vcenter" style="padding-top:7px;">
+                          <input class="form-control" type="hidden" id="id_tugas" name="id_tugas" value="">
+                          <input class="form-control spinner input-circle" type="text" id="tambah-penugasan" name="tambah-penugasan" placeholder="Tambah penugasan..." value="">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <hr>
+                  <div id="show_penugasan">
 
+                  </div>
                 </div>
               </div>
             </div>
+            <!--end tab-pane-->
           </div>
-          <!--end tab-pane-->
         </div>
       </div>
     </div>
-    <!-- END PAGE BASE CONTENT -->
   </div>
   <!-- END CONTENT BODY -->
 </div>
 <!-- END CONTENT -->
 
+<!-- MODAL TEMPLATE SOAL -->
+<div class="modal fade bs-modal-md" id="modal-template-soal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Template Soal</h4>
+      </div>
+      <form role="form" id="form-template-soal">
+        <div class="modal-body">
+          <div class="form-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form id="form-template-soal">
+                  <div class="form-group" id="form-tipe-soal">
+                    <label class="control-label">Tipe Soal</label>
+                    <select class="form-control" id="tipe-soal" name="tipe-soal">
+                      <option></option>
+                      <?php
+                      $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
+                      while ($row = mysqli_fetch_array($tipe_soal)) : ?>
+                        <option value="<?= $row['tipe_soal'] ?>"><?= $row['tipe_soal'] ?></option>
+                      <?php endwhile; ?>
+                    </select>
+                    <div id="pesan-tipe-soal"></div>
+                  </div>
+                  <div class="form-group" id="form-soal" style="display: none;">
+                    <label class="control-label">Jumlah Soal</label>
+                    <input class="form-control col-md-4 jumlah_soal" style="margin-bottom: 10px;" type="text" name="jumlah_soal" id="jumlah_soal">
+                    <div id="pesan-jumlah_soal"></div>
+                  </div>
+                  <div class="form-group" id="form-jawaban" style="display: none;">
+                    <label class="control-label">Jumlah pilihan jawaban per soal</label>
+                    <input class="form-control col-md-4 jumlah_jawaban" style="margin-bottom: 10px;" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
+                    <div id="pesan-jumlah_jawaban"></div>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn green">Generate Template Soal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- END MODAL TEMPLATE SOAL -->
 <!-- MODAL TAMBAH PENUGASAN -->
 <div class="modal fade bs-modal-lg" id="modal-tambah-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -264,112 +327,54 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
               <div class="row col-md-12">
                 <div class="form-group" id="form-tugas-awal">
                   <label for="tugas-awal" class="control-label"><strong>Tugas Awal</strong></label>
-                  <select class="form-control select2" id="tugas-awal" name="tugas-awal">
-                    <option></option>
-                  </select>
-                  <div id="pesan-tugas-awal"></div>
+                  <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel-tugas-awal" id="fileexcel-tugas-awal">
+                  <div id="pesan-fileexcel-tugas-awal"></div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-6 col-xl-12">
-                  <div class="form-group" id="form-batas-tugas-awal">
-                    <label class="control-label">Batas akhir</label><br>
-                    <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
-                      <input type="text" class="form-control" id="batas-tugas-awal" name="batas-tugas-awal">
-                      <span class="input-group-btn">
-                        <button class="btn default date-reset" type="button">
-                          <i class="fa fa-times"></i>
-                        </button>
-                        <button class="btn default date-set" type="button">
-                          <i class="fa fa-calendar"></i>
-                        </button>
-                      </span>
-                    </div>
-                    <div id="pesan-batas-tugas-awal"></div>
-                  </div>
+              <div class="form-group" id="form-batas-tugas-awal">
+                <label class="control-label">Batas akhir</label><br>
+                <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
+                  <input type="text" class="form-control" id="batas-tugas-awal" name="batas-tugas-awal">
+                  <span class="input-group-btn">
+                    <button class="btn default date-reset" type="button">
+                      <i class="fa fa-times"></i>
+                    </button>
+                    <button class="btn default date-set" type="button">
+                      <i class="fa fa-calendar"></i>
+                    </button>
+                  </span>
                 </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-durasi-tugas-awal">
-                    <label class="control-label">Waktu pengerjaan</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="durasi-tugas-awal" name="durasi-tugas-awal">
-                      <span class="input-group-btn">
-                        <button class="btn default date-set" type="button">
-                          menit
-                        </button>
-                      </span>
-                    </div>
-                    <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
-                    <div id="pesan-durasi-tugas-awal"></div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-jumlah_soal-tugas-awal">
-                    <label class="control-label">Jumlah Soal</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal" name="jumlah_soal-tugas-awal">
-                      <span class="input-group-btn">
-                        <button class="btn default date-set" type="button">
-                          soal
-                        </button>
-                      </span>
-                    </div>
-                    <div id="pesan-jumlah_soal-tugas-awal"></div>
-                  </div>
-                </div>
+                <div id="pesan-batas-tugas-awal"></div>
               </div>
-              <div class="row">
-                <div class="col-md-6 col-xl-12">
-                  <div class="form-group" id="form-batas-tugas-awal">
-                    <label class="control-label">Batas akhir</label><br>
-                    <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
-                      <input type="text" class="form-control" id="batas-tugas-awal" name="batas-tugas-awal">
-                      <span class="input-group-btn">
-                        <button class="btn default date-reset" type="button">
-                          <i class="fa fa-times"></i>
-                        </button>
-                        <button class="btn default date-set" type="button">
-                          <i class="fa fa-calendar"></i>
-                        </button>
-                      </span>
-                    </div>
-                    <div id="pesan-batas-tugas-awal"></div>
-                  </div>
+              <div class="form-group" id="form-durasi-tugas-awal">
+                <label class="control-label">Waktu pengerjaan</label><br>
+                <div class="input-group">
+                  <input type="text" class="form-control text-right" id="durasi-tugas-awal" name="durasi-tugas-awal">
+                  <span class="input-group-btn">
+                    <button class="btn default date-set" type="button">
+                      menit
+                    </button>
+                  </span>
                 </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-durasi-tugas-awal">
-                    <label class="control-label">Waktu pengerjaan</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="durasi-tugas-awal" name="durasi-tugas-awal">
-                      <span class="input-group-btn">
-                        <button class="btn default date-set" type="button">
-                          menit
-                        </button>
-                      </span>
-                    </div>
-                    <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
-                    <div id="pesan-durasi-tugas-awal"></div>
-                  </div>
+                <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
+                <div id="pesan-durasi-tugas-awal"></div>
+              </div>
+              <div class="form-group" id="form-jumlah_soal-tugas-awal">
+                <label class="control-label">Jumlah Soal ditampilkan</label><br>
+                <div class="input-group">
+                  <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal" name="jumlah_soal-tugas-awal">
+                  <span class="input-group-btn">
+                    <button class="btn default date-set" type="button">
+                      soal
+                    </button>
+                  </span>
                 </div>
-                <div class="col-md-3 col-xl-12">
-                  <div class="form-group" id="form-jumlah_soal-tugas-awal">
-                    <label class="control-label">Jumlah Soal</label><br>
-                    <div class="input-group">
-                      <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal" name="jumlah_soal-tugas-awal">
-                      <span class="input-group-btn">
-                        <button class="btn default date-set" type="button">
-                          soal
-                        </button>
-                      </span>
-                    </div>
-                    <div id="pesan-jumlah_soal-tugas-awal"></div>
-                  </div>
-                </div>
+                <div id="pesan-jumlah_soal-tugas-awal"></div>
               </div>
             </div>
             <!-- End Tugas Awal -->
             <!-- Remidi 1 -->
-            <div class="note note-warning" style="background-color: #fcf8e3;">
+            <!-- <div class="note note-warning" style="background-color: #fcf8e3;">
               <div class="row col-md-12">
                 <div class="form-group" id="form-r1">
                   <label for="r1" class="control-label"><strong>Remidi 1</strong></label>
@@ -430,7 +435,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
             </div>
             <!-- End Remidi 1 -->
             <!-- Remidi 2 -->
-            <div class="note note-warning" style="background-color: #fcf8e3;">
+            <!-- <div class="note note-warning" style="background-color: #fcf8e3;">
               <div class="row col-md-12">
                 <div class="form-group" id="form-r2">
                   <label for="r2" class="control-label"><strong>Remidi 2</strong></label>
@@ -707,13 +712,31 @@ require('layouts/bodylayout.php');
       width: "100%"
     });
 
+    $("#tipe-soal").select2({
+      placeholder: "Pilih tipe soal...",
+      width: "100%"
+    });
+
+    $('#tipe-soal').on('select2:select', function(e) {
+      var tipe = $(this).find(':selected').text();;
+      if (tipe == "Pilihan Ganda") {
+        $('#form-soal').css("display", "block");
+        $('#form-jawaban').css("display", "block");
+      } else {
+        $('#form-soal').css("display", "block");
+        $('#form-jawaban').css("display", "none");
+      }
+    });
+
     $("#form-tambah-penugasan").on("submit", function(e) {
       e.preventDefault();
-      var formdata = $(this).serialize();
+      var formData = new FormData($(this)[0]);
       $.ajax({
-        url: 'backend/function.php?action=simpan_data_penugasan',
+        url: 'backend/function.php?action=tambah_penugasan',
         type: 'post',
-        data: formdata,
+        data: formData,
+        processData: false,
+        contentType: false,
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
@@ -766,8 +789,8 @@ require('layouts/bodylayout.php');
       $('#modal-hapus-penugasan').modal('show');
     });
 
-    $("#form-hapus-penugasan").on("submit", function(e) {
-      e.preventDefault();
+    $("#form-hapus-penugasan").on("submit", function(event) {
+      event.preventDefault();
       var formdata = $(this).serialize();
       $.ajax({
         url: 'backend/function.php?action=hapus_data_penugasan',
@@ -780,6 +803,50 @@ require('layouts/bodylayout.php');
           get_penugasan_akanberakhir();
         }
       });
+    });
+
+    $('#modal-template-soal').on('hidden.bs.modal', function() {
+      $('#form-template-soal').trigger("reset");
+      $('#tipe-soal').trigger("change");
+      $('#form-soal').css('display', 'none');
+      $('#form-jawaban').css('display', 'none');
+      $('#pesan-jumlah_soal').html("");
+      $('#pesan-jumlah_jawaban').html("");
+    })
+
+    $('#form-template-soal').on('submit', function(event) {
+      event.preventDefault();
+      var tipe_soal = $("#tipe-soal").val();
+      var jumlah_soal = $("#jumlah_soal").val();
+      var jumlah_jawaban = $("#jumlah_jawaban").val();
+
+      if (!tipe_soal) {
+        $('#pesan-tipe-soal').html('<span class="help-block" style="color:red;">Tipe soal tidak boleh kosong.</span>');
+      } else {
+        $('#pesan-tipe-soal').html('');
+        if (!jumlah_soal) {
+          $('#pesan-jumlah_soal').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
+        } else {
+          $('#pesan-jumlah_soal').html('');
+        }
+        if (tipe_soal == "Pilihan Ganda") {
+          if (!jumlah_jawaban) {
+            $('#pesan-jumlah_jawaban').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
+          } else {
+            $('#pesan-jumlah_jawaban').html('');
+          }
+          if (jumlah_soal && jumlah_jawaban) {
+            var popout = '<?= $baseurl ?>/guru/views/generate_document/excel_soal_pilihan_ganda.php?ts=' + tipe_soal + '&js=' + jumlah_soal + '&jj=' + jumlah_jawaban;
+            window.open(popout);
+          }
+        } else {
+          if (jumlah_soal) {
+            var popout = '<?= $baseurl ?>/guru/views/generate_document/excel_soal_essay.php?ts=' + tipe_soal + '&js=' + jumlah_soal;
+            window.open(popout);
+          }
+        }
+      }
+
     });
   });
 </script>
