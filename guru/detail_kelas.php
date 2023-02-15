@@ -197,13 +197,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                       </div>
                     </div>
                   </div>
-                  <div class="portlet light bordered">
-                    <div class="portlet-title">
-                      <div class="caption">
-                        <button type="button" class="btn btn-circle green" id="btn-nilai">Nilai</button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
                 <div class="todo-content">
                   <form class="form-horizontal" role="form" id="form-edit-tugas">
@@ -632,15 +625,15 @@ require('layouts/bodylayout.php');
     });
 
     $('#show_penugasan').on('click', '.lihat_tugas', function() {
-      var kode_tugas = $(this).attr("data-kode");
+      var id_tugas_penugasan = $(this).attr("data-id");
       $.ajax({
         url: 'backend/function.php?action=get_data&get=lihat_tugas',
         type: 'post',
         data: {
-          kode_tugas: kode_tugas,
+          id_tugas_penugasan: id_tugas_penugasan,
         },
         success: function(data) {
-          if (kode_tugas) {
+          if (id_tugas_penugasan) {
             $('#show_tugas').html(data);
             $('#modal-lihat-tugas').modal('show');
           }
@@ -740,9 +733,14 @@ require('layouts/bodylayout.php');
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
+            $('#form-tambah-penugasan').trigger("reset");
             $('#modal-tambah-penugasan').modal('hide');
             get_penugasan();
             get_penugasan_akanberakhir();
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
           } else {
             for (i = 0; i < data.errors.length; i++) {
               $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
