@@ -58,14 +58,13 @@
           if (result.isConfirmed) {
             var id_tugas_penugasan = $(this).attr("data-penugasan");
             $.ajax({
-              url: 'backend/function.php?action=mulai_ujian_awal',
+              url: 'backend/function.php?action=mulai_ujian',
               type: 'post',
               data: {
                 id_tugas_penugasan: id_tugas_penugasan,
               },
               success: function(data) {
-                console.log(id_tugas_penugasan)
-                // location.reload();
+                location.reload();
               }
             });
           } else if (result.isDenied) {

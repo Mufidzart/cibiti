@@ -15,7 +15,7 @@
           $no = 1;
           $id_soal = json_decode($dataprosesujian['id_soal']);
           foreach ($id_soal as $value) :
-            $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$value' AND tgl_hapus IS NULL");
+            $getsoal = mysqli_query($conn, "SELECT * FROM soal_tugas_penugasan WHERE id='$value' AND tgl_hapus IS NULL");
             $soal = mysqli_fetch_assoc($getsoal); ?>
             <div class="d-flex my-10">
               <!--begin::Arrow-->
@@ -33,15 +33,15 @@
                 <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
                 <?php
                 $id_soal = $soal['id'];
-                $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
-                if ($getkunci->num_rows !== 0) : ?>
-                  <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                    $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                $get_jawaban_soal = mysqli_query($conn, "SELECT * FROM jawaban_soal_tugas_penugasan WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
+                if ($get_jawaban_soal->num_rows !== 0) : ?>
+                  <?php while ($kunci = mysqli_fetch_assoc($get_jawaban_soal)) :
+                    $getjawabansiswa = mysqli_query($conn, "SELECT * FROM jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_soal=$id_soal AND tgl_hapus IS NULL");
                     if ($kunci['kunci'] == 1) {
                     }
                     $background = "bg-secondary";
-                    if ($getjawaban->num_rows !== 0) {
-                      $datajawaban = mysqli_fetch_assoc($getjawaban);
+                    if ($getjawabansiswa->num_rows !== 0) {
+                      $datajawaban = mysqli_fetch_assoc($getjawabansiswa);
                       if ($datajawaban['id_jawaban'] == $kunci['id']) {
                         if ($kunci['kunci'] == 1) {
                           $selected = "checked";
@@ -92,15 +92,8 @@
             <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
             <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
             <div class="mb-9">Anda mendapatkan nilai <br>
-              <?php
-              $getnilai = $conn->query(
-                "SELECT anp.*,ahp.judul,ahp.tugas_awal FROM arf_nilai_penugasan anp
-                JOIN arf_history_penugasan ahp ON ahp.id=anp.id_penugasan
-                WHERE anp.id_penugasan=$id_penugasan AND anp.tgl_hapus IS NULL"
-              );
-              $datanilai = mysqli_fetch_assoc($getnilai); ?>
-              <?php if ($getnilai->num_rows !== 0) : ?>
-                <br> <strong class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></strong>
+              <?php if (!empty($dataprosesujian['nilai'])) : ?>
+                <br> <strong class="text-primary fs-1"><?= $dataprosesujian['nilai'] ?></strong>
               <?php endif; ?>
             </div>
             <!--begin::Buttons-->
@@ -149,15 +142,15 @@
             <!--end::Title-->
             <!--begin::Description-->
             <p class="text-gray-400 fs-4 fw-bold">Anda mendapat nilai<br>
-              <?php if ($getnilai->num_rows !== 0) : ?>
-                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanilai['kode-tugas'] ?>">
+              <?php if (!empty($dataprosesujian['nilai'])) : ?>
+                <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3">
                   <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
                   <span class="d-flex flex-column align-items-start ms-2">
-                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanilai['nilai_awal'] ?></b></span>
+                    <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $dataprosesujian['nilai'] ?></b></span>
                   </span>
                 </a>
                 <br>Penugasan
-                <br> <b class="text-primary"><?= $datanilai['judul']  ?></b>
+                <br> <b class="text-primary"><?= $tugas['sub_tugas']  ?></b>
                 <br>Anda mengerjakan soal pada
                 <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
               <?php endif; ?>
@@ -203,7 +196,7 @@
     });
   }
 </script>
-<?php if ($getnilai->num_rows == 0) : ?>
+<?php if (empty($dataprosesujian['nilai'])) : ?>
   <script>
     $(document).ready(function() {
       timeout();

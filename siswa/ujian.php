@@ -7,8 +7,8 @@ $id_tugas_penugasan = $_GET['tgs'];
 $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
 $tugas = mysqli_fetch_assoc($get_tugas_penugasan);
 $id_penugasan = $tugas['id_penugasan'];
-// $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
-// $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+$getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+$datapenugasan = mysqli_fetch_assoc($getpenugasan);
 ?>
 <!-- BEGIN CONTENT -->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -18,7 +18,7 @@ $id_penugasan = $tugas['id_penugasan'];
     <?php
     $max_jam = new DateTime($tugas['batas_tugas']);
     $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
-    $getprosesujian =  $conn->query("SELECT * FROM proses_ujian WHERE id_tugas_penugasan=$id_tugas_penugasan");
+    $getprosesujian =  $conn->query("SELECT * FROM proses_ujian WHERE id_siswa='$nis' AND id_tugas_penugasan=$id_tugas_penugasan");
     if ($getprosesujian->num_rows == 0) {
       if ($jam_sekarang < $max_jam) {
         require('views/ujian/mulai_ujian.php');
@@ -28,7 +28,7 @@ $id_penugasan = $tugas['id_penugasan'];
     } else {
       $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
       if (empty($dataprosesujian['selesai_ujian'])) {
-        $durasi = $datapenugasan['durasi_menit_tugas_awal'];
+        $durasi = $tugas['durasi_tugas'];
         $mulai_ujian = $dataprosesujian['mulai_ujian'];
         $jam_mulai = new DateTime($mulai_ujian);
         $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");

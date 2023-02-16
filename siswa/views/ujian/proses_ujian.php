@@ -24,7 +24,7 @@
       $no = 1;
       ?>
       <form class="form" id="form-jawaban">
-        <input type="hidden" name="id_penugasan" value="<?= $idpenugasan ?>">
+        <input type="hidden" name="id_tugas_penugasan" value="<?= $id_tugas_penugasan ?>">
         <input type="hidden" name="id_prosesujian" value="<?= $dataprosesujian['id'] ?>">
         <div class="stepper stepper-pills stepper-column">
           <div class="stepper-nav ps-lg-10">
@@ -36,7 +36,7 @@
               } ?>
               <div id="soal_<?= $no_tab ?>" style="display: <?= $display ?>;">
                 <?php foreach ($item as $key => $value) :
-                  $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$value' AND tgl_hapus IS NULL");
+                  $getsoal = mysqli_query($conn, "SELECT * FROM soal_tugas_penugasan WHERE id='$value' AND tgl_hapus IS NULL");
                   $soal = mysqli_fetch_assoc($getsoal); ?>
                   <div class="d-flex my-10">
                     <!--begin::Arrow-->
@@ -54,14 +54,14 @@
                       <div class="d-flex align-items-center fw-bold mb-4"><?= $soal['pertanyaan'] ?></div>
                       <?php
                       $id_soal = $soal['id'];
-                      $getkunci = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
-                      if ($getkunci->num_rows !== 0) : ?>
-                        <?php while ($kunci = mysqli_fetch_assoc($getkunci)) :
-                          $getjawaban = mysqli_query($conn, "SELECT * FROM arf_jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_penugasan=$idpenugasan AND kode_tugas='$tugas_awal' AND id_soal=$id_soal AND tgl_hapus IS NULL");
+                      $get_jawaban_soal = mysqli_query($conn, "SELECT * FROM jawaban_soal_tugas_penugasan WHERE id_soal='$id_soal' AND tgl_hapus IS NULL ORDER BY RAND()");
+                      if ($get_jawaban_soal->num_rows !== 0) : ?>
+                        <?php while ($kunci = mysqli_fetch_assoc($get_jawaban_soal)) :
+                          $getjawabansiswa = mysqli_query($conn, "SELECT * FROM jawaban_siswa WHERE id_siswa='$nis_siswa' AND id_soal=$id_soal AND tgl_hapus IS NULL");
                           if ($kunci['kunci'] == 1) {
                           }
-                          if ($getjawaban->num_rows !== 0) {
-                            $datajawaban = mysqli_fetch_assoc($getjawaban);
+                          if ($getjawabansiswa->num_rows !== 0) {
+                            $datajawaban = mysqli_fetch_assoc($getjawabansiswa);
                             if ($datajawaban['id_jawaban'] == $kunci['id']) {
                               if ($kunci['kunci'] == 1) {
                                 $selected = "checked";
@@ -209,16 +209,14 @@
   }
 
   function timeout() {
-    var id_penugasan = "<?= $idpenugasan ?>";
+    var id_tugas_penugasan = "<?= $id_tugas_penugasan ?>";
     var id_proses = "<?= $dataprosesujian['id'] ?>";
-    var kode_tugas = "<?= $tugas_awal ?>";
     $.ajax({
       url: 'backend/function.php?action=get_data&get=nilai_ujian_awal',
       type: 'post',
       data: {
-        id_penugasan: id_penugasan,
-        id_proses: id_proses,
-        kode_tugas: kode_tugas
+        id_tugas_penugasan: id_tugas_penugasan,
+        id_proses: id_proses
       },
       success: function(data) {
         $('#show_nilai').html(data);
@@ -300,6 +298,7 @@
       var max_tab = parseInt("<?= $jumlah_tab ?>");
       var nomor = $(this).attr("data-no");
       let new_nomor = parseInt(nomor) + 1;
+      console.log(new_nomor);
       $('.label-next-' + nomor).css("display", "none");
       $('.progress-next-' + nomor).css("display", "block");
       setTimeout(function() {

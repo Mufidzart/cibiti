@@ -33,13 +33,17 @@
       <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $datanewnilai['kode-tugas'] ?>">
         <!-- <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span> -->
         <span class="d-flex flex-column align-items-start ms-2">
-          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewnilai['nilai_awal'] ?></b></span>
+          <span class="fs-3 fw-bolder"> <b class="text-primary fs-1"><?= $datanewprosesujian['nilai'] ?></b></span>
         </span>
       </a>
+      <?php
+      $get_tugas_penugasan = $conn->query("SELECT * FROM tugas_penugasan WHERE id=$id_tugas_penugasan AND tgl_hapus IS NULL");
+      $data_tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan);
+      ?>
       <br>Penugasan
-      <br> <b class="text-primary"><?= $datanewnilai['judul']  ?></b>
+      <br> <b class="text-primary"><?= $data_tugas_penugasan['sub_tugas']  ?></b>
       <br>Anda mengerjakan soal pada
-      <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
+      <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datanewprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($datanewprosesujian['mulai_ujian'])) ?> WIB</b>
     </p>
     <!--end::Description-->
   </div>
