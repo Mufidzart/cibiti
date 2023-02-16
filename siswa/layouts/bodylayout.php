@@ -61,6 +61,7 @@
 <script src="assets/js/custom/modals/create-app.js"></script>
 <script src="assets/js/custom/modals/create-account.js"></script>
 <script src="assets/js/custom/modals/upgrade-plan.js"></script>
+<script src="assets/js/custom/documentation/general/sweetalert.js"></script>
 <!--end::Page Custom Javascript-->
 <!--end::Javascript-->
 </body>

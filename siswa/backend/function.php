@@ -138,13 +138,14 @@ switch ($_GET['action']) {
       require('../views/remidi/nilai_ujian.php');
     }
     break;
-  case 'mulai_ujian_awal':
-    $id_penugasan = $_POST['id_penugasan'];
-    $jenis_ujian = "tugas_awal";
+  case 'mulai_ujian':
+    $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
     $nis = $_SESSION['username'];
-    $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
-    $datapenugasan = mysqli_fetch_assoc($getpenugasan);
-    $jumlah_soal = $datapenugasan['jumlah_soal_tugas_awal'];
+    $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
+    $tugas = mysqli_fetch_assoc($get_tugas_penugasan);
+    // $getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
+    // $datapenugasan = mysqli_fetch_assoc($getpenugasan);
+    $jumlah_soal = $datapenugasan['jumlah_soal'];
     $getsoalujian =  $conn->query(
       "SELECT asl.id FROM arf_soal asl
         JOIN arf_tugas_cbt atc ON asl.kode_tugas=atc.kode_tugas

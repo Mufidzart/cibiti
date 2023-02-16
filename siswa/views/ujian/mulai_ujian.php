@@ -7,25 +7,25 @@
         <h2 class="fs-2x fw-bolder mb-10">Mulai Mengerjakan!</h2>
         <!--end::Title-->
         <!--begin::Description-->
-        <p class="text-gray-400 fs-4 fw-bold mb-10">Pastikan Kode Soal sudah sesuai<br>
-          <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $tugas_awal ?>">
+        <p class="text-gray-400 fs-4 fw-bold mb-10">Pastikan tugas sudah sesuai<br>
+          <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $tugas['sub_tugas'] ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span>
             <span class="d-flex flex-column align-items-start ms-2">
-              <span class="fs-3 fw-bolder"><?= $tugas_awal ?></span>
+              <span class="fs-3 fw-bolder"><?= $tugas['sub_tugas'] ?></span>
             </span>
           </a>
-          <?php if ($datapenugasan['durasi_menit_tugas_awal'] == 0) : ?>
+          <?php if ($tugas['durasi_tugas'] == 0) : ?>
             <br>Kerjakan sebelum
           <?php else : ?>
             <br>Batas waktu mengerjakan adalah
-            <br> <b class="text-primary fs-1"><?= $datapenugasan['durasi_menit_tugas_awal'] ?> menit</b>
+            <br> <b class="text-primary fs-1"><?= $tugas['durasi_tugas'] ?> menit</b>
             <br>Tugas akan berakhir pada
           <?php endif; ?>
-          <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datapenugasan['batas_tugas_awal']))) ?> pukul <?= date("H:i", strtotime($datapenugasan['batas_tugas_awal'])) ?> WIB</b>
+          <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($tugas['batas_tugas']))) ?> pukul <?= date("H:i", strtotime($tugas['batas_tugas'])) ?> WIB</b>
         </p>
         <!--end::Description-->
         <!--begin::Action-->
-        <a href="javascript:;" class="btn btn-primary" id="mulai_ujian" data-penugasan="<?= $datapenugasan['id'] ?>">Mulai</a>
+        <a href="javascript:;" class="btn btn-primary" id="mulai_ujian" data-penugasan="<?= $id_tugas_penugasan ?>">Mulai</a>
         <!--end::Action-->
       </div>
       <!--end::Wrapper-->
@@ -39,16 +39,37 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
+
+
       $('#mulai_ujian').on('click', function(event) {
-        var id_penugasan = $(this).attr("data-penugasan");
-        $.ajax({
-          url: 'backend/function.php?action=mulai_ujian_awal',
-          type: 'post',
-          data: {
-            id_penugasan: id_penugasan,
-          },
-          success: function(data) {
-            location.reload();
+        Swal.fire({
+          html: `Apakah anda akan <strong>mulai mengerjakan</strong>`,
+          icon: "info",
+          buttonsStyling: false,
+          showCancelButton: true,
+          confirmButtonText: "Mulai",
+          cancelButtonText: 'Tutup',
+          customClass: {
+            confirmButton: "btn btn-primary",
+            cancelButton: 'btn btn-danger'
+          }
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            var id_tugas_penugasan = $(this).attr("data-penugasan");
+            $.ajax({
+              url: 'backend/function.php?action=mulai_ujian_awal',
+              type: 'post',
+              data: {
+                id_tugas_penugasan: id_tugas_penugasan,
+              },
+              success: function(data) {
+                console.log(id_tugas_penugasan)
+                // location.reload();
+              }
+            });
+          } else if (result.isDenied) {
+            Swal.close()
           }
         });
       })

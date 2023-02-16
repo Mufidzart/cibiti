@@ -734,6 +734,7 @@ require('layouts/bodylayout.php');
         success: function(data) {
           if (data.acc == true) {
             $('#form-tambah-penugasan').trigger("reset");
+            $('#jenis-tugas').val(null).trigger('change');
             $('#modal-tambah-penugasan').modal('hide');
             get_penugasan();
             get_penugasan_akanberakhir();
