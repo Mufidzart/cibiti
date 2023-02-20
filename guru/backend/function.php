@@ -186,9 +186,7 @@ switch ($_GET['action']) {
       require('../views/data_soal.php');
     } elseif ($_GET['get'] == 'data_soal_id') {
       $id_soal = $_POST['id_soal'];
-      $tipe_soal = mysqli_query($conn, "SELECT * FROM arf_master_soal WHERE tgl_hapus IS NULL");
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE id='$id_soal' AND tgl_hapus IS NULL");
-      $getjawaban = mysqli_query($conn, "SELECT * FROM arf_kunci_soal WHERE id_soal='$id_soal' AND tgl_hapus IS NULL");
+      $getsoal = mysqli_query($conn, "SELECT * FROM soal_tugas_penugasan WHERE id='$id_soal' AND tgl_hapus IS NULL");
       require('../views/data_soal_id.php');
     } elseif ($_GET['get'] == "data_tugas") {
       $id_staff = $session_id_staf;
@@ -238,6 +236,8 @@ switch ($_GET['action']) {
 
   case 'edit_data_soal':
     // Validation
+    var_dump($_POST);
+    die;
     $data['errors'] = [];
     $data['success'] = [];
     if (empty($_POST['pertanyaan'])) {
@@ -246,7 +246,10 @@ switch ($_GET['action']) {
     } else {
       array_push($data['success'], "pertanyaan");
     }
-    $tipe_soal = $_POST['tipe-soal'];
+    $id_soal = $_POST['id_soal'];
+    $getsoal = mysqli_query($conn, "SELECT * FROM soal_tugas_penugasan WHERE id='$id_soal' AND tgl_hapus IS NULL");
+    $soal = mysqli_fetch_assoc($getsoal);
+    $tipe_soal = $soal['tipe_soal'];
     // Validation
     if ($tipe_soal == "Pilihan Ganda") {
       if (empty($_POST['radio-pilihan'])) {
@@ -286,17 +289,15 @@ switch ($_GET['action']) {
       echo json_encode($data);
     } else {
       // Inputan Soal
-      $id_soal = $_POST['id_soal'];
-      $jenis_soal = $tipe_soal;
       $pertanyaan = $_POST['pertanyaan'];
       $today = date("Y-m-d h:i:s");
       // End Inputan Soal
       // Update Soal
-      $query = mysqli_query($conn, "UPDATE arf_soal SET tipe_soal='$jenis_soal', pertanyaan='$pertanyaan', tgl_edit='$today' WHERE id='$id_soal'");
+      $query = mysqli_query($conn, "UPDATE soal_tugas_penugasan SET tipe_soal='$tipe_soal', pertanyaan='$pertanyaan', tgl_edit='$today' WHERE id='$id_soal'");
       // End Update Soal
       if ($tipe_soal == "Pilihan Ganda") {
         // Inputan Kunci Jawaban
-        $delete_old_jawaban = mysqli_query($conn, "UPDATE arf_kunci_soal SET tgl_hapus='$today' WHERE id_soal='$id_soal'");
+        $delete_old_jawaban = mysqli_query($conn, "UPDATE jawaban_soal_tugas_penugasan SET tgl_hapus='$today' WHERE id_soal='$id_soal'");
         $radio_pilih = $_POST['radio-pilihan'];
         $jawaban_1 = $_POST['pilihan-1'];
         $kunci_jawaban_1 = ($radio_pilih == 1) ? 1 : 0;

@@ -25,6 +25,8 @@ switch ($_GET['action']) {
       $getprosesujian =  $conn->query("SELECT * FROM proses_ujian WHERE id=$id_prosesujian AND tgl_hapus IS NULL");
       $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
       if (empty($dataprosesujian['nilai'])) {
+        $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
+        $tugas = mysqli_fetch_assoc($get_tugas_penugasan);
         // UPDATE NILAI
         $getalljawaban = $conn->query(
           "SELECT * FROM jawaban_siswa js
@@ -45,7 +47,7 @@ switch ($_GET['action']) {
             }
           }
         }
-        $jumlah_soal =  $data_tugas_penugasan['jumlah_soal'];
+        $jumlah_soal =  $tugas['jumlah_soal'];
         $jumlah_benar = sizeof($jawaban_benar);
         $nilai = ($jumlah_benar / $jumlah_soal) * 100;
         $query = $conn->query("UPDATE proses_ujian SET nilai='$nilai' WHERE id=$id_prosesujian");
