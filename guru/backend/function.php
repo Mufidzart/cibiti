@@ -180,15 +180,7 @@ switch ($_GET['action']) {
 
     break;
   case 'get_data':
-    if ($_GET['get'] == 'data_soal') {
-      $kode_tugas = $_POST['kode_tugas'];
-      $getsoal = mysqli_query($conn, "SELECT * FROM arf_soal WHERE kode_tugas='$kode_tugas' AND tgl_hapus IS NULL");
-      require('../views/data_soal.php');
-    } elseif ($_GET['get'] == 'data_soal_id') {
-      $id_soal = $_POST['id_soal'];
-      $getsoal = mysqli_query($conn, "SELECT * FROM soal_tugas_penugasan WHERE id='$id_soal' AND tgl_hapus IS NULL");
-      require('../views/data_soal_id.php');
-    } elseif ($_GET['get'] == "data_tugas") {
+    if ($_GET['get'] == "data_tugas") {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
       $jenis_tugas = $_POST['jenis_tugas'];
