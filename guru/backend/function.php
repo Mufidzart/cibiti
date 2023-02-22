@@ -9,6 +9,19 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
 include 'helpers.php';
 switch ($_GET['action']) {
+  case 'get_kelas':
+    $id_thajaran = $_POST['id_thajaran'];
+    $semester = $_POST['semester'];
+    $getkelasmapel = $conn->query(
+      "SELECT agm.id_kelas,agm.id_subkelas,ak.nama_kelas,ak.parent_id,am.nama_mapel 
+      FROM arf_guru_mapel agm 
+      JOIN arf_mapel am ON am.id=agm.id_mapel 
+      JOIN arf_kelas ak ON ak.id=agm.id_subkelas 
+      WHERE agm.id_staf='$session_id_staf' 
+      AND agm.id_thajaran=$id_thajaran"
+    );
+    require('../views/data_kelas.php');
+    break;
   case 'simpan_data_tugas':
     $id_staff = $session_id_staf;
     $judul = $_POST['judul-tugas'];

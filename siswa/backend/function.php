@@ -2,6 +2,22 @@
 require 'connection.php';
 
 switch ($_GET['action']) {
+  case 'get_mapel':
+    $data = explode("/", $_POST['data_kelas']);
+    $id_kelas_induk = $data[0];
+    $id_kelas = $data[1];
+    $id_thajaran = $data[2];
+    $getgurumapel = $conn->query(
+      "SELECT agm.id_staf,agm.id_mapel,asf.nama_lengkap,am.nama_mapel
+      FROM arf_guru_mapel agm
+      JOIN arf_staf asf ON asf.nip=agm.id_staf
+      JOIN arf_mapel am ON am.id=agm.id_mapel
+      WHERE agm.id_kelas=$id_kelas_induk
+      AND agm.id_subkelas=$id_kelas
+      AND agm.id_thajaran=$id_thajaran"
+    );
+    require('../views/data_mapel.php');
+    break;
   case 'get_data':
     if ($_GET['get'] == "data_penugasan") {
       $kelas_siswa = $_POST['kelas_siswa'];

@@ -12,19 +12,6 @@ $getsiswa = $conn->query(
   ANd ask.id_semester=$semester"
 );
 $datasiswa = mysqli_fetch_assoc($getsiswa);
-$kelas_siswa = $datasiswa['id_kelas_induk'];
-$subkelas_siswa = $datasiswa['id_kelas'];
-$getgurumapel = $conn->query(
-  "SELECT agm.id_staf,agm.id_mapel,asf.nama_lengkap,am.nama_mapel
-  FROM arf_guru_mapel agm
-  JOIN arf_staf asf ON asf.nip=agm.id_staf
-  JOIN arf_mapel am ON am.id=agm.id_mapel
-  WHERE agm.id_kelas=$kelas_siswa
-  AND agm.id_subkelas=$subkelas_siswa
-  AND agm.id_thajaran=$id_thajaran"
-);
-
-
 ?>
 <!-- BEGIN CONTENT -->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -246,7 +233,39 @@ $getgurumapel = $conn->query(
         <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
           <!--begin::Header-->
           <div class="card-header border-0">
-            <h3 class="card-title fw-bolder text-dark">Mata Pelajaran</h3>
+            <h3 class="card-title">
+              Mata Pelajaran Kelas:
+              <!--begin::Col-->
+              <div class="fv-row" style="margin-left: 20px;">
+                <select name="pilih-kelas" id="pilih-kelas" aria-label="Pilih kelas" data-control="select2" data-placeholder="Pilih kelas..." class="form-select form-select-solid form-select-lg fw-bold">
+                  <option value="">Pilih kelas...</option>
+                  <?php $gethistorisiswa = $conn->query("SELECT DISTINCT id_kelas_induk,id_kelas,id_thajaran,keterangan FROM arf_siswa_kelashistory WHERE nis=$nis AND status='aktif'");
+                  while ($row = mysqli_fetch_assoc($gethistorisiswa)) :
+                    $id_kelas_induk = $row['id_kelas_induk'];
+                    $id_kelas = $row['id_kelas'];
+                    $idthajaran = $row['id_thajaran'];
+                    if ($id_kelas_induk == 1) {
+                      $grade = "X";
+                    } elseif ($id_kelas_induk == 2) {
+                      $grade = "XI";
+                    } elseif ($id_kelas_induk == 3) {
+                      $grade = "XII";
+                    }
+                    $select = ($id_thajaran == $id_thajaran) ? "selected" : "";
+                    $getkelassiswa = $conn->query("SELECT * FROM arf_kelas WHERE id=$id_kelas");
+                    $kelas = mysqli_fetch_assoc($getkelassiswa);
+                    $kelas_deskripsi = $kelas['deskripsi'];
+                    $nama_kelas = $kelas['nama_kelas'];
+                    $getthajaran = $conn->query("SELECT * FROM arf_thajaran WHERE id=$id_thajaran");
+                    $thajaran = mysqli_fetch_assoc($getthajaran);
+                    $tahun_pelajaran = $thajaran['tahun_pelajaran'];
+                  ?>
+                    <option value="<?= $id_kelas_induk . '/' . $id_kelas . '/' . $idthajaran ?>" <?= $select ?>><?= $grade . " - " . $kelas_deskripsi . "(" . $nama_kelas . ")" ?></option>
+                  <?php endwhile; ?>
+                </select>
+              </div>
+              <!--end::Col-->
+            </h3>
             <div class="card-toolbar">
               <!--begin::Menu-->
               <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
@@ -269,50 +288,7 @@ $getgurumapel = $conn->query(
           <!--end::Header-->
           <!--begin::Card body-->
           <div class="card-body">
-            <div class="row">
-              <?php
-              // $colorbg = ["bg-light-primary", "bg-secondary", "bg-light", "bg-light-success", "bg-light-warning", "bg-light-danger", "bg-light-dark"];
-              $colorbg = ["bg-light-info"];
-              $i = 0;
-              while ($datamapel = mysqli_fetch_assoc($getgurumapel)) :
-                if ($i == 1) {
-                  $i = 0;
-                } else {
-                  $i = $i;
-                }
-                $no = substr($i, -1);
-                $bg = $colorbg[$no];
-              ?>
-                <div class="col-xl-4 ps-xl-12 pb-2">
-                  <a class="d-flex align-items-center rounded py-5 px-4 <?= $bg ?>" href="detail_mapel.php?kls=<?= $kelas_siswa ?>&skls=<?= $subkelas_siswa ?>&g=<?= $datamapel['id_staf'] ?>&mpl=<?= $datamapel['id_mapel'] ?>">
-                    <!--begin::Icon-->
-                    <div class="d-flex h-80px w-80px flex-shrink-0 flex-center">
-                      <!--begin::Svg Icon | path: icons/duotune/abstract/abs051.svg-->
-                      <span class="svg-icon svg-icon-info position-absolute opacity-10">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="70px" height="70px" viewBox="0 0 70 70" fill="none" class="w-80px h-80px">
-                          <path d="M28 4.04145C32.3316 1.54059 37.6684 1.54059 42 4.04145L58.3109 13.4585C62.6425 15.9594 65.3109 20.5812 65.3109 25.5829V44.4171C65.3109 49.4188 62.6425 54.0406 58.3109 56.5415L42 65.9585C37.6684 68.4594 32.3316 68.4594 28 65.9585L11.6891 56.5415C7.3575 54.0406 4.68911 49.4188 4.68911 44.4171V25.5829C4.68911 20.5812 7.3575 15.9594 11.6891 13.4585L28 4.04145Z" fill="#000000"></path>
-                        </svg>
-                      </span>
-                      <!--end::Svg Icon-->
-                      <!--begin::Svg Icon | path: icons/duotune/art/art006.svg-->
-                      <span class="svg-icon svg-icon-3x svg-icon-info position-absolute">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                          <path opacity="0.3" d="M22 19V17C22 16.4 21.6 16 21 16H8V3C8 2.4 7.6 2 7 2H5C4.4 2 4 2.4 4 3V19C4 19.6 4.4 20 5 20H21C21.6 20 22 19.6 22 19Z" fill="black"></path>
-                          <path d="M20 5V21C20 21.6 19.6 22 19 22H17C16.4 22 16 21.6 16 21V8H8V4H19C19.6 4 20 4.4 20 5ZM3 8H4V4H3C2.4 4 2 4.4 2 5V7C2 7.6 2.4 8 3 8Z" fill="black"></path>
-                        </svg>
-                      </span>
-                      <!--end::Svg Icon-->
-                    </div>
-                    <div class="text-gray-800 text-hover-primary fw-bolder fs-3 ms-3">
-                      <?= $datamapel['nama_mapel'] ?>
-                      <span class="text-muted fw-bold fs-6 d-block"><?= $datamapel['nama_lengkap'] ?></span>
-                    </div>
-                    <!--end::Icon-->
-                  </a>
-                </div>
-              <?php
-                $i++;
-              endwhile; ?>
+            <div id="tampil-mapel">
             </div>
           </div>
           <!--end::Card body-->
@@ -329,3 +305,27 @@ $getgurumapel = $conn->query(
 <?php
 require('layouts/bodylayout.php');
 ?>
+<script>
+  function get_mapel() {
+    var data_kelas = $("#pilih-kelas").val();
+    $.ajax({
+      url: 'backend/function.php?action=get_mapel',
+      type: 'post',
+      data: {
+        data_kelas: data_kelas
+      },
+      cache: false,
+      success: function(data) {
+        $("#tampil-mapel").html(data);
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    get_mapel();
+
+    $('#pilih-kelas').on('select2:select', function(e) {
+      get_mapel();
+    });
+  })
+</script>
