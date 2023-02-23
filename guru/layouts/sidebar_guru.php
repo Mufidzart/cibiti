@@ -6,7 +6,7 @@ $segments = explode('/', $urlArray);
 <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
 <div class="page-sidebar navbar-collapse collapse">
     <!-- BEGIN SIDEBAR MENU -->
-    <ul class="page-sidebar-menu   " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+    <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
         <li class="nav-item start <?= (end($segments) == 'kelas.php' || end($segments) == 'detail_kelas.php') ? 'active open' : '' ?>">
             <a href="../index.php" class="nav-link nav-toggle">
                 <i class="icon-home"></i>
