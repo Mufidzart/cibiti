@@ -28,7 +28,7 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
             <!--begin::Row-->
             <div class="row mb-7">
               <div class="symbol symbol-100px symbol-lg-160px symbol-fixed text-center">
-                <img src="assets/media/avatars/150-26.jpg" alt="image" />
+                <img src="assets/images/person_avatar.png" alt="image" />
               </div>
             </div>
             <!--end::Row-->
@@ -164,59 +164,6 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
           <!--end::Body-->
         </div>
         <!--end::Engage widget 1-->
-        <!--begin::Row-->
-        <div class="row g-5 g-xl-8">
-          <!--begin::Col-->
-          <div class="col-xl-12">
-            <!--begin::List Widget 3-->
-            <div class="card card-xl-stretch mb-xl-8">
-              <!--begin::Header-->
-              <div class="card-header border-0">
-                <h3 class="card-title fw-bolder text-dark">Tugas</h3>
-                <div class="card-toolbar">
-                  <!--begin::Menu-->
-                  <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                    <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
-                    <span class="svg-icon svg-icon-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <rect x="5" y="5" width="5" height="5" rx="1" fill="#000000" />
-                          <rect x="14" y="5" width="5" height="5" rx="1" fill="#000000" opacity="0.3" />
-                          <rect x="5" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3" />
-                          <rect x="14" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3" />
-                        </g>
-                      </svg>
-                    </span>
-                    <!--end::Svg Icon-->
-                  </button>
-                  <!--end::Menu-->
-                </div>
-              </div>
-              <!--end::Header-->
-              <!--begin::Body-->
-              <div class="card-body pt-2">
-                <!--begin::Item-->
-                <div class="d-flex align-items-center mb-8">
-                  <!--begin::Bullet-->
-                  <span class="bullet bullet-vertical h-40px bg-success"></span>
-                  <!--end::Bullet-->
-                  <!--begin::Description-->
-                  <div class="flex-grow-1 ms-3">
-                    <a href="#" class="text-gray-800 text-hover-primary fw-bolder fs-6">Create FireStone Logo</a>
-                    <span class="text-muted fw-bold d-block">Due in 2 Days</span>
-                  </div>
-                  <!--end::Description-->
-                  <span class="badge badge-light-success fs-8 fw-bolder">New</span>
-                </div>
-                <!--end:Item-->
-              </div>
-              <!--end::Body-->
-            </div>
-            <!--end:List Widget 3-->
-          </div>
-          <!--end::Col-->
-        </div>
-        <!--end::Row-->
       </div>
       <!--end::Col-->
     </div>

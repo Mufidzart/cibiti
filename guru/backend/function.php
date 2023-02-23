@@ -212,6 +212,12 @@ switch ($_GET['action']) {
         array_push($datatugas, $data_push);
       }
       echo json_encode($datatugas);
+    } elseif ($_GET['get'] == "data_topik") {
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['id_mapel'];
+      $id_kelas = $_POST['id_kelas'];
+      $gettopik = mysqli_query($conn, "SELECT * FROM topik_pembelajaran WHERE id_staf='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY id DESC");
+      require('../views/data_topik.php');
     } elseif ($_GET['get'] == "data_penugasan") {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
@@ -705,10 +711,68 @@ switch ($_GET['action']) {
     }
     echo json_encode($data);
     break;
+  case 'tambah_topik':
+    //Validation
+    $data['errors'] = [];
+    $data['success'] = [];
+    if (empty($_POST['mapel'])) {
+      $validation = ["input" => "mapel", "message" => "Mata pelajaran tidak ditemukan."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "mapel");
+    }
+    if (empty($_POST['kelas'])) {
+      $validation = ["input" => "kelas", "message" => "Kelas tidak ditemukan."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "kelas");
+    }
+    if (empty($_POST['judul-topik'])) {
+      $validation = ["input" => "judul-topik", "message" => "Judul tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "judul-topik");
+    }
+    if (!empty($data['errors'])) {
+      $data['acc'] = false;
+      echo json_encode($data);
+    } else {
+      $id_staff = $session_id_staf;
+      $id_mapel = $_POST['mapel'];
+      $id_kelas = $_POST['kelas'];
+      $judul = $_POST['judul-topik'];
+      $deskripsi = $_POST['deskripsi-topik'];
+
+      // Input Topik
+      $query = $conn->query(
+        "INSERT INTO topik_pembelajaran(id_staf, id_mapel, id_kelas, id_thajaran, judul, deskripsi) 
+      VALUES('$id_staff','$id_mapel','$id_kelas','$id_thajaran','$judul','$deskripsi')"
+      );
+      if ($query) {
+        $data = [
+          "acc" => true,
+          "success" => $data['success']
+        ];
+        echo json_encode($data);
+      } else {
+        $data = [
+          "acc" => false,
+          "errors" => mysqli_error($conn)
+        ];
+        echo json_encode($data);
+      }
+    }
+    break;
   case 'tambah_penugasan':
     //Validation
     $data['errors'] = [];
     $data['success'] = [];
+    // if (empty($_POST['id_topik_penugasan'])) {
+    //   $validation = ["id_topik_penugasan" => "id_topik_penugasan", "message" => "Topik pembelajaran tidak ditemukan."];
+    //   array_push($data['errors'], $validation);
+    // } else {
+    //   array_push($data['success'], "id_topik_penugasan");
+    // }
     if (empty($_POST['mapel'])) {
       $validation = ["input" => "mapel", "message" => "Mata pelajaran tidak ditemukan."];
       array_push($data['errors'], $validation);
@@ -773,6 +837,7 @@ switch ($_GET['action']) {
       echo json_encode($data);
     } else {
       $id_staff = $session_id_staf;
+      // $id_topik = $_POST['id_topik_penugasan'];
       $id_mapel = $_POST['mapel'];
       $id_kelas = $_POST['kelas'];
       $judul = $_POST['judul-penugasan'];

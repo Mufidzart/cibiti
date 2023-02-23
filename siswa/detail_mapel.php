@@ -128,7 +128,10 @@ $datamapel = mysqli_fetch_assoc($getmapel);
           <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bolder flex-nowrap">
             <!--begin::Nav item-->
             <li class="nav-item">
-              <a class="nav-link text-active-primary me-6 active" href="javascript:;">Penugasan</a>
+              <a class="nav-link text-active-primary me-6 active nav-overview" id="nav-overview" href="javascript:;">Overview</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-active-primary me-6 nav-penugasan" id="nav-penugasan" href="javascript:;">Penugasan</a>
             </li>
             <!--end::Nav item-->
           </ul>
@@ -138,36 +141,8 @@ $datamapel = mysqli_fetch_assoc($getmapel);
     </div>
     <!--end::Navbar-->
     <!--begin::details View-->
-    <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
-      <!--begin::Card header-->
-      <div class="card-header cursor-pointer">
-        <h3 class="card-title fw-bolder text-dark">Penugasan</h3>
-        <div class="card-toolbar">
-          <!--begin::Menu-->
-          <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-            <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
-            <span class="svg-icon svg-icon-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <rect x="5" y="5" width="5" height="5" rx="1" fill="#000000" />
-                  <rect x="14" y="5" width="5" height="5" rx="1" fill="#000000" opacity="0.3" />
-                  <rect x="5" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3" />
-                  <rect x="14" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3" />
-                </g>
-              </svg>
-            </span>
-            <!--end::Svg Icon-->
-          </button>
-          <!--end::Menu-->
-        </div>
-      </div>
-      <!--begin::Card header-->
-      <!--begin::Card body-->
-      <div class="card-body" id="show_penugasan">
-        <!--begin::Messages-->
-        <!--end::Messages-->
-      </div>
-      <!--end::Card body-->
+    <div id="view-nav">
+
     </div>
   </div>
   <!--end::Container-->
@@ -177,6 +152,26 @@ $datamapel = mysqli_fetch_assoc($getmapel);
 require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
+  function get_topik() {
+    var kelas_siswa = '<?= $kelas_siswa ?>';
+    var subkelas_siswa = '<?= $subkelas_siswa ?>';
+    var id_staf = '<?= $id_staf ?>';
+    var id_mapel = '<?= $id_mapel ?>';
+    $.ajax({
+      url: 'backend/function.php?action=get_data&get=data_topik',
+      type: 'post',
+      data: {
+        kelas_siswa: kelas_siswa,
+        subkelas_siswa: subkelas_siswa,
+        id_staf: id_staf,
+        id_mapel: id_mapel
+      },
+      success: function(data) {
+        $('#view-nav').html(data);
+      }
+    });
+  }
+
   function get_penugasan() {
     var kelas_siswa = '<?= $kelas_siswa ?>';
     var subkelas_siswa = '<?= $subkelas_siswa ?>';
@@ -192,11 +187,21 @@ require('layouts/bodylayout.php');
         id_mapel: id_mapel
       },
       success: function(data) {
-        $('#show_penugasan').html(data);
+        $('#view-nav').html(data);
       }
     });
   }
   $(document).ready(function() {
-    get_penugasan();
+    get_topik();
+    $("#nav-overview").on("click", function(event) {
+      $(this).addClass("active");
+      $("#nav-penugasan").removeClass("active");
+      get_topik();
+    })
+    $("#nav-penugasan").on("click", function(event) {
+      $(this).addClass("active");
+      $("#nav-overview").removeClass("active");
+      get_penugasan();
+    })
   })
 </script>

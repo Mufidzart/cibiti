@@ -19,7 +19,23 @@ switch ($_GET['action']) {
     require('../views/data_mapel.php');
     break;
   case 'get_data':
-    if ($_GET['get'] == "data_penugasan") {
+    if ($_GET['get'] == "data_topik") {
+      $kelas_siswa = $_POST['kelas_siswa'];
+      $subkelas_siswa = $_POST['subkelas_siswa'];
+      $id_staf = $_POST['id_staf'];
+      $id_mapel = $_POST['id_mapel'];
+      $gettopik = $conn->query(
+        "SELECT tp.*,asf.nama_lengkap
+        FROM topik_pembelajaran tp
+        JOIN arf_staf asf ON asf.nip=tp.id_staf
+        WHERE tp.id_staf='$id_staf' 
+        AND tp.id_mapel=$id_mapel
+        AND tp.id_kelas=$subkelas_siswa
+        AND tp.id_thajaran=$id_thajaran
+        AND tp.tgl_hapus IS NULL ORDER BY id DESC"
+      );
+      require('../views/data_topik.php');
+    } elseif ($_GET['get'] == "data_penugasan") {
       $kelas_siswa = $_POST['kelas_siswa'];
       $subkelas_siswa = $_POST['subkelas_siswa'];
       $id_staf = $_POST['id_staf'];

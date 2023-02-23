@@ -64,7 +64,9 @@ License: You must have a valid license purchased only from themeforest(the above
   <!-- BEGIN LOGO -->
   <div class="logo">
     <a href="index.html">
-      <img src="../guru/assets/pages/img/logo-big.png" alt="" /> </a>
+      <!-- <img src="../guru/assets/pages/img/logo-big.png" alt="" /> </a> -->
+      <h1 style="color: white;">Learning Management System</h1>
+    </a>
   </div>
   <!-- END LOGO -->
   <!-- BEGIN LOGIN -->

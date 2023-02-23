@@ -142,6 +142,22 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   </div>
                 </div>
               </div>
+              <div class="portlet light bordered">
+                <div class="portlet-title">
+                  <div class="caption">
+                    <i class="fa fa-plus-square"></i>
+                    <span class="caption-subject font-dark bold uppercase">Topik Pembelajaran</span>
+                  </div>
+                  <div class="actions">
+                    <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-topik">Tambah Topik <i class="icon-plus"></i></a>
+                  </div>
+                </div>
+                <div class="portlet-body">
+                  <div id="show_topik">
+
+                  </div>
+                </div>
+              </div>
             </div>
             <!--tab_1_2-->
             <div class="tab-pane" id="tab_peserta">
@@ -229,6 +245,42 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
 </div>
 <!-- END CONTENT -->
 
+<!-- MODAL TAMBAH TOPIK -->
+<div class="modal fade bs-modal-lg" id="modal-tambah-topik" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Tambah Topik</h4>
+      </div>
+      <form role="form" id="form-tambah-topik">
+        <div class="modal-body form">
+          <div class="form-body">
+            <div class="form-group" id="form-judul-topik">
+              <label class="control-label">Judul Topik</label>
+              <input class="form-control" type="hidden" id="mapel" name="mapel" value="<?= $id_mapel ?>">
+              <input class="form-control" type="hidden" id="kelas" name="kelas" value="<?= $datakelas['id_kelas'] ?>">
+              <input class="form-control spinner" type="text" id="judul-topik" name="judul-topik" placeholder="Judul topik..." value="">
+              <div id="pesan-judul-topik"></div>
+            </div>
+            <div class="form-group" id="form-deskripsi-topik">
+              <label class="control-label">Deskripsi Topik</label>
+              <textarea class="form-control" id="deskripsi-topik" name="deskripsi-topik" rows="3" placeholder="Deskripsi topik..."></textarea>
+              <div id="pesan-deskripsi-topik"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn green">Tambahkan</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL TAMBAH TOPIK -->
 <!-- MODAL TEMPLATE SOAL -->
 <div class="modal fade bs-modal-md" id="modal-template-soal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md">
@@ -294,6 +346,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
           <div class="form-body">
             <div class="form-group" id="form-judul-penugasan">
               <label class="control-label">Judul Penugasan</label>
+              <input class="form-control" type="hidden" id="id_topik_penugasan" name="id_topik_penugasan" value="">
               <input class="form-control" type="hidden" id="mapel" name="mapel" value="<?= $id_mapel ?>">
               <input class="form-control" type="hidden" id="kelas" name="kelas" value="<?= $datakelas['id_kelas'] ?>">
               <input class="form-control spinner" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
@@ -462,6 +515,22 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
 require('layouts/bodylayout.php');
 ?>
 <script type="text/javascript">
+  function get_topik() {
+    var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+    var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+    $.ajax({
+      url: 'backend/function.php?action=get_data&get=data_topik',
+      type: 'post',
+      data: {
+        id_mapel: id_mapel,
+        id_kelas: id_kelas
+      },
+      success: function(data) {
+        $('#show_topik').html(data);
+      }
+    });
+  }
+
   function get_penugasan() {
     var id_mapel = '<?= $datakelas['id_mapel'] ?>';
     var id_kelas = '<?= $datakelas['id_kelas'] ?>';
@@ -495,10 +564,14 @@ require('layouts/bodylayout.php');
   }
 
   $(document).ready(function() {
+    get_topik();
     get_penugasan();
     get_penugasan_akanberakhir();
 
+    // $('#show_topik').on('click', '.tambah-penugasan', function() {
     $('#tambah-penugasan').on('click', function() {
+      var id_topik = $(this).attr("data-id-topik");
+      $('#id_topik_penugasan').val(id_topik);
       $('#modal-tambah-penugasan').modal('show');
     });
 
@@ -599,6 +672,40 @@ require('layouts/bodylayout.php');
       }
     });
 
+    $("#form-tambah-topik").on("submit", function(e) {
+      e.preventDefault();
+      var formData = new FormData($(this)[0]);
+      $.ajax({
+        url: 'backend/function.php?action=tambah_topik',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            $('#form-tambah-topik').trigger("reset");
+            $('#jenis-tugas').val(null).trigger('change');
+            $('#modal-tambah-topik').modal('hide');
+            get_topik();
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-' + data.errors[i].input).addClass('has-error');
+            }
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
+          }
+        }
+      });
+    });
+
     $("#form-tambah-penugasan").on("submit", function(e) {
       e.preventDefault();
       var formData = new FormData($(this)[0]);
@@ -614,6 +721,7 @@ require('layouts/bodylayout.php');
             $('#form-tambah-penugasan').trigger("reset");
             $('#jenis-tugas').val(null).trigger('change');
             $('#modal-tambah-penugasan').modal('hide');
+            get_topik();
             get_penugasan();
             get_penugasan_akanberakhir();
             for (i = 0; i < data.success.length; i++) {

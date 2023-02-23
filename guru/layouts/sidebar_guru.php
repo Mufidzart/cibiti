@@ -10,16 +10,16 @@ $segments = explode('/', $urlArray);
         <li class="nav-item start <?= (end($segments) == 'kelas.php' || end($segments) == 'detail_kelas.php') ? 'active open' : '' ?>">
             <a href="../index.php" class="nav-link nav-toggle">
                 <i class="icon-home"></i>
-                <span class="title">Kelas</span>
+                <span class="title">Dashboard</span>
                 <span class="selected"></span>
             </a>
         </li>
-        <li class="nav-item  <?= (end($segments) == 'media.php' || end($segments) == 'detail_media.php') ? 'active open' : '' ?>">
+        <!-- <li class="nav-item  <?= (end($segments) == 'media.php' || end($segments) == 'detail_media.php') ? 'active open' : '' ?>">
             <a href="media.php" class="nav-link">
                 <i class="icon-puzzle"></i>
                 <span class="title">Bank Media</span>
             </a>
-        </li>
+        </li> -->
     </ul>
     <!-- END SIDEBAR MENU -->
 </div>
