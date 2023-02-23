@@ -41,30 +41,30 @@
                       <span class="text-info" style="padding-top:7px;text-transform: none;">!klik untuk melihat soal</span>
                     </div>
                   </div>
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="mt-comment-actions" style="margin: 0px 0px 0px 20px; float:left;">
                       <button type="button" class="btn btn-xs btn-circle btn-primary"> Edit <?= $tugas['sub_tugas'] ?> <i class="fa fa-edit"></i></button>
                     </div>
-                  </div>
+                  </div> -->
                 <?php endwhile; ?>
                 <div class="row" style="margin-top: 30px;">
                   <div class="col-md-12">
-                    <!-- <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-success nilai-penugasan" data-id="<?= $data_penugasan['id'] ?>">Nilai <i class="fa fa-font"></i></button> -->
+                    <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-info nilai-penugasan" data-id="<?= $id_penugasan ?>">Nilai <i class="fa fa-font"></i></button>
                     <?php
                     $get_tugas_penugasan_r1 = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_penugasan='$id_penugasan' AND sub_tugas='Remidi 1' AND tgl_hapus IS NULL");
                     ?>
                     <?php if ($get_tugas_penugasan_r1->num_rows == 0) : ?>
-                      <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-success tambah-subtugas" data-id="<?= $data_penugasan['id'] ?>" data-subtugas="Remidi 1">Remidi 1 <i class="fa fa-plus"></i></button>
+                      <!-- <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-success tambah-subtugas" data-id="<?= $id_penugasan ?>" data-subtugas="Remidi 1">Remidi 1 <i class="fa fa-plus"></i></button> -->
                     <?php else : ?>
                       <?php
                       $get_tugas_penugasan_r2 = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_penugasan='$id_penugasan' AND sub_tugas='Remidi 2' AND tgl_hapus IS NULL");
                       ?>
                       <?php if ($get_tugas_penugasan_r2->num_rows == 0) : ?>
-                        <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-success tambah-subtugas" data-id="<?= $data_penugasan['id'] ?>" data-subtugas="Remidi 2">Remidi 2 <i class="fa fa-plus"></i></button>
+                        <!-- <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-success tambah-subtugas" data-id="<?= $id_penugasan ?>" data-subtugas="Remidi 2">Remidi 2 <i class="fa fa-plus"></i></button> -->
                       <?php endif; ?>
                     <?php endif; ?>
-                    <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-primary edit-penugasan" data-id="<?= $data_penugasan['id'] ?>">Edit <i class="fa fa-edit"></i></button>
-                    <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-danger hapus-penugasan" data-id="<?= $data_penugasan['id'] ?>">Hapus <i class="fa fa-trash"></i></button>
+                    <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-primary edit-penugasan" data-id="<?= $id_penugasan ?>">Edit <i class="fa fa-edit"></i></button>
+                    <button type="button" style="margin: 5px;" class="btn btn-circle btn-sm btn-danger hapus-penugasan" data-id="<?= $id_penugasan ?>">Hapus <i class="fa fa-trash"></i></button>
                   </div>
                 </div>
               </span>
@@ -154,6 +154,26 @@ endif; ?>
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
+<!-- MODAL NILAI PENUGASAN -->
+<div class="modal fade bs-modal-lg" id="modal-nilai" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title" id="title-modal">Nilai Penugasan</h4>
+      </div>
+      <div class="modal-body" id="tampil-nilai">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL NILAI PENUGASAN -->
 <script>
   $(document).ready(function() {
 
@@ -198,6 +218,21 @@ endif; ?>
               $('#form-' + data.success[i]).removeClass('has-error');
             }
           }
+        }
+      });
+    });
+
+    $(".nilai-penugasan").on("click", function() {
+      var id_penugasan = $(this).attr('data-id');
+      $.ajax({
+        url: 'backend/function.php?action=get_nilai_penugasan',
+        type: 'post',
+        data: {
+          id_penugasan: id_penugasan,
+        },
+        success: function(data) {
+          $('#tampil-nilai').html(data);
+          $('#modal-nilai').modal('show');
         }
       });
     });

@@ -866,4 +866,20 @@ switch ($_GET['action']) {
       }
     }
     break;
+
+  case 'get_nilai_penugasan':
+    $id_penugasan = $_POST['id_penugasan'];
+    $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan'");
+    $data_penugasan = mysqli_fetch_assoc($getpenugasan);
+    $id_kelas = $data_penugasan['id_kelas'];
+    $getsiswa = $conn->query(
+      "SELECT ask.nis,ask.nama_siswa,ask.id_kelas_induk,ak.nama_kelas
+      FROM arf_siswa_kelashistory ask
+      JOIN arf_kelas ak ON ak.id=ask.id_kelas
+      WHERE ak.id=$id_kelas 
+      AND id_thajaran=$id_thajaran 
+      AND id_semester=$semester"
+    );
+    require('../views/nilai_penugasan.php');
+    break;
 }
