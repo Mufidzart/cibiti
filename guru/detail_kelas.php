@@ -837,6 +837,7 @@ require('layouts/bodylayout.php');
     });
 
 
+    
     $('#jenis-tugas').on('select2:select', function(e) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
       var jenis_tugas = $(this).val();
