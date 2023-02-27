@@ -28,19 +28,14 @@ switch ($_GET['action']) {
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staf='$id_staf' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND id_topik IS NULL AND tgl_hapus IS NULL ORDER BY id DESC");
-      require('../views/data_penugasan.php');
+      require('../views/penugasan/data_penugasan.php');
     } elseif ($_GET['get'] == "data_penugasan_akanberakhir") {
       $id_staf = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
       $datenow = date("Y-m-d H:i:s");
       $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staf='$id_staf' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND id_topik IS NULL AND tgl_hapus IS NULL");
-      require('../views/data_penugasan_akanberakhir.php');
-    } elseif ($_GET['get'] == "lihat_tugas") {
-      $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
-      $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
-      $data_tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan);
-      require('../views/lihat_tugas.php');
+      require('../views/penugasan/data_penugasan_akanberakhir.php');
     } elseif ($_GET['get'] == "nilai_penugasan") {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
@@ -165,7 +160,12 @@ switch ($_GET['action']) {
     }
     break;
   case 'proses_penugasan':
-    if ($_GET['run'] == "tambah_penugasan") {
+    if ($_GET['get'] == "lihat_penugasan") {
+      $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
+      $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
+      $data_tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan);
+      require('../views/penugasan/lihat_tugas.php');
+    } elseif ($_GET['run'] == "tambah_penugasan") {
       //Validation
       $data['errors'] = [];
       $data['success'] = [];

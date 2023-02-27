@@ -673,6 +673,23 @@ require('layouts/bodylayout.php');
       $('#modal-tambah-penugasan').modal('show');
     });
 
+    $('#show_topik').on('click', '.lihat_tugas', function() {
+      var id_tugas_penugasan = $(this).attr("data-id");
+      $.ajax({
+        url: 'backend/function.php?action=proses_penugasan&get=lihat_penugasan',
+        type: 'post',
+        data: {
+          id_tugas_penugasan: id_tugas_penugasan,
+        },
+        success: function(data) {
+          if (id_tugas_penugasan) {
+            $('#show_tugas').html(data);
+            $('#modal-lihat-tugas').modal('show');
+          }
+        }
+      });
+    });
+
     $('#tab_penugasan').on('click', '#tambah-penugasan', function(event) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
       var id_kelas = '<?= $datakelas['id_kelas'] ?>';
@@ -780,6 +797,7 @@ require('layouts/bodylayout.php');
           if (data.acc == true) {
             $('#form-tambah-subtugas').trigger("reset");
             $('#modal-tambah-penugasan').modal('hide');
+            get_topik();
             get_penugasan();
             get_penugasan_akanberakhir();
             for (i = 0; i < data.success.length; i++) {
@@ -798,17 +816,6 @@ require('layouts/bodylayout.php');
           }
         }
       });
-    });
-
-
-    $('.tambah-subtugas').on('click', function(event) {
-      var id_penugasan = $(this).attr('data-id');
-      var subtugas = $(this).attr('data-subtugas');
-      $('#id_penugasan').val(id_penugasan);
-      $('#subtugas').val(subtugas);
-      $('#label-tugas').html('Tugas ' + subtugas);
-      $('#title-modal').html('Tambah Tugas ' + subtugas);
-      $('#modal-tambah-subtugas').modal('show');
     });
 
 
