@@ -393,15 +393,15 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
             <div class="form-group" id="form-judul">
               <label class="control-label">Judul Penugasan</label>
               <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="">
-              <input class="form-control" type="hidden" id="id_mapel" name="id_mapel" value="<?= $id_mapel ?>">
+              <input class="form-control" type="hidden" id="id_mapel" name="id_mapel" value="<?= $datakelas['id_mapel'] ?>">
               <input class="form-control" type="hidden" id="id_kelas" name="id_kelas" value="<?= $datakelas['id_kelas'] ?>">
               <input class="form-control spinner" type="text" id="judul" name="judul" placeholder="Judul penugasan..." value="">
-              <div id="pesan-judul"></div>
+              <div class="pesan" id="pesan-judul"></div>
             </div>
             <div class="form-group" id="form-deskripsi">
               <label class="control-label">Deskripsi penugasan</label>
               <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Deskripsi penugasan..."></textarea>
-              <div id="pesan-deskripsi"></div>
+              <div class="pesan" id="pesan-deskripsi"></div>
             </div>
             <div class="form-group" id="form-jenis-tugas">
               <label class="control-label">Jenis Tugas</label>
@@ -412,16 +412,14 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   <option value="<?= $jenis['jenis_tugas'] ?>" <?= $select ?>><?= $jenis['jenis_tugas'] ?></option>
                 <?php endwhile; ?>
               </select>
-              <div id="pesan-jenis-tugas"></div>
+              <div class="pesan" id="pesan-jenis-tugas"></div>
             </div>
             <!-- Tugas Awal -->
             <div class="note note-info">
-              <div class="row col-md-12">
-                <div class="form-group" id="form-tugas">
-                  <label for="tugas" class="control-label"><strong>Tugas Awal</strong></label>
-                  <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel-tugas" id="fileexcel-tugas">
-                  <div id="pesan-fileexcel-tugas"></div>
-                </div>
+              <div class="form-group" id="form-fileexcel-tugas">
+                <label for="tugas" class="control-label">File Tugas</label>
+                <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel-tugas" id="fileexcel-tugas">
+                <div class="pesan" id="pesan-fileexcel-tugas"></div>
               </div>
               <div class="form-group" id="form-batas-tugas">
                 <label class="control-label">Batas akhir</label><br>
@@ -436,7 +434,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </button>
                   </span>
                 </div>
-                <div id="pesan-batas-tugas"></div>
+                <div class="pesan" id="pesan-batas-tugas"></div>
               </div>
               <div class="form-group" id="form-durasi-tugas">
                 <label class="control-label">Waktu pengerjaan</label><br>
@@ -449,7 +447,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   </span>
                 </div>
                 <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
-                <div id="pesan-durasi-tugas"></div>
+                <div class="pesan" id="pesan-durasi-tugas"></div>
               </div>
               <div class="form-group" id="form-jumlah-soal-tugas">
                 <label class="control-label">Jumlah Soal ditampilkan</label><br>
@@ -461,7 +459,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </button>
                   </span>
                 </div>
-                <div id="pesan-jumlah-soal-tugas"></div>
+                <div class="pesan" id="pesan-jumlah-soal-tugas"></div>
               </div>
             </div>
             <!-- End -->
@@ -631,10 +629,17 @@ require('layouts/bodylayout.php');
       $('#form-jawaban').css('display', 'none');
       $('#pesan-jumlah_soal').html("");
       $('#pesan-jumlah_jawaban').html("");
-    })
+    });
 
     $('#modal-tambah-topik').on('hidden.bs.modal', function() {
       $('#form-tambah-topik').trigger("reset");
+    });
+
+    $('#modal-tambah-penugasan').on('hidden.bs.modal', function() {
+      $('#form-tambah-penugasan').find('#id_topik').val('');
+      $('#form-tambah-penugasan').find('.pesan').html('');
+      $("#form-tambah-penugasan").find('.form-group').removeClass('has-error');
+      $('#form-tambah-penugasan').trigger("reset");
     })
 
     $('#show_topik').on('click', '.edit-topik', function(event) {
@@ -660,8 +665,21 @@ require('layouts/bodylayout.php');
 
     $('#show_topik').on('click', '.tambah-penugasan', function(event) {
       var id_topik = $(this).attr('data-id');
-      $('#form-hapus-topik').find('#id_topik').val(id_topik);
-      $('#modal-hapus-topik').modal('show');
+      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+      var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+      $('#form-tambah-penugasan').find('#id_topik').val(id_topik);
+      $('#form-tambah-penugasan').find('#id_mapel').val(id_mapel);
+      $('#form-tambah-penugasan').find('#id_kelas').val(id_kelas);
+      $('#modal-tambah-penugasan').modal('show');
+    });
+
+    $('#tab_penugasan').on('click', '#tambah-penugasan', function(event) {
+      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+      var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+      $('#form-tambah-penugasan').find('#id_topik').val('');
+      $('#form-tambah-penugasan').find('#id_mapel').val(id_mapel);
+      $('#form-tambah-penugasan').find('#id_kelas').val(id_kelas);
+      $('#modal-tambah-penugasan').modal('show');
     });
 
     $('#form-template-soal').on('submit', function(event) {
@@ -748,22 +766,11 @@ require('layouts/bodylayout.php');
       });
     });
 
-
-    $('.tambah-subtugas').on('click', function(event) {
-      var id_penugasan = $(this).attr('data-id');
-      var subtugas = $(this).attr('data-subtugas');
-      $('#id_penugasan').val(id_penugasan);
-      $('#subtugas').val(subtugas);
-      $('#label-tugas').html('Tugas ' + subtugas);
-      $('#title-modal').html('Tambah Tugas ' + subtugas);
-      $('#modal-tambah-subtugas').modal('show');
-    });
-
-    $("#form-tambah-subtugas").on("submit", function(e) {
+    $("#form-tambah-penugasan").on("submit", function(e) {
       e.preventDefault();
       var formData = new FormData($(this)[0]);
       $.ajax({
-        url: 'backend/function.php?action=tambah_subtugas',
+        url: 'backend/function.php?action=proses_penugasan&run=tambah_penugasan',
         type: 'post',
         data: formData,
         processData: false,
@@ -776,22 +783,34 @@ require('layouts/bodylayout.php');
             get_penugasan();
             get_penugasan_akanberakhir();
             for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
+              $("#form-tambah-penugasan").find('#pesan-' + data.success[i]).html('')
+              $("#form-tambah-penugasan").find('#form-' + data.success[i]).removeClass('has-error');
             }
           } else {
             for (i = 0; i < data.errors.length; i++) {
-              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
-              $('#form-' + data.errors[i].input).addClass('has-error');
+              $("#form-tambah-penugasan").find('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $("#form-tambah-penugasan").find('#form-' + data.errors[i].input).addClass('has-error');
             }
             for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
+              $("#form-tambah-penugasan").find('#pesan-' + data.success[i]).html('')
+              $("#form-tambah-penugasan").find('#form-' + data.success[i]).removeClass('has-error');
             }
           }
         }
       });
     });
+
+
+    $('.tambah-subtugas').on('click', function(event) {
+      var id_penugasan = $(this).attr('data-id');
+      var subtugas = $(this).attr('data-subtugas');
+      $('#id_penugasan').val(id_penugasan);
+      $('#subtugas').val(subtugas);
+      $('#label-tugas').html('Tugas ' + subtugas);
+      $('#title-modal').html('Tambah Tugas ' + subtugas);
+      $('#modal-tambah-subtugas').modal('show');
+    });
+
 
     $('#show_penugasan').on('click', '.lihat_tugas', function() {
       var id_tugas_penugasan = $(this).attr("data-id");
@@ -888,43 +907,6 @@ require('layouts/bodylayout.php');
         $('#form-soal').css("display", "block");
         $('#form-jawaban').css("display", "none");
       }
-    });
-
-
-    $("#form-tambah-penugasan").on("submit", function(e) {
-      e.preventDefault();
-      var formData = new FormData($(this)[0]);
-      $.ajax({
-        url: 'backend/function.php?action=tambah_penugasan',
-        type: 'post',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: function(data) {
-          if (data.acc == true) {
-            $('#form-tambah-penugasan').trigger("reset");
-            $('#jenis-tugas').val(null).trigger('change');
-            $('#modal-tambah-penugasan').modal('hide');
-            get_topik();
-            get_penugasan();
-            get_penugasan_akanberakhir();
-            for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
-            }
-          } else {
-            for (i = 0; i < data.errors.length; i++) {
-              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
-              $('#form-' + data.errors[i].input).addClass('has-error');
-            }
-            for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
-            }
-          }
-        }
-      });
     });
 
     $('#show_penugasan').on('click', '.edit-penugasan', function(event) {

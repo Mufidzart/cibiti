@@ -26,7 +26,7 @@
               <span class="mt-comment-status mt-comment-status-pending">
                 <div class="clearfix">
                   <div class="btn-group btn-group-solid">
-                    <button type="button" class="btn green tambah-penugasan" data-id-topik="<?= $data_topik['id'] ?>" data-judul="<?= $data_topik['judul'] ?>"><i class="fa fa-plus"></i> Penugasan</button>
+                    <button type="button" class="btn green tambah-penugasan" data-id="<?= $data_topik['id'] ?>"><i class="fa fa-plus"></i> Penugasan</button>
                   </div>
                 </div>
                 <div class="row" style="margin-top: 30px;">

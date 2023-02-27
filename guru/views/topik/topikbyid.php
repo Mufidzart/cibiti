@@ -1,7 +1,7 @@
 <form role="form" id="form-edit-topik">
   <div class="modal-body form">
     <div class="form-body">
-      <div class="form-group">
+      <div class="form-group" id="form-judul-topik">
         <label class="control-label">Judul Topik</label>
         <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="<?= $data_topik['id'] ?>">
         <input class="form-control spinner" type="text" id="judul-topik" name="judul-topik" placeholder="Judul topik..." value="<?= $data_topik['judul'] ?>">
@@ -37,12 +37,12 @@
             get_topik();
           } else {
             for (i = 0; i < data.errors.length; i++) {
-              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
-              $('#form-' + data.errors[i].input).addClass('has-error');
+              $('#form-edit-topik').find('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-edit-topik').find('#form-' + data.errors[i].input).addClass('has-error');
             }
             for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
+              $('#form-edit-topik').find('#pesan-' + data.success[i]).html('')
+              $('#form-edit-topik').find('#form-' + data.success[i]).removeClass('has-error');
             }
           }
         }
