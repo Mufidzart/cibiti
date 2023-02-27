@@ -12,15 +12,6 @@
     $pecahtglinput = explode(" ", $data_topik['tgl_input']);
     $tgl_input = date("d-m-Y", strtotime($pecahtglinput[0]));
     $jam_input = date("H:i", strtotime($pecahtglinput[1]));
-    // $pecahtglselesai = explode(" ", $data_topik['batas_tugas_awal']);
-    // $tgl_selesai = date("Y-m-d", strtotime($pecahtglselesai[0]));
-    // $jam_selesai = date("H:i", strtotime($pecahtglselesai[1]));
-    // $today = new DateTime(date("Y-m-d"));
-    // if ($today > $batas) {
-    //   $color = "danger";
-    // } else {
-    //   $color = "info";
-    // }
   ?>
     <div class="note note-info">
       <div class="mt-comments">
@@ -33,7 +24,11 @@
             <div class="mt-comment-text"> <?= $data_topik['deskripsi'] ?> </div>
             <div class="mt-comment-details">
               <span class="mt-comment-status mt-comment-status-pending">
-                <!-- <button type="button" class="btn green tambah-penugasan" data-id-topik="<?= $data_topik['id'] ?>">Tambah Penugasan</button> -->
+                <div class="clearfix">
+                  <div class="btn-group btn-group-solid">
+                    <button type="button" class="btn green tambah-penugasan" data-id-topik="<?= $data_topik['id'] ?>" data-judul="<?= $data_topik['judul'] ?>"><i class="fa fa-plus"></i> Penugasan</button>
+                  </div>
+                </div>
               </span>
             </div>
           </div>
@@ -45,26 +40,29 @@
   endwhile;
 endif; ?>
 
+
 <!-- MODAL TAMBAH PENUGASAN -->
-<div class="modal fade bs-modal-lg" id="modal-tambah-subtugas" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade bs-modal-lg" id="modal-tambah-tugas" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h4 class="modal-title" id="title-modal">Tambah SubTugas</h4>
+        <h4 class="modal-title" id="title-modal">Tambah Tugas</h4>
       </div>
-      <form role="form" id="form-tambah-subtugas">
+      <form role="form" id="form-tambah-tugas">
         <div class="modal-body form">
           <div class="form-body">
-            <input class="form-control" type="hidden" id="id_penugasan" name="id_penugasan" value="">
-            <input class="form-control" type="hidden" id="subtugas" name="subtugas" value="">
+            <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="">
             <!-- Tambah SubTugas -->
-            <div class="note note-info">
+            <div class="note">
+              <div class="form-group">
+                <a class="btn btn-circle green" data-toggle="modal" href="#modal-template-soal">Template Soal <i class="icon-wrench"></i></a>
+              </div>
               <div class="row col-md-12">
-                <div class="form-group" id="form-tugas-awal">
+                <div class="form-group" id="form-tugas">
                   <label for="label-tugas" class="control-label" id="label-tugas"><strong>Tugas</strong></label>
-                  <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel-tugas" id="fileexcel-tugas">
-                  <div id="pesan-fileexcel-tugas"></div>
+                  <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel" id="fileexcel">
+                  <div id="pesan-fileexcel"></div>
                 </div>
               </div>
               <div class="form-group" id="form-batas-tugas">
@@ -85,7 +83,7 @@ endif; ?>
               <div class="form-group" id="form-durasi">
                 <label class="control-label">Waktu pengerjaan</label><br>
                 <div class="input-group">
-                  <input type="text" class="form-control text-right" id="durasi" name="durasi">
+                  <input type="text" class="form-control text-right" id="durasi-tugas" name="durasi-tugas">
                   <span class="input-group-btn">
                     <button class="btn default date-set" type="button">
                       menit
@@ -122,45 +120,22 @@ endif; ?>
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
-<!-- MODAL NILAI PENUGASAN -->
-<div class="modal fade bs-modal-lg" id="modal-nilai" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h4 class="modal-title" id="title-modal">Nilai Penugasan</h4>
-      </div>
-      <div class="modal-body" id="tampil-nilai">
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- END MODAL NILAI PENUGASAN -->
 <script>
   $(document).ready(function() {
-
-    $('.tambah-subtugas').on('click', function(event) {
-      var id_penugasan = $(this).attr('data-id');
-      var subtugas = $(this).attr('data-subtugas');
-      $('#id_penugasan').val(id_penugasan);
-      $('#subtugas').val(subtugas);
-      $('#label-tugas').html('Tugas ' + subtugas);
-      $('#title-modal').html('Tambah Tugas ' + subtugas);
-      $('#modal-tambah-subtugas').modal('show');
+    $('.tambah-penugasan').on('click', function(event) {
+      var id_topik = $(this).attr('data-id-topik');
+      var judul_topik = $(this).attr('data-judul');
+      $('#modal-tambah-tugas').find('#id_topik').val(id_topik);
+      $('#modal-tambah-tugas').find('#label-tugas').html('Tugas ' + judul_topik);
+      $('#modal-tambah-tugas').modal('show');
     });
 
-
-    $("#form-tambah-subtugas").on("submit", function(e) {
+    $("#form-tambah-tugas").on("submit", function(e) {
       e.preventDefault();
       var formData = new FormData($(this)[0]);
       $.ajax({
-        url: 'backend/function.php?action=tambah_subtugas',
+        url: 'backend/function.php?action=tambah_tugas_topik',
         type: 'post',
         data: formData,
         processData: false,
@@ -186,21 +161,6 @@ endif; ?>
               $('#form-' + data.success[i]).removeClass('has-error');
             }
           }
-        }
-      });
-    });
-
-    $(".nilai-penugasan").on("click", function() {
-      var id_penugasan = $(this).attr('data-id');
-      $.ajax({
-        url: 'backend/function.php?action=get_nilai_penugasan',
-        type: 'post',
-        data: {
-          id_penugasan: id_penugasan,
-        },
-        success: function(data) {
-          $('#tampil-nilai').html(data);
-          $('#modal-nilai').modal('show');
         }
       });
     });

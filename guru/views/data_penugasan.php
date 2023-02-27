@@ -88,6 +88,7 @@ endif; ?>
       <form role="form" id="form-tambah-subtugas">
         <div class="modal-body form">
           <div class="form-body">
+            <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="">
             <input class="form-control" type="hidden" id="id_penugasan" name="id_penugasan" value="">
             <input class="form-control" type="hidden" id="subtugas" name="subtugas" value="">
             <!-- Tambah SubTugas -->
@@ -186,7 +187,6 @@ endif; ?>
       $('#title-modal').html('Tambah Tugas ' + subtugas);
       $('#modal-tambah-subtugas').modal('show');
     });
-
 
     $("#form-tambah-subtugas").on("submit", function(e) {
       e.preventDefault();

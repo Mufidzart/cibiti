@@ -88,6 +88,7 @@ License: You must have a valid license purchased only from themeforest(the above
     .vcenter {
         vertical-align: middle !important;
     }
+    
 </style>
 <!-- End Custom Style -->
 

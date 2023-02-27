@@ -222,7 +222,7 @@ switch ($_GET['action']) {
       $id_staff = $session_id_staf;
       $id_mapel = $_POST['id_mapel'];
       $id_kelas = $_POST['id_kelas'];
-      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY id DESC");
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND id_topik IS NULL AND tgl_hapus IS NULL ORDER BY id DESC");
       require('../views/data_penugasan.php');
     } elseif ($_GET['get'] == "data_penugasan_akanberakhir") {
       $id_staff = $session_id_staf;
@@ -946,5 +946,150 @@ switch ($_GET['action']) {
       AND id_semester=$semester"
     );
     require('../views/nilai_penugasan.php');
+    break;
+  case 'tambah_tugas_topik':
+    //Validation
+    $data['errors'] = [];
+    $data['success'] = [];
+    if (empty($_POST['id_topik'])) {
+      $validation = ["id_topik" => "id_topik", "message" => "Topik pembelajaran tidak ditemukan."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "id_topik");
+    }
+    if (empty($_FILES['fileexcel']['name'])) {
+      $validation = ["input" => "fileexcel", "message" => "File tugas tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "fileexcel");
+    }
+    if (empty($_POST['batas-tugas'])) {
+      $validation = ["input" => "batas-tugas", "message" => "Batas tugas tidak boleh kosong."];
+      array_push($data['errors'], $validation);
+    } else {
+      array_push($data['success'], "batas-tugas");
+    }
+    if (empty($_POST['durasi-tugas'])) {
+      if ($_POST['durasi-tugas'] == "0") {
+        array_push($data['success'], "durasi-tugas");
+      } else {
+        $validation = ["input" => "durasi-tugas", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      }
+    } else {
+      array_push($data['success'], "durasi-tugas");
+    }
+    if (empty($_POST['jumlah_soal'])) {
+      $validation = ["input" => "jumlah_soal", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+      array_push($data['errors'], $validation);
+    } else {
+      if ($_POST['jumlah_soal'] == "0") {
+        $validation = ["input" => "jumlah_soal", "message" => "Jumlah soal tidak boleh kosong atau 0."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "jumlah_soal");
+      }
+    }
+
+    if (!empty($data['errors'])) {
+      $data['acc'] = false;
+      echo json_encode($data);
+    } else {
+      $id_topik = $_POST['id_topik'];
+      $gettopik = mysqli_query($conn, "SELECT * FROM topik_pembelajaran WHERE id='$id_topik' AND tgl_hapus IS NULL");
+      $data_topik = mysqli_fetch_assoc($gettopik);
+      $id_staff = $session_id_staf;
+      $id_mapel = $data_topik['id_mapel'];
+      $id_kelas = $data_topik['kelas'];
+      $judul = $data_topik['judul'];
+      $deskripsi = $data_topik['deskripsi'];
+      $sub_tugas = "Tugas Awal";
+      $pecahtugasawal = explode(" - ", $_POST['batas-tugas']);
+      $tgl_tugasawal = date('Y-m-d', strtotime($pecahtugasawal[0]));
+      $time_tugasawal = date('H:i:s', strtotime($pecahtugasawal[1]));
+      $batas_tugas_awal = $tgl_tugasawal . ' ' . $time_tugasawal;
+      $durasi_menit_tugas_awal = $_POST['durasi-tugas'];
+      $jumlah_soal_tugas_awal = $_POST['jumlah_soal'];
+      var_dump($_POST);
+      die;
+      // Input History Penugasan
+      $query = $conn->query(
+        "INSERT INTO arf_history_penugasan(id_staff, id_mapel, id_kelas, id_tahunajaran, judul, deskripsi, jenis_tugas) 
+        VALUES('$id_staff','$id_mapel','$id_kelas','$id_thajaran','$judul','$deskripsi','$jenis_tugas')"
+      );
+      // End Input History Penugasan
+      // Input Tugas Penugasan
+      $id_penugasan = $conn->insert_id;
+      $query = $conn->query(
+        "INSERT INTO tugas_penugasan(id_penugasan, sub_tugas, batas_tugas, durasi_tugas, jumlah_soal) 
+        VALUES('$id_penugasan','$sub_tugas','$batas_tugas_awal','$durasi_menit_tugas_awal','$jumlah_soal_tugas_awal')"
+      );
+      $id_tugas_penugasan = $conn->insert_id;
+      // End Input Tugas Penugasan
+
+      // Input Soal Tugas Penugasan
+      if (isset($_FILES['fileexcel-tugas-awal'])) { // Jika user mengklik tombol Import
+        $folder = "../tmp/";
+        if (!file_exists($folder)) {
+          mkdir($folder, 0777);
+        }
+        $file_name = $_FILES['fileexcel-tugas-awal']['name'];
+        $source       = $_FILES["fileexcel-tugas-awal"]["tmp_name"];
+        $destination  = $folder . $file_name;
+        /* move the file */
+        move_uploaded_file($source, $destination);
+        $arr_file = explode('.', $_FILES['fileexcel-tugas-awal']['name']);
+        $extension = end($arr_file);
+
+        if ('csv' == $extension) {
+          $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+        } else {
+          $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }
+        $spreadsheet = $reader->load($destination); // Load file yang tadi diupload ke folder tmp
+        $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        $last_column = $spreadsheet->getActiveSheet()->getHighestColumn();
+        $count_pilihan_jawaban = (ord(strtolower($last_column)) - 96) - 3;
+        $numrow = 1;
+        $start_pilihan = "C";
+        $tipe_soal = str_replace("Template Soal ", "", $sheet[1]['A']);
+        foreach ($sheet as $row) {
+          if ($numrow >= 5) {
+            $soal = $row['B'];
+            $kunci_jawaban = $row[$last_column];
+            // Cek jika semua data tidak diisi
+            if ($soal == "" && $kunci_jawaban == "") continue; // Lewat data pada baris ini (masuk ke looping selanjutnya / baris selanjutnya
+            $explode_kunci = explode(" ", $kunci_jawaban);
+            $kunci = $explode_kunci[1];
+            $query = mysqli_query($conn, "INSERT INTO soal_tugas_penugasan(id_tugas_penugasan, tipe_soal, pertanyaan) VALUES('$id_tugas_penugasan','$tipe_soal', '$soal')");
+            $id_soal = $conn->insert_id;
+            for ($i = 1; $i <= $count_pilihan_jawaban; $i++) {
+              $kunci_fix = ($i == $kunci) ? 1 : 0;
+              $pilihan_jawaban = $row[$start_pilihan];
+              $query = mysqli_query($conn, "INSERT INTO jawaban_soal_tugas_penugasan(id_soal, jawaban, kunci) VALUE ('$id_soal','$pilihan_jawaban','$kunci_fix')");
+              $start_pilihan++;
+            }
+          }
+          $start_pilihan = "C";
+          $numrow++; // Tambah 1 setiap kali looping
+        }
+        unlink($destination); // Hapus file excel yg telah diupload, ini agar tidak terjadi penumpukan file
+      }
+      // End Input Soal Tugas Penugasan
+
+      if ($query) {
+        $data = [
+          "acc" => true,
+          "success" => $data['success']
+        ];
+        echo json_encode($data);
+      } else {
+        $data = [
+          "acc" => false,
+          "errors" => mysqli_error($conn)
+        ];
+        echo json_encode($data);
+      }
+    }
     break;
 }
