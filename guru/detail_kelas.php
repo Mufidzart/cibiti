@@ -41,8 +41,6 @@ $get_date = date('Y-m-d');
 $get_time = date('H:i:s');
 $current_date = $get_date . 'T' . $get_time . 'Z';
 ?>
-<input class="form-control" type="hidden" id="id-mapel" name="id-mapel" value="<?= $id_mapel ?>">
-<input class="form-control" type="hidden" id="id-kelas" name="id-kelas" value="<?= $datakelas['id_kelas'] ?>">
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
   <!-- BEGIN CONTENT BODY -->
@@ -149,7 +147,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     <span class="caption-subject font-dark bold uppercase">Topik Pembelajaran</span>
                   </div>
                   <div class="actions">
-                    <a class="btn btn-circle green" data-toggle="modal" href="#modal-tambah-topik">Tambah Topik <i class="icon-plus"></i></a>
+                    <a class="btn btn-circle green" id="btn-tambah-topik">Tambah Topik <i class="icon-plus"></i></a>
                   </div>
                 </div>
                 <div class="portlet-body">
@@ -245,42 +243,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
 </div>
 <!-- END CONTENT -->
 
-<!-- MODAL TAMBAH TOPIK -->
-<div class="modal fade bs-modal-lg" id="modal-tambah-topik" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h4 class="modal-title">Tambah Topik</h4>
-      </div>
-      <form role="form" id="form-tambah-topik">
-        <div class="modal-body form">
-          <div class="form-body">
-            <div class="form-group" id="form-judul-topik">
-              <label class="control-label">Judul Topik</label>
-              <input class="form-control" type="hidden" id="mapel" name="mapel" value="<?= $id_mapel ?>">
-              <input class="form-control" type="hidden" id="kelas" name="kelas" value="<?= $datakelas['id_kelas'] ?>">
-              <input class="form-control spinner" type="text" id="judul-topik" name="judul-topik" placeholder="Judul topik..." value="">
-              <div id="pesan-judul-topik"></div>
-            </div>
-            <div class="form-group" id="form-deskripsi-topik">
-              <label class="control-label">Deskripsi Topik</label>
-              <textarea class="form-control" id="deskripsi-topik" name="deskripsi-topik" rows="3" placeholder="Deskripsi topik..."></textarea>
-              <div id="pesan-deskripsi-topik"></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Batal</button>
-          <button type="submit" class="btn green">Tambahkan</button>
-        </div>
-      </form>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- END MODAL TAMBAH TOPIK -->
 <!-- MODAL TEMPLATE SOAL -->
 <div class="modal fade bs-modal-md" id="modal-template-soal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-md">
@@ -310,12 +272,12 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   <div class="form-group" id="form-soal" style="display: none;">
                     <label class="control-label">Jumlah Soal</label>
                     <input class="form-control col-md-4 jumlah_soal" style="margin-bottom: 10px;" type="text" name="jumlah_soal" id="jumlah_soal">
-                    <div id="pesan-jumlah_soal"></div>
+                    <div id="pesan-jumlah-soal"></div>
                   </div>
                   <div class="form-group" id="form-jawaban" style="display: none;">
                     <label class="control-label">Jumlah pilihan jawaban per soal</label>
                     <input class="form-control col-md-4 jumlah_jawaban" style="margin-bottom: 10px;" type="text" name="jumlah_jawaban" id="jumlah_jawaban">
-                    <div id="pesan-jumlah_jawaban"></div>
+                    <div id="pesan-jumlah-jawaban"></div>
                   </div>
                   <div class="form-group">
                     <button type="submit" class="btn green">Generate Template Soal</button>
@@ -333,6 +295,90 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   </div>
 </div>
 <!-- END MODAL TEMPLATE SOAL -->
+<!-- MODAL TAMBAH TOPIK -->
+<div class="modal fade bs-modal-lg" id="modal-tambah-topik" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Tambah Topik</h4>
+      </div>
+      <form role="form" id="form-tambah-topik">
+        <div class="modal-body form">
+          <div class="form-body">
+            <div class="form-group" id="form-judul-topik">
+              <label class="control-label">Judul Topik</label>
+              <input class="form-control" type="hidden" id="id_mapel" name="id_mapel" value="<?= $datakelas['id_mapel'] ?>">
+              <input class="form-control" type="hidden" id="id_kelas" name="id_kelas" value="<?= $datakelas['id_kelas'] ?>">
+              <input class="form-control spinner" type="text" id="judul-topik" name="judul-topik" placeholder="Judul topik..." value="">
+              <div id="pesan-judul-topik"></div>
+            </div>
+            <div class="form-group" id="form-deskripsi-topik">
+              <label class="control-label">Deskripsi Topik</label>
+              <textarea class="form-control" id="deskripsi-topik" name="deskripsi-topik" rows="3" placeholder="Deskripsi topik..."></textarea>
+              <div id="pesan-deskripsi-topik"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn green">Tambahkan</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL TAMBAH TOPIK -->
+<!-- MODAL EDIT TOPIK -->
+<div class="modal fade bs-modal-lg" id="modal-edit-topik" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Edit Topik</h4>
+      </div>
+      <div class="modal-body form" id="tampil-edit-topik">
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL EDIT TOPIK -->
+<!-- MODAL HAPUS TOPIK -->
+<div class="modal fade bs-modal-md" id="modal-hapus-topik" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Hapus Topik</h4>
+      </div>
+      <form role="form" id="form-hapus-topik">
+        <div class="modal-body">
+          <div class="form-body">
+            <div class="form-group">
+              <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="">
+              <div class="note note-danger">
+                <h4 class="block">Peringatan Hapus!</h4>
+                <p> Apakah anda yakin menghapus data ini? </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn red">Hapus</button>
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL HAPUS TOPIK -->
+
 <!-- MODAL TAMBAH PENUGASAN -->
 <div class="modal fade bs-modal-lg" id="modal-tambah-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -344,18 +390,18 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
       <form role="form" id="form-tambah-penugasan">
         <div class="modal-body form">
           <div class="form-body">
-            <div class="form-group" id="form-judul-penugasan">
+            <div class="form-group" id="form-judul">
               <label class="control-label">Judul Penugasan</label>
-              <input class="form-control" type="hidden" id="id_topik_penugasan" name="id_topik_penugasan" value="">
-              <input class="form-control" type="hidden" id="mapel" name="mapel" value="<?= $id_mapel ?>">
-              <input class="form-control" type="hidden" id="kelas" name="kelas" value="<?= $datakelas['id_kelas'] ?>">
-              <input class="form-control spinner" type="text" id="judul-penugasan" name="judul-penugasan" placeholder="Judul penugasan..." value="">
-              <div id="pesan-judul-penugasan"></div>
+              <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="">
+              <input class="form-control" type="hidden" id="id_mapel" name="id_mapel" value="<?= $id_mapel ?>">
+              <input class="form-control" type="hidden" id="id_kelas" name="id_kelas" value="<?= $datakelas['id_kelas'] ?>">
+              <input class="form-control spinner" type="text" id="judul" name="judul" placeholder="Judul penugasan..." value="">
+              <div id="pesan-judul"></div>
             </div>
-            <div class="form-group" id="form-deskripsi-penugasan">
+            <div class="form-group" id="form-deskripsi">
               <label class="control-label">Deskripsi penugasan</label>
-              <textarea class="form-control" id="deskripsi-penugasan" name="deskripsi-penugasan" rows="3" placeholder="Deskripsi penugasan..."></textarea>
-              <div id="pesan-deskripsi-penugasan"></div>
+              <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Deskripsi penugasan..."></textarea>
+              <div id="pesan-deskripsi"></div>
             </div>
             <div class="form-group" id="form-jenis-tugas">
               <label class="control-label">Jenis Tugas</label>
@@ -371,16 +417,16 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
             <!-- Tugas Awal -->
             <div class="note note-info">
               <div class="row col-md-12">
-                <div class="form-group" id="form-tugas-awal">
-                  <label for="tugas-awal" class="control-label"><strong>Tugas Awal</strong></label>
-                  <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel-tugas-awal" id="fileexcel-tugas-awal">
-                  <div id="pesan-fileexcel-tugas-awal"></div>
+                <div class="form-group" id="form-tugas">
+                  <label for="tugas" class="control-label"><strong>Tugas Awal</strong></label>
+                  <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="fileexcel-tugas" id="fileexcel-tugas">
+                  <div id="pesan-fileexcel-tugas"></div>
                 </div>
               </div>
-              <div class="form-group" id="form-batas-tugas-awal">
+              <div class="form-group" id="form-batas-tugas">
                 <label class="control-label">Batas akhir</label><br>
                 <div class="input-group date form_datetime" data-date="<?= $current_date ?>">
-                  <input type="text" class="form-control" id="batas-tugas-awal" name="batas-tugas-awal">
+                  <input type="text" class="form-control" id="batas-tugas" name="batas-tugas">
                   <span class="input-group-btn">
                     <button class="btn default date-reset" type="button">
                       <i class="fa fa-times"></i>
@@ -390,12 +436,12 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                     </button>
                   </span>
                 </div>
-                <div id="pesan-batas-tugas-awal"></div>
+                <div id="pesan-batas-tugas"></div>
               </div>
-              <div class="form-group" id="form-durasi-tugas-awal">
+              <div class="form-group" id="form-durasi-tugas">
                 <label class="control-label">Waktu pengerjaan</label><br>
                 <div class="input-group">
-                  <input type="text" class="form-control text-right" id="durasi-tugas-awal" name="durasi-tugas-awal">
+                  <input type="text" class="form-control text-right" id="durasi-tugas" name="durasi-tugas">
                   <span class="input-group-btn">
                     <button class="btn default date-set" type="button">
                       menit
@@ -403,19 +449,19 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   </span>
                 </div>
                 <span class="help-block"> isikan angka 0 jika tidak dibatasi. </span>
-                <div id="pesan-durasi-tugas-awal"></div>
+                <div id="pesan-durasi-tugas"></div>
               </div>
-              <div class="form-group" id="form-jumlah_soal-tugas-awal">
+              <div class="form-group" id="form-jumlah-soal-tugas">
                 <label class="control-label">Jumlah Soal ditampilkan</label><br>
                 <div class="input-group">
-                  <input type="text" class="form-control text-right" id="jumlah_soal-tugas-awal" name="jumlah_soal-tugas-awal">
+                  <input type="text" class="form-control text-right" id="jumlah-soal-tugas" name="jumlah-soal-tugas">
                   <span class="input-group-btn">
                     <button class="btn default date-set" type="button">
                       soal
                     </button>
                   </span>
                 </div>
-                <div id="pesan-jumlah_soal-tugas-awal"></div>
+                <div id="pesan-jumlah-soal-tugas"></div>
               </div>
             </div>
             <!-- End -->
@@ -432,6 +478,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
+
+
 <!-- MODAL LIHAT TUGAS -->
 <div class="modal fade bs-modal-lg" id="modal-lihat-tugas" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -519,7 +567,7 @@ require('layouts/bodylayout.php');
     var id_mapel = '<?= $datakelas['id_mapel'] ?>';
     var id_kelas = '<?= $datakelas['id_kelas'] ?>';
     $.ajax({
-      url: 'backend/function.php?action=get_data&get=data_topik',
+      url: 'backend/function.php?action=proses_topik&run=data_topik',
       type: 'post',
       data: {
         id_mapel: id_mapel,
@@ -568,11 +616,181 @@ require('layouts/bodylayout.php');
     get_penugasan();
     get_penugasan_akanberakhir();
 
-    // $('#show_topik').on('click', '.tambah-penugasan', function() {
-    $('#tambah-penugasan').on('click', function() {
-      var id_topik = $(this).attr("data-id-topik");
-      $('#id_topik_penugasan').val(id_topik);
-      $('#modal-tambah-penugasan').modal('show');
+    $('#btn-tambah-topik').on('click', function(event) {
+      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
+      var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+      $("#form-tambah-topik").find("#id_mapel").val(id_mapel);
+      $("#form-tambah-topik").find("#id_kelas").val(id_kelas);
+      $('#modal-tambah-topik').modal('show');
+    });
+
+    $('#modal-template-soal').on('hidden.bs.modal', function() {
+      $('#form-template-soal').trigger("reset");
+      $('#tipe-soal').trigger("change");
+      $('#form-soal').css('display', 'none');
+      $('#form-jawaban').css('display', 'none');
+      $('#pesan-jumlah_soal').html("");
+      $('#pesan-jumlah_jawaban').html("");
+    })
+
+    $('#modal-tambah-topik').on('hidden.bs.modal', function() {
+      $('#form-tambah-topik').trigger("reset");
+    })
+
+    $('#show_topik').on('click', '.edit-topik', function(event) {
+      var id_topik = $(this).attr('data-id');
+      $.ajax({
+        url: 'backend/function.php?action=proses_topik&run=topikbyid',
+        type: 'post',
+        data: {
+          id_topik: id_topik,
+        },
+        success: function(data) {
+          $('#tampil-edit-topik').html(data);
+          $('#modal-edit-topik').modal('show');
+        }
+      });
+    });
+
+    $('#show_topik').on('click', '.hapus-topik', function(event) {
+      var id_topik = $(this).attr('data-id');
+      $('#form-hapus-topik').find('#id_topik').val(id_topik);
+      $('#modal-hapus-topik').modal('show');
+    });
+
+    $('#show_topik').on('click', '.tambah-penugasan', function(event) {
+      var id_topik = $(this).attr('data-id');
+      $('#form-hapus-topik').find('#id_topik').val(id_topik);
+      $('#modal-hapus-topik').modal('show');
+    });
+
+    $('#form-template-soal').on('submit', function(event) {
+      event.preventDefault();
+      var tipe_soal = $('#form-template-soal').find("#tipe-soal").val();
+      var jumlah_soal = $('#form-template-soal').find("#jumlah_soal").val();
+      var jumlah_jawaban = $('#form-template-soal').find("#jumlah_jawaban").val();
+      if (!tipe_soal) {
+        $('#form-template-soal').find('#pesan-tipe-soal').html('<span class="help-block" style="color:red;">Tipe soal tidak boleh kosong.</span>');
+      } else {
+        $('#form-template-soal').find('#pesan-tipe-soal').html('');
+        if (tipe_soal == "Pilihan Ganda") {
+          if (!jumlah_soal) {
+            $('#form-template-soal').find('#pesan-jumlah-soal').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
+          } else {
+            $('#form-template-soal').find('#pesan-jumlah-soal').html('');
+            if (!jumlah_jawaban) {
+              $('#form-template-soal').find('#pesan-jumlah-jawaban').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
+            } else {
+              $('#form-template-soal').find('#pesan-jumlah-jawaban').html('');
+              var popout = '<?= $baseurl ?>/guru/views/generate_document/excel_soal_pilihan_ganda.php?ts=' + tipe_soal + '&js=' + jumlah_soal + '&jj=' + jumlah_jawaban;
+              window.open(popout);
+            }
+          }
+        } else {
+          if (!jumlah_soal) {
+            $('#form-template-soal').find('#pesan-jumlah-soal').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
+          } else {
+            $('#form-template-soal').find('#pesan-jumlah-soal').html('');
+            var popout = '<?= $baseurl ?>/guru/views/generate_document/excel_soal_essay.php?ts=' + tipe_soal + '&js=' + jumlah_soal;
+            window.open(popout);
+          }
+        }
+      }
+
+    });
+
+    $("#form-tambah-topik").on("submit", function(event) {
+      event.preventDefault();
+      var formData = new FormData($(this)[0]);
+      $.ajax({
+        url: 'backend/function.php?action=proses_topik&run=tambah_topik',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            $('#form-tambah-topik').trigger("reset");
+            $('#jenis-tugas').val(null).trigger('change');
+            $('#modal-tambah-topik').modal('hide');
+            get_topik();
+            for (i = 0; i < data.success.length; i++) {
+              $('#form-tambah-topik').find('#pesan-' + data.success[i]).html('')
+              $('#form-tambah-topik').find('#form-' + data.success[i]).removeClass('has-error');
+            }
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#form-tambah-topik').find('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-tambah-topik').find('#form-' + data.errors[i].input).addClass('has-error');
+            }
+            for (i = 0; i < data.success.length; i++) {
+              $('#form-tambah-topik').find('#pesan-' + data.success[i]).html('')
+              $('#form-tambah-topik').find('#form-' + data.success[i]).removeClass('has-error');
+            }
+          }
+        }
+      });
+    });
+
+    $("#form-hapus-topik").on("submit", function(event) {
+      event.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=proses_topik&run=hapus_topik',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          $('#modal-hapus-topik').modal('hide');
+          get_topik();
+        }
+      });
+    });
+
+
+    $('.tambah-subtugas').on('click', function(event) {
+      var id_penugasan = $(this).attr('data-id');
+      var subtugas = $(this).attr('data-subtugas');
+      $('#id_penugasan').val(id_penugasan);
+      $('#subtugas').val(subtugas);
+      $('#label-tugas').html('Tugas ' + subtugas);
+      $('#title-modal').html('Tambah Tugas ' + subtugas);
+      $('#modal-tambah-subtugas').modal('show');
+    });
+
+    $("#form-tambah-subtugas").on("submit", function(e) {
+      e.preventDefault();
+      var formData = new FormData($(this)[0]);
+      $.ajax({
+        url: 'backend/function.php?action=tambah_subtugas',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            $('#form-tambah-subtugas').trigger("reset");
+            $('#modal-tambah-penugasan').modal('hide');
+            get_penugasan();
+            get_penugasan_akanberakhir();
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $('#form-' + data.errors[i].input).addClass('has-error');
+            }
+            for (i = 0; i < data.success.length; i++) {
+              $('#pesan-' + data.success[i]).html('')
+              $('#form-' + data.success[i]).removeClass('has-error');
+            }
+          }
+        }
+      });
     });
 
     $('#show_penugasan').on('click', '.lihat_tugas', function() {
@@ -672,39 +890,6 @@ require('layouts/bodylayout.php');
       }
     });
 
-    $("#form-tambah-topik").on("submit", function(e) {
-      e.preventDefault();
-      var formData = new FormData($(this)[0]);
-      $.ajax({
-        url: 'backend/function.php?action=tambah_topik',
-        type: 'post',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: function(data) {
-          if (data.acc == true) {
-            $('#form-tambah-topik').trigger("reset");
-            $('#jenis-tugas').val(null).trigger('change');
-            $('#modal-tambah-topik').modal('hide');
-            get_topik();
-            for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
-            }
-          } else {
-            for (i = 0; i < data.errors.length; i++) {
-              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
-              $('#form-' + data.errors[i].input).addClass('has-error');
-            }
-            for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
-            }
-          }
-        }
-      });
-    });
 
     $("#form-tambah-penugasan").on("submit", function(e) {
       e.preventDefault();
@@ -790,48 +975,5 @@ require('layouts/bodylayout.php');
       });
     });
 
-    $('#modal-template-soal').on('hidden.bs.modal', function() {
-      $('#form-template-soal').trigger("reset");
-      $('#tipe-soal').trigger("change");
-      $('#form-soal').css('display', 'none');
-      $('#form-jawaban').css('display', 'none');
-      $('#pesan-jumlah_soal').html("");
-      $('#pesan-jumlah_jawaban').html("");
-    })
-
-    $('#form-template-soal').on('submit', function(event) {
-      event.preventDefault();
-      var tipe_soal = $("#tipe-soal").val();
-      var jumlah_soal = $("#jumlah_soal").val();
-      var jumlah_jawaban = $("#jumlah_jawaban").val();
-
-      if (!tipe_soal) {
-        $('#pesan-tipe-soal').html('<span class="help-block" style="color:red;">Tipe soal tidak boleh kosong.</span>');
-      } else {
-        $('#pesan-tipe-soal').html('');
-        if (!jumlah_soal) {
-          $('#pesan-jumlah_soal').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
-        } else {
-          $('#pesan-jumlah_soal').html('');
-        }
-        if (tipe_soal == "Pilihan Ganda") {
-          if (!jumlah_jawaban) {
-            $('#pesan-jumlah_jawaban').html('<span class="help-block" style="color:red;">Jumlah soal tidak boleh kosong.</span>');
-          } else {
-            $('#pesan-jumlah_jawaban').html('');
-          }
-          if (jumlah_soal && jumlah_jawaban) {
-            var popout = '<?= $baseurl ?>/guru/views/generate_document/excel_soal_pilihan_ganda.php?ts=' + tipe_soal + '&js=' + jumlah_soal + '&jj=' + jumlah_jawaban;
-            window.open(popout);
-          }
-        } else {
-          if (jumlah_soal) {
-            var popout = '<?= $baseurl ?>/guru/views/generate_document/excel_soal_essay.php?ts=' + tipe_soal + '&js=' + jumlah_soal;
-            window.open(popout);
-          }
-        }
-      }
-
-    });
   });
 </script>

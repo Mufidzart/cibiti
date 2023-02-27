@@ -177,51 +177,6 @@ endif; ?>
 <!-- END MODAL NILAI PENUGASAN -->
 <script>
   $(document).ready(function() {
-
-    $('.tambah-subtugas').on('click', function(event) {
-      var id_penugasan = $(this).attr('data-id');
-      var subtugas = $(this).attr('data-subtugas');
-      $('#id_penugasan').val(id_penugasan);
-      $('#subtugas').val(subtugas);
-      $('#label-tugas').html('Tugas ' + subtugas);
-      $('#title-modal').html('Tambah Tugas ' + subtugas);
-      $('#modal-tambah-subtugas').modal('show');
-    });
-
-    $("#form-tambah-subtugas").on("submit", function(e) {
-      e.preventDefault();
-      var formData = new FormData($(this)[0]);
-      $.ajax({
-        url: 'backend/function.php?action=tambah_subtugas',
-        type: 'post',
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: 'json',
-        success: function(data) {
-          if (data.acc == true) {
-            $('#form-tambah-subtugas').trigger("reset");
-            $('#modal-tambah-penugasan').modal('hide');
-            get_penugasan();
-            get_penugasan_akanberakhir();
-            for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
-            }
-          } else {
-            for (i = 0; i < data.errors.length; i++) {
-              $('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
-              $('#form-' + data.errors[i].input).addClass('has-error');
-            }
-            for (i = 0; i < data.success.length; i++) {
-              $('#pesan-' + data.success[i]).html('')
-              $('#form-' + data.success[i]).removeClass('has-error');
-            }
-          }
-        }
-      });
-    });
-
     $(".nilai-penugasan").on("click", function() {
       var id_penugasan = $(this).attr('data-id');
       $.ajax({

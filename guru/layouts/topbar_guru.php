@@ -19,50 +19,9 @@ $datastaf = mysqli_fetch_assoc($getstaf);
 <!-- BEGIN PAGE TOP -->
 <div class="page-top">
   <!-- BEGIN TOP NAVIGATION MENU -->
-  <div class="page-actions">
-    <div class="btn-group">
-      <button type="button" class="btn red-haze btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false">
-        <span class="hidden-sm hidden-xs">Actions&nbsp;</span>
-        <i class="fa fa-angle-down"></i>
-      </button>
-      <ul class="dropdown-menu" role="menu">
-        <li>
-          <a href="javascript:;">
-            <i class="icon-docs"></i> New Post </a>
-        </li>
-        <li>
-          <a href="javascript:;">
-            <i class="icon-tag"></i> New Comment </a>
-        </li>
-        <li>
-          <a href="javascript:;">
-            <i class="icon-share"></i> Share </a>
-        </li>
-        <li class="divider"> </li>
-        <li>
-          <a href="javascript:;">
-            <i class="icon-flag"></i> Comments
-            <span class="badge badge-success">4</span>
-          </a>
-        </li>
-        <li>
-          <a href="javascript:;">
-            <i class="icon-users"></i> Feedbacks
-            <span class="badge badge-danger">2</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
   <div class="top-menu">
     <ul class="nav navbar-nav pull-right">
       <li class="separator hide"> </li>
-      <!-- BEGIN NOTIFICATION DROPDOWN -->
-      <!-- <li class="separator hide"> </li> -->
-      <!-- BEGIN INBOX DROPDOWN -->
-      <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
-      <!-- END INBOX DROPDOWN -->
-      <!-- <li class="separator hide"> </li> -->
       <!-- BEGIN USER LOGIN DROPDOWN -->
       <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
       <li class="dropdown dropdown-user dropdown-dark">
