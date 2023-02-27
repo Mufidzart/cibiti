@@ -6,7 +6,7 @@
     </div>
   </div>
   <?php else :
-  $no = 1;
+  $no = $gettopik->num_rows;
   while ($data_topik = mysqli_fetch_assoc($gettopik)) :
     $id_topik = $data_topik['id'];
     $pecahtglinput = explode(" ", $data_topik['tgl_input']);
@@ -25,24 +25,21 @@
             <div class="mt-comment-details">
               <span class="mt-comment-status mt-comment-status-pending">
                 <?php
-                $no = 1;
-                $get_penugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
-                while ($penugasan = mysqli_fetch_assoc($get_penugasan)) :
-                  $id_penugasan = $penugasan['id'];
-                  $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_penugasan='$id_penugasan' AND tgl_hapus IS NULL");
-                  $tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan); ?>
+                $nom = 1;
+                $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
+                while ($tugas = mysqli_fetch_assoc($get_tugas_penugasan)) : ?>
                   <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
                     <div class="col-md-12">
-                      <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" data-id="<?= $tugas_penugasan['id'] ?>" style="background-color: #d9edf7;"><?= $tugas_penugasan['sub_tugas'] . " KE " . $no . ": " . $penugasan['judul'] ?></a>
+                      <a href="javascript:;" class="btn btn-circle default green-stripe lihat_tugas" data-id="<?= $tugas['id'] ?>" style="background-color: #d9edf7;"><?= $tugas['jenis_tugas'] . " KE " . $nom . ": " . $tugas['judul'] ?></a>
                       <span class="text-info" style="padding-top:7px;text-transform: none;">!klik untuk melihat soal</span>
                     </div>
                   </div>
                   <!-- <div class="row">
                     <div class="mt-comment-actions" style="margin: 0px 0px 0px 20px; float:left;">
-                      <button type="button" class="btn btn-xs btn-circle btn-primary"> Edit <?= $tugas_penugasan['sub_tugas'] ?> <i class="fa fa-edit"></i></button>
+                      <button type="button" class="btn btn-xs btn-circle btn-primary"> Edit <?= $tugas['jenis_tugas'] ?> <i class="fa fa-edit"></i></button>
                     </div>
                   </div> -->
-                <?php $no++;
+                <?php $nom++;
                 endwhile; ?>
                 <div class="clearfix">
                   <div class="btn-group btn-group-solid">
@@ -62,6 +59,6 @@
       </div>
     </div>
 <?php
-    $no++;
+    $no--;
   endwhile;
 endif; ?>

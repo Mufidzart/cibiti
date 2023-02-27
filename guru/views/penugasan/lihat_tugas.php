@@ -1,20 +1,21 @@
 <?php
 $id_tugas_penugasan = $data_tugas_penugasan['id'];
-$id_penugasan = $data_tugas_penugasan['id_penugasan'];
-$get_penugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan' AND tgl_hapus IS NULL");
-$data_penugasan = mysqli_fetch_assoc($get_penugasan);
 $getsoal = mysqli_query($conn, "SELECT * FROM soal_tugas_penugasan WHERE id_tugas_penugasan='$id_tugas_penugasan' AND tgl_hapus IS NULL");
 $jumlah_soal = $getsoal->num_rows;
 ?>
 <div class="portlet">
   <div class="row">
     <div class="col-md-12 profile-info" style="padding-right: 50px;padding-left: 50px;margin-bottom: 50px;">
-      <h3 class="font-green sbold uppercase" id="text-judul"><?= $data_tugas_penugasan['sub_tugas'] ?>: <?= $data_penugasan['judul'] ?></h3>
+      <h3 class="font-green sbold uppercase" id="text-judul"><?= $data_tugas_penugasan['jenis_tugas'] ?>: <?= $data_tugas_penugasan['judul'] ?></h3>
       <a href="javascript:;" class="btn btn-circle default blue-stripe" style="margin-top:10px;margin-bottom:10px;"> Jumlah Soal: <?= $jumlah_soal ?></a>
       <a href="javascript:;" class="btn btn-circle default green-stripe" style="margin-top:10px;margin-bottom:10px;"> Jumlah Soal Ditampilkan: <?= $data_tugas_penugasan['jumlah_soal'] ?></a>
       <a href="javascript:;" class="btn btn-circle default green-stripe" style="margin-top:10px;margin-bottom:10px;"> Durasi: <?= $data_tugas_penugasan['durasi_tugas'] ?> Menit</a>
+      <a href="javascript:;" class="btn btn-circle btn-sm btn-info nilai-penugasan" data-id="<?= $id_tugas_penugasan ?>">Nilai <i class="fa fa-font"></i></a>
+      <a href="javascript:;" class="btn btn-circle btn-sm btn-primary edit-penugasan" data-id="<?= $id_tugas_penugasan ?>">Edit <i class="fa fa-edit"></i></a>
+      <a href="javascript:;" class="btn btn-circle btn-sm btn-danger hapus-penugasan" data-id="<?= $id_tugas_penugasan ?>">Hapus <i class="fa fa-trash"></i></a>
     </div>
   </div>
+
   <div class="row">
     <div class="col-md-12 col-sm-12">
       <div class="portlet light bordered">
@@ -87,3 +88,27 @@ $jumlah_soal = $getsoal->num_rows;
     </div>
   </div>
 </div>
+<script>
+  $(document).ready(function() {
+    $('.nilai-penugasan').on('click', function() {
+      var id_tugas_penugasan = $(this).attr("data-id");
+      $.ajax({
+        url: 'backend/function.php?action=proses_penugasan&run=nilai_penugasan',
+        type: 'post',
+        data: {
+          id_tugas_penugasan: id_tugas_penugasan,
+        },
+        success: function(data) {
+          $('#show_nilai').html(data);
+          $('#modal-lihat-nilai').modal('show');
+        }
+      });
+    });
+
+    $('.hapus-penugasan').on('click', function(event) {
+      var id_tugas_penugasan = $(this).attr("data-id");
+      $('#form-hapus-penugasan').find('#id_tugas_penugasan').val(id_tugas_penugasan);
+      $('#modal-hapus-penugasan').modal('show');
+    });
+  });
+</script>

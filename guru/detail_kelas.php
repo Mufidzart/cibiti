@@ -476,10 +476,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
-
-
 <!-- MODAL LIHAT TUGAS -->
-<div class="modal fade bs-modal-lg" id="modal-lihat-tugas" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade bs-modal-lg" id="modal-lihat-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -494,6 +492,24 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL LIHAT TUGAS -->
+<!-- MODAL LIHAT NILAI -->
+<div class="modal fade bs-modal-lg" id="modal-lihat-nilai" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Lihat Nilai</h4>
+      </div>
+      <div class="modal-body" id="show_nilai">
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL LIHAT NILAI -->
+
+
 <!-- MODAL EDIT PENUGASAN -->
 <div class="modal fade bs-modal-lg" id="modal-edit-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -522,7 +538,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
         <div class="modal-body">
           <div class="form-body">
             <div class="form-group">
-              <input class="form-control spinner" type="hidden" id="id-hapus-penugasan" name="id-hapus-penugasan" value="">
+              <input class="form-control spinner" type="hidden" id="id_tugas_penugasan" name="id_tugas_penugasan" value="">
               <div class="note note-danger">
                 <h4 class="block">Peringatan Hapus!</h4>
                 <p> Apakah anda yakin menghapus data ini? </p>
@@ -531,8 +547,8 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
           <button type="submit" class="btn red">Hapus</button>
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
         </div>
       </form>
     </div>
@@ -541,22 +557,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL HAPUS PENUGASAN -->
-<!-- MODAL LIHAT NILAI -->
-<div class="modal fade bs-modal-lg" id="modal-lihat-nilai" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-        <h4 class="modal-title">Lihat Nilai</h4>
-      </div>
-      <div class="modal-body" id="show_nilai">
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- END MODAL LIHAT NILAI -->
 <?php
 require('layouts/bodylayout.php');
 ?>
@@ -676,7 +676,7 @@ require('layouts/bodylayout.php');
     $('#show_topik').on('click', '.lihat_tugas', function() {
       var id_tugas_penugasan = $(this).attr("data-id");
       $.ajax({
-        url: 'backend/function.php?action=proses_penugasan&get=lihat_penugasan',
+        url: 'backend/function.php?action=proses_penugasan&run=lihat_penugasan',
         type: 'post',
         data: {
           id_tugas_penugasan: id_tugas_penugasan,
@@ -684,11 +684,13 @@ require('layouts/bodylayout.php');
         success: function(data) {
           if (id_tugas_penugasan) {
             $('#show_tugas').html(data);
-            $('#modal-lihat-tugas').modal('show');
+            $('#modal-lihat-penugasan').modal('show');
           }
         }
       });
     });
+
+
 
     $('#tab_penugasan').on('click', '#tambah-penugasan', function(event) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
@@ -818,40 +820,22 @@ require('layouts/bodylayout.php');
       });
     });
 
-
-    $('#show_penugasan').on('click', '.lihat_tugas', function() {
-      var id_tugas_penugasan = $(this).attr("data-id");
+    $("#form-hapus-penugasan").on("submit", function(event) {
+      event.preventDefault();
+      var formdata = $(this).serialize();
       $.ajax({
-        url: 'backend/function.php?action=get_data&get=lihat_tugas',
+        url: 'backend/function.php?action=proses_penugasan&run=hapus_penugasan',
         type: 'post',
-        data: {
-          id_tugas_penugasan: id_tugas_penugasan,
-        },
+        data: formdata,
+        dataType: 'json',
         success: function(data) {
-          if (id_tugas_penugasan) {
-            $('#show_tugas').html(data);
-            $('#modal-lihat-tugas').modal('show');
-          }
+          $('#modal-hapus-penugasan').modal('hide');
+          $('#modal-lihat-penugasan').modal('hide');
+          get_topik();
         }
       });
     });
 
-    $('#btn-nilai').on('click', function() {
-      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
-      var id_kelas = '<?= $datakelas['id_kelas'] ?>';
-      $.ajax({
-        url: 'backend/function.php?action=get_data&get=nilai_penugasan',
-        type: 'post',
-        data: {
-          id_mapel: id_mapel,
-          id_kelas: id_kelas
-        },
-        success: function(data) {
-          $('#show_nilai').html(data);
-          $('#modal-lihat-nilai').modal('show');
-        }
-      });
-    });
 
     $('#jenis-tugas').on('select2:select', function(e) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';

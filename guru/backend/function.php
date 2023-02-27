@@ -2,7 +2,6 @@
 require 'connection.php';
 // Load file autoload.php
 require '../../vendor/autoload.php';
-
 // Include librari PhpSpreadsheet
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -160,7 +159,7 @@ switch ($_GET['action']) {
     }
     break;
   case 'proses_penugasan':
-    if ($_GET['get'] == "lihat_penugasan") {
+    if ($_GET['run'] == "lihat_penugasan") {
       $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
       $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
       $data_tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan);
@@ -169,6 +168,12 @@ switch ($_GET['action']) {
       //Validation
       $data['errors'] = [];
       $data['success'] = [];
+      if (empty($_POST['id_topik'])) {
+        $validation = ["input" => "id_topik", "message" => "Topik pembelajaran tidak ditemukan."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "id_topik");
+      }
 
       if (empty($_POST['judul'])) {
         $validation = ["input" => "judul", "message" => "Judul tidak boleh kosong."];
@@ -217,20 +222,7 @@ switch ($_GET['action']) {
         }
       }
 
-      if (empty($_POST['id_topik'])) {
-        if (empty($_POST['id_mapel'])) {
-          $validation = ["input" => "id_mapel", "message" => "Mata pelajaran tidak ditemukan."];
-          array_push($data['errors'], $validation);
-        } else {
-          array_push($data['success'], "id_mapel");
-        }
-        if (empty($_POST['id_kelas'])) {
-          $validation = ["input" => "id_kelas", "message" => "Kelas tidak ditemukan."];
-          array_push($data['errors'], $validation);
-        } else {
-          array_push($data['success'], "id_kelas");
-        }
-      }
+
 
       if (!empty($data['errors'])) {
         $data['acc'] = false;
@@ -247,32 +239,17 @@ switch ($_GET['action']) {
         $durasi_menit_tugas = $_POST['durasi-tugas'];
         $jumlah_soal_tugas = $_POST['jumlah-soal-tugas'];
         // Input History Penugasan
-        if (empty($_POST['id_topik'])) {
-          $id_mapel = $_POST['id_mapel'];
-          $id_kelas = $_POST['id_kelas'];
-          $query = $conn->query(
-            "INSERT INTO arf_history_penugasan(id_staf, id_mapel, id_kelas, id_thajaran, judul, deskripsi, jenis_tugas) 
-          VALUES('$id_staf','$id_mapel','$id_kelas','$id_thajaran','$judul','$deskripsi','$jenis_tugas')"
-          );
-        } else {
-          $id_topik = $_POST['id_topik'];
-          $gettopik = mysqli_query($conn, "SELECT * FROM topik_pembelajaran WHERE id='$id_topik' AND tgl_hapus IS NULL");
-          $data_topik = mysqli_fetch_assoc($gettopik);
-          $id_mapel = $data_topik['id_mapel'];
-          $id_kelas = $data_topik['id_kelas'];
-          $id_thajaran = $data_topik['id_thajaran'];
-          $query = $conn->query(
-            "INSERT INTO arf_history_penugasan(id_staf, id_mapel, id_kelas, id_thajaran, id_topik, judul, deskripsi, jenis_tugas) 
-          VALUES('$id_staf','$id_mapel','$id_kelas','$id_thajaran','$id_topik','$judul','$deskripsi','$jenis_tugas')"
-          );
-        }
-        // End Input History Penugasan
+        $id_topik = $_POST['id_topik'];
+        $gettopik = mysqli_query($conn, "SELECT * FROM topik_pembelajaran WHERE id='$id_topik' AND tgl_hapus IS NULL");
+        $data_topik = mysqli_fetch_assoc($gettopik);
+        $id_mapel = $data_topik['id_mapel'];
+        $id_kelas = $data_topik['id_kelas'];
+        $id_thajaran = $data_topik['id_thajaran'];
         // Input Tugas Penugasan
         $id_penugasan = $conn->insert_id;
-        $sub_tugas = "Tugas";
         $query = $conn->query(
-          "INSERT INTO tugas_penugasan(id_penugasan, sub_tugas, batas_tugas, durasi_tugas, jumlah_soal) 
-        VALUES('$id_penugasan','$sub_tugas','$batas_tugas','$durasi_menit_tugas','$jumlah_soal_tugas')"
+          "INSERT INTO tugas_penugasan(id_topik, jenis_tugas, judul, deskripsi, batas_tugas, durasi_tugas, jumlah_soal) 
+        VALUES('$id_topik','$jenis_tugas','$judul','$deskripsi','$batas_tugas','$durasi_menit_tugas','$jumlah_soal_tugas')"
         );
         $id_tugas_penugasan = $conn->insert_id;
         // End Input Tugas Penugasan
@@ -290,6 +267,7 @@ switch ($_GET['action']) {
           move_uploaded_file($source, $destination);
           $arr_file = explode('.', $_FILES['fileexcel-tugas']['name']);
           $extension = end($arr_file);
+
 
           if ('csv' == $extension) {
             $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
@@ -340,6 +318,34 @@ switch ($_GET['action']) {
           ];
           echo json_encode($data);
         }
+      }
+    } elseif ($_GET['run'] == "nilai_penugasan") {
+      $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
+      $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
+      $data_tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan);
+      $id_topik = $data_tugas_penugasan['id_topik'];
+      $gettopik = mysqli_query($conn, "SELECT * FROM topik_pembelajaran WHERE id='$id_topik' AND tgl_hapus IS NULL");
+      $data_topik = mysqli_fetch_assoc($gettopik);
+      $id_kelas = $data_topik['id_kelas'];
+      $getsiswa = $conn->query(
+        "SELECT ask.nis,ask.nama_siswa,ask.id_kelas_induk,ak.nama_kelas
+        FROM arf_siswa_kelashistory ask
+        JOIN arf_kelas ak ON ak.id=ask.id_kelas
+        WHERE ak.id=$id_kelas 
+        AND id_thajaran=$id_thajaran 
+        AND id_semester=$semester"
+      );
+      require('../views/penugasan/nilai_penugasan.php');
+    } elseif ($_GET['run'] == "hapus_penugasan") {
+      $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
+      $today = date("Y-m-d h:i:s");
+      $query = mysqli_query($conn, "UPDATE tugas_penugasan SET tgl_hapus='$today' WHERE id='$id_tugas_penugasan'");
+      if ($query) {
+        $data = "Hapus Data Sukses";
+        echo json_encode($data);
+      } else {
+        $data = "Hapus Data Gagal: " . mysqli_error($conn);
+        echo json_encode($data);
       }
     }
     break;
@@ -814,19 +820,6 @@ switch ($_GET['action']) {
     break;
 
   case 'get_nilai_penugasan':
-    $id_penugasan = $_POST['id_penugasan'];
-    $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id='$id_penugasan'");
-    $data_penugasan = mysqli_fetch_assoc($getpenugasan);
-    $id_kelas = $data_penugasan['id_kelas'];
-    $getsiswa = $conn->query(
-      "SELECT ask.nis,ask.nama_siswa,ask.id_kelas_induk,ak.nama_kelas
-      FROM arf_siswa_kelashistory ask
-      JOIN arf_kelas ak ON ak.id=ask.id_kelas
-      WHERE ak.id=$id_kelas 
-      AND id_thajaran=$id_thajaran 
-      AND id_semester=$semester"
-    );
-    require('../views/nilai_penugasan.php');
     break;
   case 'tambah_tugas_topik':
     //Validation
