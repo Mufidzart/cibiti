@@ -1,5 +1,5 @@
 <?php
-require('backend/connection.php');
+require '../config/lms_connection.php';
 $page_title = "Media Learning Management System (LMS)";
 require('layouts/headlayout.php');
 $getfile = mysqli_query($conn, "SELECT * FROM arf_media_upload");

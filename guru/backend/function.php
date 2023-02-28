@@ -1,12 +1,12 @@
 <?php
-require 'connection.php';
+require '../../config/lms_connection.php';
+include '../../helpers/helpers.php';
 // Load file autoload.php
 require '../../vendor/autoload.php';
 // Include librari PhpSpreadsheet
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 
-include 'helpers.php';
 switch ($_GET['action']) {
   case 'get_kelas':
     $id_thajaran = $_POST['id_thajaran'];

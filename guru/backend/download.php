@@ -1,6 +1,5 @@
 <?php
-
-require 'connection.php';
+require '../../config/lms_connection.php';
 
 switch ($_GET['action']) {
   case 'download-materi':

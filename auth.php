@@ -4,30 +4,10 @@ switch ($_GET['action']) {
     // mengaktifkan session php
     session_start();
 
-    // menghubungkan dengan koneksi
-    // include 'backend/connection.php';
-
-
-    // menyeleksi data admin dengan username dan password yang sesuai
-    // $data = mysqli_query($koneksi, "select * from admin where username='$username' and password='$password'");
-
-    // menghitung jumlah data yang ditemukan
-    // $cek = mysqli_num_rows($data);
-
-    $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    $uri_segments = explode('/', $actual_link);
-    $baseurl = $uri_segments[0] . '//' . $uri_segments[2];
-    if ($uri_segments[2] == "cibiti.test") {
-      $servername = "localhost";
-      $usernamedb = "root";
-      $passworddb = "";
-      $database = "cibiti";
-    } else {
-      $servername = "localhost";
-      $usernamedb = "u1671256_cibitiusr";
-      $passworddb = "cibitiusr";
-      $database = "u1671256_cibiti";
-    }
+    $servername = "localhost";
+    $usernamedb = "root";
+    $passworddb = "";
+    $database = "cibiti";
     // membuat koneksi
     $conn = new mysqli($servername, $usernamedb, $passworddb, $database);
     // Cek data guru

@@ -1,11 +1,8 @@
 <div class="card mb-5 mb-xl-10">
-  <!--begin::Card header-->
   <div class="card-header cursor-pointer">
     <h3 class="card-title fw-bolder text-dark">Topik Pembelajaran</h3>
     <div class="card-toolbar">
-      <!--begin::Menu-->
       <button type="button" class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-        <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
         <span class="svg-icon svg-icon-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -16,15 +13,10 @@
             </g>
           </svg>
         </span>
-        <!--end::Svg Icon-->
       </button>
-      <!--end::Menu-->
     </div>
   </div>
-  <!--begin::Card header-->
-  <!--begin::Card body-->
   <div class="card-body">
-    <!--begin::Messages-->
     <div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_chat_messenger_body" data-kt-scroll-offset="-2px" style="max-height: 500px;">
       <?php
       $no = $gettopik->num_rows;
@@ -44,34 +36,31 @@
           $tanggal = humanize($topik['tgl_input']);
         }
         ?>
-        <!--begin::Message(in)-->
         <div class="d-flex justify-content-start mb-10">
-          <!--begin::Wrapper-->
           <div class="d-flex flex-column align-items-start">
-            <!--begin::Text-->
             <div class="p-5 rounded bg-light-info text-dark fw-bold text-start" data-kt-element="message-text">
               <h3>Topik Ke <?= $no . ": " . $topik['judul'] ?></h3>
               <p><?= $topik['deskripsi'] ?></p>
-
               <!-- Materi -->
               <?php
+              $no = 1;
               $getmateri = mysqli_query($conn, "SELECT * FROM materi_pembelajaran WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
               while ($materi = mysqli_fetch_assoc($getmateri)) :
                 $id_materi = $materi['id'];
               ?>
                 <div class="row">
                   <div class="col-md-12 my-2">
-                    <a href="backend/download.php?action=download-materi&id=<?= $id_materi ?>" target="_blank" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-success btn-active-light-success px-6">
-                      <span class=""><i class="bi bi-file-earmark-richtext-fill text-success fs-1"></i></span>
+                    <a class="btn btn-flex btn-outline btn-outline-dashed btn-outline-warning btn-active-light-warning px-6 lihat-materi" data-id="<?= $id_materi ?>">
+                      <span class=""><i class="bi bi-file-earmark-text text-warning fs-1"></i></span>
                       <span class="d-flex flex-column align-items-start ms-2">
-                        <span class="fs-3 fw-bolder"><?= $materi['judul'] ?></span>
+                        <span class="fs-3 fw-bolder">Materi <?= $no . " : " . $materi['judul'] ?></span>
                       </span>
                     </a>
                   </div>
                 </div>
-              <?php endwhile; ?>
-              <!-- End Mater -->
-
+              <?php $no++;
+              endwhile; ?>
+              <!-- End Materi -->
               <!-- Penugasan -->
               <?php
               $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
@@ -121,7 +110,7 @@
                 <div class="row">
                   <div class="col-md-12 my-2">
                     <a href="ujian.php?tgs=<?= $id_tugas_penugasan ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-success btn-active-light-success px-6" data-kode="<?= $tugas['jenis_tugas'] ?>">
-                      <span class=""><i class="bi bi-file-earmark-richtext-fill text-success fs-1"></i></span>
+                      <span class=""><i class="bi bi-file-earmark-font-fill text-success fs-1"></i></span>
                       <span class="d-flex flex-column align-items-start ms-2">
                         <span class="fs-3 fw-bolder"><?= $tugas['jenis_tugas'] ?></span>
                         <span class="fs-7">klik untuk mengerjakan</span>
@@ -133,15 +122,58 @@
               <?php endwhile; ?>
               <!-- End Penugasan -->
             </div>
-            <!--end::Text-->
           </div>
-          <!--end::Wrapper-->
         </div>
-        <!--end::Message(in)-->
       <?php $no--;
       endwhile; ?>
     </div>
-    <!--end::Messages-->
   </div>
-  <!--end::Card body-->
 </div>
+
+<div class="modal fade" id="modal-lihat-materi" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered mw-650px">
+    <div class="modal-content">
+      <form class="form" action="#" id="kt_modal_add_event_form">
+        <div class="modal-header">
+          <h2 class="fw-bolder" data-kt-calendar="title">Lihat Materi</h2>
+          <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+            <span class="svg-icon svg-icon-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black"></rect>
+                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"></rect>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="modal-body py-10 px-lg-17" id="show_materi">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-kt-scrolltop="true" data-bs-dismiss="modal">
+            <span class="indicator-label">Tutup</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('.lihat-materi').on('click', function(e) {
+      var id_materi = $(this).attr("data-id");
+      $.ajax({
+        url: 'backend/function.php?action=get_data&get=lihat_materi',
+        type: 'post',
+        data: {
+          id_materi: id_materi,
+        },
+        success: function(data) {
+          if (id_materi) {
+            $('#show_materi').html(data);
+            $('#modal-lihat-materi').modal('show');
+          }
+        }
+      });
+    });
+  });
+</script>

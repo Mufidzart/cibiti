@@ -1,5 +1,5 @@
 <?php
-require('backend/connection.php');
+require '../config/lms_connection.php';
 $page_title = "Learning Management System (LMS)";
 require('layouts/headlayout.php');
 // $getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_siswa_kelashistory ask ON ask.id=agm.id_subkelas JOIN arf_kelas ak ON ak.id=ask.id_kelas WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");

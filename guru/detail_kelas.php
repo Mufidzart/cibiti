@@ -1,5 +1,5 @@
 <?php
-require('backend/connection.php');
+require '../config/lms_connection.php';
 $page_title = "Detail Kelas";
 require('layouts/headlayout.php');
 $id_kelas = $_GET['kelas'];

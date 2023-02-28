@@ -1,5 +1,7 @@
 <?php
-require('backend/connection.php');
+require '../config/lms_connection.php';
+include '../helpers/helpers.php';
+include '../helpers/tanggal_helper.php';
 $page_title = "Learning Management System (LMS)";
 require('layouts/headlayout.php');
 $nis = $_SESSION['username'];
@@ -190,5 +192,5 @@ require('layouts/bodylayout.php');
     $('#pilih-kelas').on('select2:select', function(e) {
       get_mapel();
     });
-  })
+  });
 </script>

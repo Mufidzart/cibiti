@@ -1,12 +1,7 @@
   <div class="card">
-    <!--begin::Card body-->
     <div class="card-body p-0">
-      <!--begin::Wrapper-->
       <div class="card-px text-center py-20 my-10">
-        <!--begin::Title-->
         <h2 class="fs-2x fw-bolder mb-10">Mulai Mengerjakan!</h2>
-        <!--end::Title-->
-        <!--begin::Description-->
         <p class="text-gray-400 fs-4 fw-bold mb-10">Pastikan tugas sudah sesuai<br>
           <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $tugas['sub_tugas'] ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span>
@@ -23,24 +18,15 @@
           <?php endif; ?>
           <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($tugas['batas_tugas']))) ?> pukul <?= date("H:i", strtotime($tugas['batas_tugas'])) ?> WIB</b>
         </p>
-        <!--end::Description-->
-        <!--begin::Action-->
         <a href="javascript:;" class="btn btn-primary" id="mulai_ujian" data-penugasan="<?= $id_tugas_penugasan ?>">Mulai</a>
-        <!--end::Action-->
       </div>
-      <!--end::Wrapper-->
-      <!--begin::Illustration-->
       <div class="text-center px-4">
         <img class="mw-100 mh-300px" alt="" src="assets/media/illustrations/sigma-1/2.png" />
       </div>
-      <!--end::Illustration-->
     </div>
-    <!--end::Card body-->
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
-
-
       $('#mulai_ujian').on('click', function(event) {
         Swal.fire({
           html: `Apakah anda akan <strong>mulai mengerjakan</strong>`,

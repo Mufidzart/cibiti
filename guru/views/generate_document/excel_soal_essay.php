@@ -1,5 +1,5 @@
 <?php
-require('../../backend/connection.php');
+require '../../../config/lms_connection.php';
 require '../../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
