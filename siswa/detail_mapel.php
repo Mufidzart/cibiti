@@ -130,9 +130,6 @@ $datamapel = mysqli_fetch_assoc($getmapel);
             <li class="nav-item">
               <a class="nav-link text-active-primary me-6 active nav-overview" id="nav-overview" href="javascript:;">Overview</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link text-active-primary me-6 nav-penugasan" id="nav-penugasan" href="javascript:;">Penugasan</a>
-            </li>
             <!--end::Nav item-->
           </ul>
         </div>
@@ -171,37 +168,13 @@ require('layouts/bodylayout.php');
       }
     });
   }
-
-  function get_penugasan() {
-    var kelas_siswa = '<?= $kelas_siswa ?>';
-    var subkelas_siswa = '<?= $subkelas_siswa ?>';
-    var id_staf = '<?= $id_staf ?>';
-    var id_mapel = '<?= $id_mapel ?>';
-    $.ajax({
-      url: 'backend/function.php?action=get_data&get=data_penugasan',
-      type: 'post',
-      data: {
-        kelas_siswa: kelas_siswa,
-        subkelas_siswa: subkelas_siswa,
-        id_staf: id_staf,
-        id_mapel: id_mapel
-      },
-      success: function(data) {
-        $('#view-nav').html(data);
-      }
-    });
-  }
+  
   $(document).ready(function() {
     get_topik();
     $("#nav-overview").on("click", function(event) {
       $(this).addClass("active");
       $("#nav-penugasan").removeClass("active");
       get_topik();
-    })
-    $("#nav-penugasan").on("click", function(event) {
-      $(this).addClass("active");
-      $("#nav-overview").removeClass("active");
-      get_penugasan();
     })
   })
 </script>

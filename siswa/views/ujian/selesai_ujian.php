@@ -4,9 +4,9 @@
     <!--begin::Wrapper-->
     <div class="card-px my-10">
       <div class="col-xl-6 mb-15 mb-xl-0 pe-5">
-        <h4 class="mb-0"><?= $datapenugasan['judul'] ?></h4>
+        <h4 class="mb-0"><?= $tugas['judul'] ?></h4>
         <p class="fs-6 fw-bold text-gray-600 py-4 m-0">
-          <?= $datapenugasan['deskripsi'] ?>
+          <?= $tugas['deskripsi'] ?>
         </p>
       </div>
       <div class="stepper stepper-pills stepper-column">
@@ -89,7 +89,7 @@
           <!--end::Icon-->
           <!--begin::Content-->
           <div class="text-center text-dark">
-            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $datapenugasan['judul'] ?></h1>
+            <h1 class="fw-bolder mb-5">Anda telah menyelesaikan <?= $tugas['judul'] ?></h1>
             <div class="separator separator-dashed border-primary opacity-25 mb-5"></div>
             <div class="mb-9">Anda mendapatkan nilai <br>
               <?php if (!empty($dataprosesujian['nilai'])) : ?>
@@ -150,7 +150,7 @@
                   </span>
                 </a>
                 <br>Penugasan
-                <br> <b class="text-primary"><?= $tugas['sub_tugas']  ?></b>
+                <br> <b class="text-primary"><?= $tugas['jenis_tugas'] . ": " . $tugas['judul']   ?></b>
                 <br>Anda mengerjakan soal pada
                 <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($dataprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($dataprosesujian['mulai_ujian'])) ?> WIB</b>
               <?php endif; ?>

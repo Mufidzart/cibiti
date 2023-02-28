@@ -4,9 +4,9 @@
     <!--begin::Wrapper-->
     <div class="card-px my-10">
       <div class="col-xl-6 mb-15 mb-xl-0 pe-5">
-        <h4 class="mb-0"><?= $datapenugasan['judul'] ?></h4>
+        <h4 class="mb-0"><?= $tugas['judul'] ?></h4>
         <p class="fs-6 fw-bold text-gray-600 py-4 m-0">
-          <?= $datapenugasan['deskripsi'] ?>
+          <?= $tugas['deskripsi'] ?>
         </p>
       </div>
       <?php $no = 1;

@@ -35,21 +35,6 @@ switch ($_GET['action']) {
         AND tp.tgl_hapus IS NULL ORDER BY id DESC"
       );
       require('../views/data_topik.php');
-    } elseif ($_GET['get'] == "data_penugasan") {
-      $kelas_siswa = $_POST['kelas_siswa'];
-      $subkelas_siswa = $_POST['subkelas_siswa'];
-      $id_staf = $_POST['id_staf'];
-      $id_mapel = $_POST['id_mapel'];
-      $getpenugasan = $conn->query(
-        "SELECT ahp.*,asf.nama_lengkap
-        FROM arf_history_penugasan ahp
-        JOIN arf_staf asf ON asf.nip=ahp.id_staff
-        WHERE ahp.id_staff='$id_staf' 
-        AND ahp.id_mapel=$id_mapel
-        AND ahp.id_kelas=$subkelas_siswa
-        AND ahp.tgl_hapus IS NULL ORDER BY id DESC"
-      );
-      require('../views/kelas_penugasan.php');
     } elseif ($_GET['get'] == "nilai_ujian_awal") {
       $nis = $_SESSION['username'];
       $id_tugas_penugasan = $_POST['id_tugas_penugasan'];

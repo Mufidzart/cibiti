@@ -6,9 +6,6 @@ $nis = $_SESSION['username'];
 $id_tugas_penugasan = $_GET['tgs'];
 $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
 $tugas = mysqli_fetch_assoc($get_tugas_penugasan);
-$id_penugasan = $tugas['id_penugasan'];
-$getpenugasan = $conn->query("SELECT * FROM arf_history_penugasan WHERE id=$id_penugasan AND tgl_hapus IS NULL");
-$datapenugasan = mysqli_fetch_assoc($getpenugasan);
 ?>
 <!-- BEGIN CONTENT -->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">

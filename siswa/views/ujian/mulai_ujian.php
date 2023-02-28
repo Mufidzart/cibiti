@@ -11,7 +11,7 @@
           <a href="javascript:;" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-primary btn-active-light-primary px-6 my-3" data-kode="<?= $tugas['sub_tugas'] ?>">
             <span class=""><i class="bi bi-file-earmark-richtext-fill text-primary fs-1"></i></span>
             <span class="d-flex flex-column align-items-start ms-2">
-              <span class="fs-3 fw-bolder"><?= $tugas['sub_tugas'] ?></span>
+              <span class="fs-3 fw-bolder"><?= $tugas['jenis_tugas'] . ": " . $tugas['judul']  ?></span>
             </span>
           </a>
           <?php if ($tugas['durasi_tugas'] == 0) : ?>

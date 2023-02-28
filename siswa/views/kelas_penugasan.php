@@ -63,67 +63,6 @@
             <div class="p-5 rounded bg-light-info text-dark fw-bold text-start" data-kt-element="message-text">
               <h3><?= $penugasan['judul'] ?></h3>
               <p><?= $penugasan['deskripsi'] ?></p>
-              <div class="row">
-                <div class="col-md-12 my-2">
-                  <?php
-                  $nis = $_SESSION['username'];
-                  $id_penugasan = $penugasan['id'];
-                  $id_mapel = $penugasan['id_mapel'];
-                  $getmapel = $conn->query("SELECT * FROM arf_mapel WHERE id=$id_mapel");
-                  $datamapel = mysqli_fetch_assoc($getmapel);
-                  $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_penugasan='$id_penugasan' AND tgl_hapus IS NULL");
-                  while ($tugas = mysqli_fetch_assoc($get_tugas_penugasan)) :
-                  ?>
-                    <?php
-                    $id_tugas_penugasan = $tugas['id'];
-                    $getprosesujian =  $conn->query("SELECT * FROM proses_ujian WHERE id_siswa='$nis' AND id_tugas_penugasan=$id_tugas_penugasan");
-                    $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
-                    $status_ujian = "";
-                    $status_penilaian = "";
-                    if ($getprosesujian->num_rows !== 0) {
-                      if (empty($dataprosesujian['selesai_ujian'])) {
-                        $durasi = $tugas['durasi_tugas'];
-                        $mulai_ujian = $dataprosesujian['mulai_ujian'];
-                        $jam_mulai = new DateTime($mulai_ujian);
-                        $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
-                        $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
-                        if ($jam_sekarang <= $jam_berakhir) {
-                          $status_ujian = "<span class='badge badge-light-info fs-7 my-3'>Sedang dikerjakan</span>";
-                        }
-                      } else {
-                        $nilai = $dataprosesujian['nilai'];
-                        if (!empty($nilai)) {
-                          $status_ujian = "<span class='badge badge-light-success fs-7 my-3'>Sudah dikerjakan</span>";
-                        } else {
-                          $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
-                        }
-                        if ($nilai < $datamapel['kb_pengetahuan']) {
-                          $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
-                        } else {
-                          $status_penilaian = "<span class='badge badge-light-success fs-7 my-3'>Anda lulus di tugas ini.</span>";
-                        }
-                      }
-                    } else {
-                      $batas = new DateTime(date("Y-m-d H:i", strtotime($tugas['batas_tugas'])));
-                      $now = new DateTime(date("Y-m-d H:i"));
-                      if ($now > $batas) {
-                        $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
-                        $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
-                      }
-                    }
-                    $badge = $status_ujian . " " . $status_penilaian;
-                    ?>
-                    <a href="ujian.php?tgs=<?= $tugas['id'] ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-success btn-active-light-success px-6" data-kode="<?= $tugas['sub_tugas'] ?>">
-                      <span class=""><i class="bi bi-file-earmark-richtext-fill text-success fs-1"></i></span>
-                      <span class="d-flex flex-column align-items-start ms-2">
-                        <span class="fs-3 fw-bolder"><?= $tugas['sub_tugas'] ?></span>
-                        <span class="fs-7">klik untuk mengerjakan</span>
-                      </span>
-                    </a>
-                    <?= $badge ?>
-                  <?php endwhile; ?>
-                </div>
-              </div>
             </div>
             <!--end::Text-->
           </div>

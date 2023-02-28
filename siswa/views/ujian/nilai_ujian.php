@@ -41,7 +41,7 @@
       $data_tugas_penugasan = mysqli_fetch_assoc($get_tugas_penugasan);
       ?>
       <br>Penugasan
-      <br> <b class="text-primary"><?= $data_tugas_penugasan['sub_tugas']  ?></b>
+      <br> <b class="text-primary"><?= $data_tugas_penugasan['jenis_tugas'] . ": " . $data_tugas_penugasan['judul']   ?></b>
       <br>Anda mengerjakan soal pada
       <br> <b class="text-primary"><?= tgl_indo(date("d-m-Y", strtotime($datanewprosesujian['mulai_ujian']))) ?> pukul <?= date("H:i", strtotime($datanewprosesujian['mulai_ujian'])) ?> WIB</b>
     </p>
