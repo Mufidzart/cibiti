@@ -495,4 +495,99 @@ switch ($_GET['action']) {
       }
     }
     break;
+  case 'proses_materi':
+    if ($_GET['run'] == "tambah_materi") {
+      //Validation
+      $data['errors'] = [];
+      $data['success'] = [];
+      if (empty($_POST['id_topik'])) {
+        $validation = ["input" => "id_topik", "message" => "Topik pembelajaran tidak ditemukan."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "id_topik");
+      }
+
+      if (empty($_POST['judul'])) {
+        $validation = ["input" => "judul", "message" => "Judul tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "judul");
+      }
+
+      if (empty($_FILES['filemateri']['name'])) {
+        $validation = ["input" => "filemateri", "message" => "File materi tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "filemateri");
+      }
+
+      if (!empty($data['errors'])) {
+        $data['acc'] = false;
+        echo json_encode($data);
+      } else {
+        $id_staf = $session_id_staf;
+        $judul = $_POST['judul'];
+        $deskripsi = $_POST['deskripsi'];
+        $id_topik = $_POST['id_topik'];
+
+        // Upload
+        if (isset($_FILES['filemateri'])) {
+          $folder = "../uploads/materi/";
+          if (!file_exists($folder)) {
+            mkdir($folder, 0777);
+          }
+          $file_name = $_FILES['filemateri']['name'];
+          $query = $conn->query(
+            "INSERT INTO materi_pembelajaran(id_topik, judul, deskripsi, file) 
+        VALUES('$id_topik','$judul','$deskripsi','$file_name')"
+          );
+          if ($query) {
+            $source       = $_FILES["filemateri"]["tmp_name"];
+            $destination  = $folder . $file_name;
+            /* move the file */
+            move_uploaded_file($source, $destination);
+          }
+        }
+        // End Upload
+
+        if ($query) {
+          $data = [
+            "acc" => true,
+            "success" => $data['success']
+          ];
+          echo json_encode($data);
+        } else {
+          $data = [
+            "acc" => false,
+            "errors" => mysqli_error($conn)
+          ];
+          echo json_encode($data);
+        }
+      }
+    } elseif ($_GET['run'] == "lihat_materi") {
+      $id_materi = $_POST['id_materi'];
+      $getmateri = mysqli_query($conn, "SELECT * FROM materi_pembelajaran WHERE id='$id_materi' AND tgl_hapus IS NULL");
+      $data_materi = mysqli_fetch_assoc($getmateri);
+      require('../views/materi/lihat_materi.php');
+    } elseif ($_GET['run'] == "hapus_materi") {
+      $id_materi = $_POST['id_materi'];
+      $getmateri = mysqli_query($conn, "SELECT * FROM materi_pembelajaran WHERE id='$id_materi' AND tgl_hapus IS NULL");
+      $data_materi = mysqli_fetch_assoc($getmateri);
+      $folder = "../uploads/materi/";
+      $file_name = $data_materi['file'];
+      $destination = $folder . $file_name;
+      $query = mysqli_query($conn, "DELETE FROM materi_pembelajaran WHERE id='$id_materi'");
+      if ($query) {
+        $delete = unlink($destination); // Hapus file excel yg telah diupload, ini agar tidak terjadi penumpukan file
+        if ($delete) {
+          $data = "Hapus File Sukses";
+        } else {
+          $data = "Hapus File Gagal: ";
+        }
+      } else {
+        $data = "Hapus Data Gagal: " . mysqli_error($conn);
+      }
+      echo json_encode($data);
+    }
+    break;
 }

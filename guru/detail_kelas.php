@@ -112,8 +112,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                       <!-- END SIDEBAR USER TITLE -->
                       <!-- SIDEBAR BUTTONS -->
                       <div class="margin-top-20 profile-userbuttons">
-                        <button type="button" class="btn btn-circle green btn-sm">Follow</button>
-                        <button type="button" class="btn btn-circle red btn-sm">Message</button>
+                        <!-- <button type="button" class="btn btn-circle green btn-sm">Edit</button> -->
                       </div>
                       <!-- END SIDEBAR BUTTONS -->
                     </div>
@@ -121,11 +120,12 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                   </div>
                   <div class="profile-info">
                     <h1 class="font-green sbold uppercase"><?= $datakelas['nama_mapel'] ?></h1>
-                    <p> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet dolore magna aliquam tincidunt erat volutpat laoreet dolore magna aliquam tincidunt erat volutpat.
-                    </p>
-                    <p>
+                    <!-- <p>
+                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt laoreet dolore magna aliquam tincidunt erat volutpat laoreet dolore magna aliquam tincidunt erat volutpat.
+                    </p> -->
+                    <!-- <p>
                       <a href="javascript:;"> www.mywebsite.com </a>
-                    </p>
+                    </p> -->
                     <ul class="list-inline">
                       <li>
                         <i class="fa fa-map-marker"></i> <?= $grade . " " . $datakelas['nama_kelas'] ?>
@@ -421,9 +421,7 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
         </div>
       </form>
     </div>
-    <!-- /.modal-content -->
   </div>
-  <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
 <!-- MODAL LIHAT TUGAS -->
@@ -505,6 +503,91 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL HAPUS PENUGASAN -->
+
+<!-- MODAL TAMBAH MATERI -->
+<div class="modal fade bs-modal-lg" id="modal-tambah-materi" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Tambah materi</h4>
+      </div>
+      <form role="form" id="form-tambah-materi">
+        <div class="modal-body form">
+          <div class="form-body">
+            <div class="form-group" id="form-judul">
+              <label class="control-label">Judul Materi</label>
+              <input class="form-control" type="hidden" id="id_topik" name="id_topik" value="">
+              <input class="form-control spinner" type="text" id="judul" name="judul" placeholder="Judul materi..." value="">
+              <div class="pesan" id="pesan-judul"></div>
+            </div>
+            <div class="form-group" id="form-deskripsi">
+              <label class="control-label">Deskripsi Materi</label>
+              <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Deskripsi materi..."></textarea>
+              <div class="pesan" id="pesan-deskripsi"></div>
+            </div>
+            <div class="form-group" id="form-filemateri">
+              <label for="tugas" class="control-label">File Materi</label>
+              <input type="file" class="form-control col-md-4" style="margin-bottom: 10px;" name="filemateri" id="filemateri">
+              <div class="pesan" id="pesan-filemateri"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Batal</button>
+          <button type="submit" class="btn green">Publish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- END MODAL TAMBAH MATERI -->
+<!-- MODAL LIHAT MATERI -->
+<div class="modal fade bs-modal-lg" id="modal-lihat-materi" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Lihat Materi</h4>
+      </div>
+      <div class="modal-body" id="show_materi">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END MODAL LIHAT MATERI -->
+<!-- MODAL HAPUS MATERi -->
+<div class="modal fade bs-modal-md" id="modal-hapus-materi" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <h4 class="modal-title">Hapus Materi</h4>
+      </div>
+      <form role="form" id="form-hapus-materi">
+        <div class="modal-body">
+          <div class="form-body">
+            <div class="form-group">
+              <input class="form-control spinner" type="hidden" id="id_materi" name="id_materi" value="">
+              <div class="note note-danger">
+                <h4 class="block">Peringatan Hapus!</h4>
+                <p> Apakah anda yakin menghapus data ini? </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn red">Hapus</button>
+          <button type="button" class="btn dark btn-outline" data-dismiss="modal">Tutup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- END MODAL HAPUS MATERi -->
 <?php
 require('layouts/bodylayout.php');
 ?>
@@ -537,6 +620,23 @@ require('layouts/bodylayout.php');
         if (id_tugas_penugasan) {
           $('#show_tugas').html(data);
           $('#modal-lihat-penugasan').modal('show');
+        }
+      }
+    });
+  }
+
+  function lihat_materi(id) {
+    var id_materi = id;
+    $.ajax({
+      url: 'backend/function.php?action=proses_materi&run=lihat_materi',
+      type: 'post',
+      data: {
+        id_materi: id_materi,
+      },
+      success: function(data) {
+        if (id_materi) {
+          $('#show_materi').html(data);
+          $('#modal-lihat-materi').modal('show');
         }
       }
     });
@@ -610,16 +710,17 @@ require('layouts/bodylayout.php');
       lihat_tugas(id_tugas_penugasan);
     });
 
-
-
-    $('#tab_penugasan').on('click', '#tambah-penugasan', function(event) {
-      var id_mapel = '<?= $datakelas['id_mapel'] ?>';
-      var id_kelas = '<?= $datakelas['id_kelas'] ?>';
-      $('#form-tambah-penugasan').find('#id_topik').val('');
-      $('#form-tambah-penugasan').find('#id_mapel').val(id_mapel);
-      $('#form-tambah-penugasan').find('#id_kelas').val(id_kelas);
-      $('#modal-tambah-penugasan').modal('show');
+    $('#show_topik').on('click', '.tambah-materi', function(event) {
+      var id_topik = $(this).attr('data-id');
+      $('#form-tambah-materi').find('#id_topik').val(id_topik);
+      $('#modal-tambah-materi').modal('show');
     });
+
+    $('#show_topik').on('click', '.lihat_materi', function() {
+      var id_materi = $(this).attr("data-id");
+      lihat_materi(id_materi);
+    });
+
 
     $('#form-template-soal').on('submit', function(event) {
       event.preventDefault();
@@ -749,6 +850,55 @@ require('layouts/bodylayout.php');
         success: function(data) {
           $('#modal-hapus-penugasan').modal('hide');
           $('#modal-lihat-penugasan').modal('hide');
+          get_topik();
+        }
+      });
+    });
+
+    $("#form-tambah-materi").on("submit", function(e) {
+      e.preventDefault();
+      var formData = new FormData($(this)[0]);
+      $.ajax({
+        url: 'backend/function.php?action=proses_materi&run=tambah_materi',
+        type: 'post',
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: 'json',
+        success: function(data) {
+          if (data.acc == true) {
+            $('#form-tambah-materi').trigger("reset");
+            $('#modal-tambah-materi').modal('hide');
+            get_topik();
+            for (i = 0; i < data.success.length; i++) {
+              $("#form-tambah-materi").find('#pesan-' + data.success[i]).html('')
+              $("#form-tambah-materi").find('#form-' + data.success[i]).removeClass('has-error');
+            }
+          } else {
+            for (i = 0; i < data.errors.length; i++) {
+              $("#form-tambah-materi").find('#pesan-' + data.errors[i].input).html('<span class="help-block" style="color:red;">' + data.errors[i].message + '</span>')
+              $("#form-tambah-materi").find('#form-' + data.errors[i].input).addClass('has-error');
+            }
+            for (i = 0; i < data.success.length; i++) {
+              $("#form-tambah-materi").find('#pesan-' + data.success[i]).html('')
+              $("#form-tambah-materi").find('#form-' + data.success[i]).removeClass('has-error');
+            }
+          }
+        }
+      });
+    });
+
+    $("#form-hapus-materi").on("submit", function(event) {
+      event.preventDefault();
+      var formdata = $(this).serialize();
+      $.ajax({
+        url: 'backend/function.php?action=proses_materi&run=hapus_materi',
+        type: 'post',
+        data: formdata,
+        dataType: 'json',
+        success: function(data) {
+          $('#modal-hapus-materi').modal('hide');
+          $('#modal-lihat-materi').modal('hide');
           get_topik();
         }
       });

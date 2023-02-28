@@ -136,9 +136,7 @@ $jumlah_soal = $getsoal->num_rows;
         </div>
       </form>
     </div>
-    <!-- /.modal-content -->
   </div>
-  <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL TAMBAH PENUGASAN -->
 <!-- MODAL HAPUS SOAL -->
@@ -176,6 +174,7 @@ $jumlah_soal = $getsoal->num_rows;
       $('#modal-tambah-soal').addClass("modal-tambah-soal");
       $('#modal-tambah-soal').appendTo("body").modal('show');
     });
+
     $('.nilai-penugasan').on('click', function() {
       var id_tugas_penugasan = $(this).attr("data-id");
       $.ajax({

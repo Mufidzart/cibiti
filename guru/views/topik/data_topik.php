@@ -26,6 +26,18 @@
               <span class="mt-comment-status mt-comment-status-pending">
                 <?php
                 $nom = 1;
+                $get_materi = mysqli_query($conn, "SELECT * FROM materi_pembelajaran WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
+                while ($materi = mysqli_fetch_assoc($get_materi)) : ?>
+                  <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
+                    <div class="col-md-12">
+                      <a href="javascript:;" class="btn default yellow-stripe lihat_materi" data-id="<?= $materi['id'] ?>" style="background-color: #d9edf7;"><i class="fa fa-file"></i> Materi Ke <?= $nom . ": " . $materi['judul'] ?></a>
+                      <span class="text-info" style="padding-top:7px;text-transform: none;">!klik untuk melihat materi</span>
+                    </div>
+                  </div>
+                <?php $nom++;
+                endwhile; ?>
+                <?php
+                $nom = 1;
                 $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
                 while ($tugas = mysqli_fetch_assoc($get_tugas_penugasan)) : ?>
                   <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
@@ -34,15 +46,11 @@
                       <span class="text-info" style="padding-top:7px;text-transform: none;">!klik untuk melihat soal</span>
                     </div>
                   </div>
-                  <!-- <div class="row">
-                    <div class="mt-comment-actions" style="margin: 0px 0px 0px 20px; float:left;">
-                      <button type="button" class="btn btn-xs btn-circle btn-primary"> Edit <?= $tugas['jenis_tugas'] ?> <i class="fa fa-edit"></i></button>
-                    </div>
-                  </div> -->
                 <?php $nom++;
                 endwhile; ?>
                 <div class="clearfix">
                   <div class="btn-group btn-group-solid">
+                    <button type="button" class="btn yellow tambah-materi" data-id="<?= $data_topik['id'] ?>"><i class="fa fa-plus"></i> Materi</button>
                     <button type="button" class="btn green tambah-penugasan" data-id="<?= $data_topik['id'] ?>"><i class="fa fa-plus"></i> Penugasan</button>
                   </div>
                 </div>
