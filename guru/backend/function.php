@@ -21,28 +21,6 @@ switch ($_GET['action']) {
     );
     require('../views/data_kelas.php');
     break;
-  case 'get_data':
-    if ($_GET['get'] == "data_penugasan") {
-      $id_staf = $session_id_staf;
-      $id_mapel = $_POST['id_mapel'];
-      $id_kelas = $_POST['id_kelas'];
-      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staf='$id_staf' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND id_topik IS NULL AND tgl_hapus IS NULL ORDER BY id DESC");
-      require('../views/penugasan/data_penugasan.php');
-    } elseif ($_GET['get'] == "data_penugasan_akanberakhir") {
-      $id_staf = $session_id_staf;
-      $id_mapel = $_POST['id_mapel'];
-      $id_kelas = $_POST['id_kelas'];
-      $datenow = date("Y-m-d H:i:s");
-      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staf='$id_staf' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND id_topik IS NULL AND tgl_hapus IS NULL");
-      require('../views/penugasan/data_penugasan_akanberakhir.php');
-    } elseif ($_GET['get'] == "nilai_penugasan") {
-      $id_staff = $session_id_staf;
-      $id_mapel = $_POST['id_mapel'];
-      $id_kelas = $_POST['id_kelas'];
-      $getpenugasan = mysqli_query($conn, "SELECT * FROM arf_history_penugasan WHERE id_staff='$id_staff' AND id_mapel='$id_mapel' AND id_kelas='$id_kelas' AND tgl_hapus IS NULL ORDER BY id DESC");
-      require('../views/nilai_penugasan.php');
-    }
-    break;
   case 'proses_topik':
     if ($_GET['run'] == "data_topik") {
       $id_staff = $session_id_staf;
@@ -336,6 +314,69 @@ switch ($_GET['action']) {
         AND id_semester=$semester"
       );
       require('../views/penugasan/nilai_penugasan.php');
+    } elseif ($_GET['run'] == "update_penugasan") {
+      //Validation
+      $data['errors'] = [];
+      $data['success'] = [];
+      if (empty($_POST['judul'])) {
+        $validation = ["input" => "judul", "message" => "Judul tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "judul");
+      }
+      if (empty($_POST['jenis-tugas'])) {
+        $validation = ["input" => "jenis-tugas", "message" => "Jenis tugas tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "jenis-tugas");
+      }
+      if (empty($_POST['batas-tugas'])) {
+        $validation = ["input" => "batas-tugas", "message" => "Batas akhir tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "batas-tugas");
+      }
+      if (empty($_POST['durasi-tugas'])) {
+        $validation = ["input" => "durasi-tugas", "message" => "Waktu pengerjaan tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "durasi-tugas");
+      }
+      if (empty($_POST['jumlah-soal-tugas'])) {
+        $validation = ["input" => "jumlah-soal-tugas", "message" => "Jumlah soal tidak boleh kosong."];
+        array_push($data['errors'], $validation);
+      } else {
+        array_push($data['success'], "jumlah-soal-tugas");
+      }
+      if (!empty($data['errors'])) {
+        $data['acc'] = false;
+        echo json_encode($data);
+      } else {
+        $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
+        $judul = $_POST['judul'];
+        $deskripsi = $_POST['deskripsi'];
+        $jenis_tugas = $_POST['jenis-tugas'];
+        $batas_tugas = $_POST['batas-tugas'];
+        $durasi_tugas = $_POST['durasi-tugas'];
+        $jumlah_soal_tugas = $_POST['jumlah-soal-tugas'];
+
+        // Update Topik
+        $query = mysqli_query($conn, "UPDATE tugas_penugasan SET jenis_tugas='$jenis_tugas', judul='$judul', deskripsi='$deskripsi', batas_tugas='$batas_tugas', durasi_tugas='$durasi_tugas', jumlah_soal='$jumlah_soal_tugas' WHERE id='$id_tugas_penugasan'");
+        // End Update
+
+        if ($query) {
+          $data = [
+            "acc" => true,
+            "success" => $data['success']
+          ];
+        } else {
+          $data = [
+            "acc" => false,
+            "errors" => mysqli_error($conn)
+          ];
+        }
+        echo json_encode($data);
+      }
     } elseif ($_GET['run'] == "hapus_penugasan") {
       $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
       $today = date("Y-m-d h:i:s");
@@ -346,6 +387,16 @@ switch ($_GET['action']) {
       } else {
         $data = "Hapus Data Gagal: " . mysqli_error($conn);
         echo json_encode($data);
+      }
+    } elseif ($_GET['run'] == "penugasanbyid") {
+      $id_tugas_penugasan = $_POST['id_tugas_penugasan'];
+      $getpenugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id='$id_tugas_penugasan' AND tgl_hapus IS NULL");
+      if ($getpenugasan->num_rows !== 0) {
+        $data_penugasan = mysqli_fetch_assoc($getpenugasan);
+        require('../views/penugasan/penugasanbyid.php');
+      } else {
+        $data = "Gagal Mengambil Data :" . mysqli_error($conn);
+        echo $data;
       }
     }
     break;

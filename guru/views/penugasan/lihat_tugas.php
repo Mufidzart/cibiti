@@ -7,18 +7,15 @@ $jumlah_soal = $getsoal->num_rows;
   <div class="row">
     <div class="col-md-12 profile-info" style="padding-right: 50px;padding-left: 50px;margin-bottom: 50px;">
       <h3 class="font-green sbold uppercase" id="text-judul"><?= $data_tugas_penugasan['jenis_tugas'] ?>: <?= $data_tugas_penugasan['judul'] ?></h3>
+      <a href="javascript:;" class="btn btn-circle default blue-stripe" style="margin-top:10px;margin-bottom:10px;"> Batas Akhir: <?= $data_tugas_penugasan['batas_tugas'] ?></a>
       <a href="javascript:;" class="btn btn-circle default blue-stripe" style="margin-top:10px;margin-bottom:10px;"> Jumlah Soal: <?= $jumlah_soal ?></a>
       <a href="javascript:;" class="btn btn-circle default green-stripe" style="margin-top:10px;margin-bottom:10px;"> Jumlah Soal Ditampilkan: <?= $data_tugas_penugasan['jumlah_soal'] ?></a>
-      <a href="javascript:;" class="btn btn-circle default green-stripe" style="margin-top:10px;margin-bottom:10px;"> Durasi: <?= $data_tugas_penugasan['durasi_tugas'] ?> Menit</a>
+      <a href="javascript:;" class="btn btn-circle default green-stripe" style="margin-top:10px;margin-bottom:10px;"> Durasi: <?= $data_tugas_penugasan['durasi_tugas'] ?> Menit</a><br>
       <a href="javascript:;" class="btn btn-circle btn-sm btn-info nilai-penugasan" data-id="<?= $id_tugas_penugasan ?>">Nilai <i class="fa fa-font"></i></a>
       <a href="javascript:;" class="btn btn-circle btn-sm btn-primary edit-penugasan" data-id="<?= $id_tugas_penugasan ?>">Edit <i class="fa fa-edit"></i></a>
       <a href="javascript:;" class="btn btn-circle btn-sm btn-danger hapus-penugasan" data-id="<?= $id_tugas_penugasan ?>">Hapus <i class="fa fa-trash"></i></a>
     </div>
   </div>
-
-
-  Terakhir Sampai Edit Penugasan
-
   <div class="row">
     <div class="col-md-12 col-sm-12">
       <div class="portlet light bordered">
@@ -104,6 +101,21 @@ $jumlah_soal = $getsoal->num_rows;
         success: function(data) {
           $('#show_nilai').html(data);
           $('#modal-lihat-nilai').modal('show');
+        }
+      });
+    });
+
+    $('.edit-penugasan').on('click', function() {
+      var id_tugas_penugasan = $(this).attr("data-id");
+      $.ajax({
+        url: 'backend/function.php?action=proses_penugasan&run=penugasanbyid',
+        type: 'post',
+        data: {
+          id_tugas_penugasan: id_tugas_penugasan,
+        },
+        success: function(data) {
+          $('#tampil-edit-penugasan').html(data);
+          $('#modal-edit-penugasan').modal('show');
         }
       });
     });

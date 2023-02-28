@@ -87,9 +87,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
             <li>
               <a href="#tab_peserta" data-toggle="tab"> Peserta Didik </a>
             </li>
-            <li>
-              <a href="#tab_penugasan" data-toggle="tab"> Penugasan </a>
-            </li>
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab_overview">
@@ -187,53 +184,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
                 <?php endwhile; ?>
               </div>
             </div>
-            <!--end tab-pane-->
-            <div class="tab-pane" id="tab_penugasan">
-              <div class="todo-ui">
-                <div class="todo-sidebar">
-                  <div class="portlet light bordered">
-                    <div class="portlet-title">
-                      <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
-                        <span class="caption-subject font-green-sharp bold uppercase">Menu </span>
-                        <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">Klik untuk melihat menu</span>
-                      </div>
-                    </div>
-                    <div class="portlet-body todo-project-list-content" style="height: auto;">
-                      <div class="todo-project-list">
-                        <ul class="nav nav-stacked">
-                          <li>
-                            <a href="javascript:;" data-toggle="collapse" data-target=".akan-berakhir"> Tugas Akan Berakhir </a>
-                            <div id="show_akan_berakhir">
-
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="todo-content">
-                  <form class="form-horizontal" role="form" id="form-edit-tugas">
-                    <div class="form-body">
-                      <div class="form-group">
-                        <label class="col-md-1 control-label vcenter">
-                          <img alt="" class="img-circle bg-white" style="padding:2px;width:40px;" src="assets/images/admin_avatar.png" />
-                        </label>
-                        <div class="col-md-9 vcenter" style="padding-top:7px;">
-                          <input class="form-control" type="hidden" id="id_tugas" name="id_tugas" value="">
-                          <input class="form-control spinner input-circle" type="text" id="tambah-penugasan" name="tambah-penugasan" placeholder="Tambah penugasan..." value="">
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                  <hr>
-                  <div id="show_penugasan">
-
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--end tab-pane-->
           </div>
         </div>
       </div>
@@ -577,42 +527,26 @@ require('layouts/bodylayout.php');
     });
   }
 
-  function get_penugasan() {
-    var id_mapel = '<?= $datakelas['id_mapel'] ?>';
-    var id_kelas = '<?= $datakelas['id_kelas'] ?>';
+  function lihat_tugas(id) {
+    var id_tugas_penugasan = id;
     $.ajax({
-      url: 'backend/function.php?action=get_data&get=data_penugasan',
+      url: 'backend/function.php?action=proses_penugasan&run=lihat_penugasan',
       type: 'post',
       data: {
-        id_mapel: id_mapel,
-        id_kelas: id_kelas
+        id_tugas_penugasan: id_tugas_penugasan,
       },
       success: function(data) {
-        $('#show_penugasan').html(data);
+        if (id_tugas_penugasan) {
+          $('#show_tugas').html(data);
+          $('#modal-lihat-penugasan').modal('show');
+        }
       }
     });
   }
 
-  function get_penugasan_akanberakhir() {
-    var id_mapel = '<?= $datakelas['id_mapel'] ?>';
-    var id_kelas = '<?= $datakelas['id_kelas'] ?>';
-    $.ajax({
-      url: 'backend/function.php?action=get_data&get=data_penugasan_akanberakhir',
-      type: 'post',
-      data: {
-        id_mapel: id_mapel,
-        id_kelas: id_kelas
-      },
-      success: function(data) {
-        $('#show_akan_berakhir').html(data);
-      }
-    });
-  }
 
   $(document).ready(function() {
     get_topik();
-    get_penugasan();
-    get_penugasan_akanberakhir();
 
     $('#btn-tambah-topik').on('click', function(event) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
@@ -675,19 +609,7 @@ require('layouts/bodylayout.php');
 
     $('#show_topik').on('click', '.lihat_tugas', function() {
       var id_tugas_penugasan = $(this).attr("data-id");
-      $.ajax({
-        url: 'backend/function.php?action=proses_penugasan&run=lihat_penugasan',
-        type: 'post',
-        data: {
-          id_tugas_penugasan: id_tugas_penugasan,
-        },
-        success: function(data) {
-          if (id_tugas_penugasan) {
-            $('#show_tugas').html(data);
-            $('#modal-lihat-penugasan').modal('show');
-          }
-        }
-      });
+      lihat_tugas(id_tugas_penugasan);
     });
 
 
@@ -800,8 +722,6 @@ require('layouts/bodylayout.php');
             $('#form-tambah-subtugas').trigger("reset");
             $('#modal-tambah-penugasan').modal('hide');
             get_topik();
-            get_penugasan();
-            get_penugasan_akanberakhir();
             for (i = 0; i < data.success.length; i++) {
               $("#form-tambah-penugasan").find('#pesan-' + data.success[i]).html('')
               $("#form-tambah-penugasan").find('#form-' + data.success[i]).removeClass('has-error');
@@ -836,8 +756,6 @@ require('layouts/bodylayout.php');
       });
     });
 
-
-    
     $('#jenis-tugas').on('select2:select', function(e) {
       var id_mapel = '<?= $datakelas['id_mapel'] ?>';
       var jenis_tugas = $(this).val();
