@@ -458,8 +458,6 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
   <!-- /.modal-dialog -->
 </div>
 <!-- END MODAL LIHAT NILAI -->
-
-
 <!-- MODAL EDIT PENUGASAN -->
 <div class="modal fade bs-modal-lg" id="modal-edit-penugasan" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -719,7 +717,7 @@ require('layouts/bodylayout.php');
         dataType: 'json',
         success: function(data) {
           if (data.acc == true) {
-            $('#form-tambah-subtugas').trigger("reset");
+            $('#form-tambah-penugasan').trigger("reset");
             $('#modal-tambah-penugasan').modal('hide');
             get_topik();
             for (i = 0; i < data.success.length; i++) {
