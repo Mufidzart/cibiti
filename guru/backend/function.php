@@ -170,7 +170,14 @@ switch ($_GET['action']) {
         $validation = ["input" => "fileexcel-tugas", "message" => "File tugas awal tidak boleh kosong."];
         array_push($data['errors'], $validation);
       } else {
-        array_push($data['success'], "fileexcel-tugas");
+        $path = $_FILES['fileexcel-tugas']['name'];
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, ["xls", "xlsx", "csv"])) {
+          $validation = ["input" => "fileexcel-tugas", "message" => "File yang dapat diunggah adalah .xls, .xlsx, dan .csv"];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "fileexcel-tugas");
+        }
       }
       if (empty($_POST['batas-tugas'])) {
         $validation = ["input" => "batas-tugas", "message" => "Batas tugas awal tidak boleh kosong."];
@@ -199,8 +206,6 @@ switch ($_GET['action']) {
           array_push($data['success'], "jumlah-soal-tugas");
         }
       }
-
-
 
       if (!empty($data['errors'])) {
         $data['acc'] = false;
@@ -421,7 +426,14 @@ switch ($_GET['action']) {
         $validation = ["input" => "fileexcel", "message" => "File awal tidak boleh kosong."];
         array_push($data['errors'], $validation);
       } else {
-        array_push($data['success'], "fileexcel");
+        $path = $_FILES['fileexcel-tugas']['name'];
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, ["xls", "xlsx", "csv"])) {
+          $validation = ["input" => "fileexcel-tugas", "message" => "File yang dapat diunggah adalah .xls, .xlsx, dan .csv"];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "fileexcel-tugas");
+        }
       }
       if (!empty($data['errors'])) {
         $data['acc'] = false;
@@ -518,7 +530,14 @@ switch ($_GET['action']) {
         $validation = ["input" => "filemateri", "message" => "File materi tidak boleh kosong."];
         array_push($data['errors'], $validation);
       } else {
-        array_push($data['success'], "filemateri");
+        $path = $_FILES['filemateri']['name'];
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, ["pdf", "png", "jpg", "jpeg", "ppt", "pptx", "xls", "xlsx", "doc", "docx"])) {
+          $validation = ["input" => "filemateri", "message" => "File yang dapat diunggah adalah .png, .jpg, .jpeg, .pdf, .ppt, .pptx, .xls, .xlsx, .doc, dan .docx"];
+          array_push($data['errors'], $validation);
+        } else {
+          array_push($data['success'], "filemateri");
+        }
       }
 
       if (!empty($data['errors'])) {
