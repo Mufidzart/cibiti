@@ -26,7 +26,9 @@
   <div class="card-body">
     <!--begin::Messages-->
     <div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_chat_messenger_body" data-kt-scroll-offset="-2px" style="max-height: 500px;">
-      <?php $no = $gettopik->num_rows;
+      <?php
+      $no = $gettopik->num_rows;
+      $nis = $_SESSION['username'];
       while ($topik = mysqli_fetch_assoc($gettopik)) : ?>
         <?php
         $id_topik = $topik['id'];
@@ -51,55 +53,73 @@
               <h3>Topik Ke <?= $no . ": " . $topik['judul'] ?></h3>
               <p><?= $topik['deskripsi'] ?></p>
 
-              <div class="row">
-                <div class="col-md-12 my-2">
-                  <?php
-                  $nis = $_SESSION['username'];
-                  $id_mapel = $topik['id_mapel'];
-                  $getmapel = $conn->query("SELECT * FROM arf_mapel WHERE id=$id_mapel");
-                  $datamapel = mysqli_fetch_assoc($getmapel);
-                  $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
-                  while ($tugas = mysqli_fetch_assoc($get_tugas_penugasan)) :
-                  ?>
-                    <?php
-                    $id_tugas_penugasan = $tugas['id'];
-                    $getprosesujian =  $conn->query("SELECT * FROM proses_ujian WHERE id_siswa='$nis' AND id_tugas_penugasan=$id_tugas_penugasan");
-                    $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
-                    $status_ujian = "";
-                    $status_penilaian = "";
-                    if ($getprosesujian->num_rows !== 0) {
-                      if (empty($dataprosesujian['selesai_ujian'])) {
-                        $durasi = $tugas['durasi_tugas'];
-                        $mulai_ujian = $dataprosesujian['mulai_ujian'];
-                        $jam_mulai = new DateTime($mulai_ujian);
-                        $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
-                        $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
-                        if ($jam_sekarang <= $jam_berakhir) {
-                          $status_ujian = "<span class='badge badge-light-info fs-7 my-3'>Sedang dikerjakan</span>";
-                        }
-                      } else {
-                        $nilai = $dataprosesujian['nilai'];
-                        if (!empty($nilai)) {
-                          $status_ujian = "<span class='badge badge-light-success fs-7 my-3'>Sudah dikerjakan</span>";
-                        } else {
-                          $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
-                        }
-                        if ($nilai < $datamapel['kb_pengetahuan']) {
-                          $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
-                        } else {
-                          $status_penilaian = "<span class='badge badge-light-success fs-7 my-3'>Anda lulus di tugas ini.</span>";
-                        }
-                      }
-                    } else {
-                      $batas = new DateTime(date("Y-m-d H:i", strtotime($tugas['batas_tugas'])));
-                      $now = new DateTime(date("Y-m-d H:i"));
-                      if ($now > $batas) {
-                        $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
-                        $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
-                      }
+              <!-- Materi -->
+              <?php
+              $getmateri = mysqli_query($conn, "SELECT * FROM materi_pembelajaran WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
+              while ($materi = mysqli_fetch_assoc($getmateri)) :
+                $id_materi = $materi['id'];
+              ?>
+                <div class="row">
+                  <div class="col-md-12 my-2">
+                    <a href="backend/download.php?action=download-materi&id=<?= $id_materi ?>" target="_blank" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-success btn-active-light-success px-6">
+                      <span class=""><i class="bi bi-file-earmark-richtext-fill text-success fs-1"></i></span>
+                      <span class="d-flex flex-column align-items-start ms-2">
+                        <span class="fs-3 fw-bolder"><?= $materi['judul'] ?></span>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              <?php endwhile; ?>
+              <!-- End Mater -->
+
+              <!-- Penugasan -->
+              <?php
+              $get_tugas_penugasan = mysqli_query($conn, "SELECT * FROM tugas_penugasan WHERE id_topik='$id_topik' AND tgl_hapus IS NULL");
+              while ($tugas = mysqli_fetch_assoc($get_tugas_penugasan)) :
+                $id_tugas_penugasan = $tugas['id'];
+                $getprosesujian =  $conn->query("SELECT * FROM proses_ujian WHERE id_siswa='$nis' AND id_tugas_penugasan=$id_tugas_penugasan");
+                $dataprosesujian = mysqli_fetch_assoc($getprosesujian);
+                $status_ujian = "";
+                $status_penilaian = "";
+                if ($getprosesujian->num_rows !== 0) {
+                  if (empty($dataprosesujian['selesai_ujian'])) {
+                    $durasi = $tugas['durasi_tugas'];
+                    $mulai_ujian = $dataprosesujian['mulai_ujian'];
+                    $jam_mulai = new DateTime($mulai_ujian);
+                    $jam_berakhir = (new DateTime($mulai_ujian))->modify('+' . $durasi . " minutes");
+                    $jam_sekarang = new DateTime(date("Y-m-d H:i:s"));
+                    if ($jam_sekarang <= $jam_berakhir) {
+                      $status_ujian = "<span class='badge badge-light-info fs-7 my-3'>Sedang dikerjakan</span>";
                     }
-                    $badge = $status_ujian . " " . $status_penilaian;
-                    ?>
+                  } else {
+                    $nilai = $dataprosesujian['nilai'];
+                    if (!empty($nilai)) {
+                      $status_ujian = "<span class='badge badge-light-success fs-7 my-3'>Sudah dikerjakan</span>";
+                    } else {
+                      $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
+                    }
+
+                    $id_mapel = $topik['id_mapel'];
+                    $getmapel = $conn->query("SELECT * FROM arf_mapel WHERE id=$id_mapel");
+                    $datamapel = mysqli_fetch_assoc($getmapel);
+                    if ($nilai < $datamapel['kb_pengetahuan']) {
+                      $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
+                    } else {
+                      $status_penilaian = "<span class='badge badge-light-success fs-7 my-3'>Anda lulus di tugas ini.</span>";
+                    }
+                  }
+                } else {
+                  $batas = new DateTime(date("Y-m-d H:i", strtotime($tugas['batas_tugas'])));
+                  $now = new DateTime(date("Y-m-d H:i"));
+                  if ($now > $batas) {
+                    $status_ujian = "<span class='badge badge-light-danger fs-7 my-3'>Terlewat</span>";
+                    $status_penilaian = "<span class='badge badge-light-danger fs-7 my-3'>Anda tidak lulus di tugas ini.</span>";
+                  }
+                }
+                $badge = $status_ujian . " " . $status_penilaian;
+              ?>
+                <div class="row">
+                  <div class="col-md-12 my-2">
                     <a href="ujian.php?tgs=<?= $id_tugas_penugasan ?>" class="btn btn-flex btn-outline btn-outline-dashed btn-outline-success btn-active-light-success px-6" data-kode="<?= $tugas['jenis_tugas'] ?>">
                       <span class=""><i class="bi bi-file-earmark-richtext-fill text-success fs-1"></i></span>
                       <span class="d-flex flex-column align-items-start ms-2">
@@ -107,10 +127,11 @@
                         <span class="fs-7">klik untuk mengerjakan</span>
                       </span>
                     </a>
-                    <?= $badge ?>
-                  <?php endwhile; ?>
+                  </div>
                 </div>
-              </div>
+                <?= $badge ?>
+              <?php endwhile; ?>
+              <!-- End Penugasan -->
             </div>
             <!--end::Text-->
           </div>
