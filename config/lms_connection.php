@@ -20,10 +20,14 @@ date_default_timezone_set('Asia/Jakarta');
 if ($_SESSION['role'] == "guru") {
   $session_id_staf = $_SESSION['username'];
 } else {
-  $nis_siswa = $_SESSION['username']; 
+  $nis_siswa = $_SESSION['username'];
 }
 $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 $uri_segments = explode('/', $actual_link);
 $baseurl = $uri_segments[0] . '//' . $uri_segments[2];
-$id_thajaran = 4;
-$semester = 1;
+if (isset($_SESSION['id_thajaran'])) {
+  $id_thajaran = $_SESSION['id_thajaran'];
+}
+if (isset($_SESSION['semester'])) {
+  $semester = $_SESSION['semester'];
+}

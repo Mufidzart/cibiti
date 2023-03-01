@@ -9,6 +9,9 @@ switch ($_GET['action']) {
     $id_kelas_induk = $data[0];
     $id_kelas = $data[1];
     $id_thajaran = $data[2];
+    // Set Session TA
+    $_SESSION['id_thajaran'] = $id_thajaran;
+    // End Set Session TA
     $getgurumapel = $conn->query(
       "SELECT agm.id_staf,agm.id_mapel,asf.nama_lengkap,am.nama_mapel
       FROM arf_guru_mapel agm
@@ -26,6 +29,7 @@ switch ($_GET['action']) {
       $subkelas_siswa = $_POST['subkelas_siswa'];
       $id_staf = $_POST['id_staf'];
       $id_mapel = $_POST['id_mapel'];
+      $idthajaran = $_POST['id_thajaran'];
       $gettopik = $conn->query(
         "SELECT tp.*,asf.nama_lengkap
         FROM topik_pembelajaran tp
@@ -33,7 +37,7 @@ switch ($_GET['action']) {
         WHERE tp.id_staf='$id_staf' 
         AND tp.id_mapel=$id_mapel
         AND tp.id_kelas=$subkelas_siswa
-        AND tp.id_thajaran=$id_thajaran
+        AND tp.id_thajaran=$idthajaran
         AND tp.tgl_hapus IS NULL ORDER BY id DESC"
       );
       require('../views/data_topik.php');

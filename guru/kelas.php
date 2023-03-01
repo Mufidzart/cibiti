@@ -2,7 +2,6 @@
 require '../config/lms_connection.php';
 $page_title = "Learning Management System (LMS)";
 require('layouts/headlayout.php');
-// $getkelasmapel = $conn->query("SELECT ak.id,ak.nama_kelas,ak.parent_id,am.nama_mapel FROM arf_guru_mapel agm JOIN arf_mapel am ON am.id=agm.id_mapel JOIN arf_siswa_kelashistory ask ON ask.id=agm.id_subkelas JOIN arf_kelas ak ON ak.id=ask.id_kelas WHERE agm.id_staf='$session_id_staf' AND agm.id_thajaran=$id_thajaran");
 ?>
 <!-- BEGIN CONTENT -->
 <div class="page-content-wrapper">
@@ -13,7 +12,6 @@ require('layouts/headlayout.php');
       <!-- BEGIN PAGE TITLE -->
       <div class="page-title">
         <h1><?= $page_title ?>
-          <small>dashboard & statistics</small>
         </h1>
       </div>
       <!-- END PAGE TITLE -->
@@ -73,7 +71,6 @@ require('layouts/headlayout.php');
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
       <li>
-        <a href="index.php">Home</a>
         <i class="fa fa-circle"></i>
       </li>
       <li>
@@ -83,7 +80,12 @@ require('layouts/headlayout.php');
     <!-- END PAGE BREADCRUMB -->
     <!-- BEGIN PAGE BASE CONTENT -->
     <div id="tampil-kelas">
-
+      <div class="row">
+        <div class="col-md-12 text-center" style="opacity: 0.5;">
+          <img src="assets/images/no-content.png" alt="No Content">
+          <h3>Pilih Tahun Ajaran di menu Filter</h3>
+        </div>
+      </div>
     </div>
     <!-- END PAGE BASE CONTENT -->
   </div>
@@ -97,18 +99,20 @@ require('layouts/bodylayout.php');
   function get_kelas() {
     var id_thajaran = $("#set-tahun-ajaran").val();
     var semester = $("#set-semester").val();
-    $.ajax({
-      url: 'backend/function.php?action=get_kelas',
-      type: 'post',
-      data: {
-        id_thajaran: id_thajaran,
-        semester: semester
-      },
-      cache: false,
-      success: function(data) {
-        $("#tampil-kelas").html(data);
-      }
-    });
+    if (id_thajaran) {
+      $.ajax({
+        url: 'backend/function.php?action=get_kelas',
+        type: 'post',
+        data: {
+          id_thajaran: id_thajaran,
+          semester: semester
+        },
+        cache: false,
+        success: function(data) {
+          $("#tampil-kelas").html(data);
+        }
+      });
+    }
   }
 
   $(document).ready(function() {

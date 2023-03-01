@@ -11,6 +11,10 @@ switch ($_GET['action']) {
   case 'get_kelas':
     $id_thajaran = $_POST['id_thajaran'];
     $semester = $_POST['semester'];
+    // Set Session TA
+    $_SESSION['id_thajaran'] = $id_thajaran;
+    $_SESSION['semester'] = $semester;
+    // End Set Session TA
     $getkelasmapel = $conn->query(
       "SELECT agm.id_kelas,agm.id_subkelas,ak.nama_kelas,ak.parent_id,am.nama_mapel 
       FROM arf_guru_mapel agm 
@@ -426,13 +430,13 @@ switch ($_GET['action']) {
         $validation = ["input" => "fileexcel", "message" => "File awal tidak boleh kosong."];
         array_push($data['errors'], $validation);
       } else {
-        $path = $_FILES['fileexcel-tugas']['name'];
+        $path = $_FILES['fileexcel']['name'];
         $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
         if (!in_array($ext, ["xls", "xlsx", "csv"])) {
-          $validation = ["input" => "fileexcel-tugas", "message" => "File yang dapat diunggah adalah .xls, .xlsx, dan .csv"];
+          $validation = ["input" => "fileexcel", "message" => "File yang dapat diunggah adalah .xls, .xlsx, dan .csv"];
           array_push($data['errors'], $validation);
         } else {
-          array_push($data['success'], "fileexcel-tugas");
+          array_push($data['success'], "fileexcel");
         }
       }
       if (!empty($data['errors'])) {

@@ -74,7 +74,6 @@ $getfile = mysqli_query($conn, "SELECT * FROM arf_media_upload");
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
       <li>
-        <a href="index.html">Home</a>
         <i class="fa fa-circle"></i>
       </li>
       <li>

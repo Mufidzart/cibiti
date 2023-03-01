@@ -58,11 +58,10 @@ $current_date = $get_date . 'T' . $get_time . 'Z';
     <!-- BEGIN PAGE BREADCRUMB -->
     <ul class="page-breadcrumb breadcrumb">
       <li>
-        <a href="index.html">Home</a>
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span class="active">User</span>
+        <span class="active"><?= $page_title ?></span>
       </li>
     </ul>
     <!-- END PAGE BREADCRUMB -->

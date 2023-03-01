@@ -10,8 +10,7 @@ $getsiswa = $conn->query(
   FROM arf_siswa asw
   JOIN arf_siswa_kelashistory ask ON ask.nis=asw.nis
   WHERE asw.nis=$nis
-  AND ask.id_thajaran=$id_thajaran
-  ANd ask.id_semester=$semester"
+  AND ask.id_thajaran=$id_thajaran"
 );
 $datasiswa = mysqli_fetch_assoc($getsiswa);
 $kelas_siswa = $datasiswa['id_kelas_induk'];
@@ -117,6 +116,7 @@ require('layouts/bodylayout.php');
     var subkelas_siswa = '<?= $subkelas_siswa ?>';
     var id_staf = '<?= $id_staf ?>';
     var id_mapel = '<?= $id_mapel ?>';
+    var id_thajaran = '<?= $id_thajaran ?>';
     $.ajax({
       url: 'backend/function.php?action=get_data&get=data_topik',
       type: 'post',
@@ -124,7 +124,8 @@ require('layouts/bodylayout.php');
         kelas_siswa: kelas_siswa,
         subkelas_siswa: subkelas_siswa,
         id_staf: id_staf,
-        id_mapel: id_mapel
+        id_mapel: id_mapel,
+        id_thajaran: id_thajaran,
       },
       success: function(data) {
         $('#view-nav').html(data);

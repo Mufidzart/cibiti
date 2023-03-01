@@ -5,14 +5,7 @@ include '../helpers/tanggal_helper.php';
 $page_title = "Learning Management System (LMS)";
 require('layouts/headlayout.php');
 $nis = $_SESSION['username'];
-$getsiswa = $conn->query(
-  "SELECT asw.*,ask.id_kelas_induk,ask.id_kelas
-  FROM arf_siswa asw
-  JOIN arf_siswa_kelashistory ask ON ask.nis=asw.nis
-  WHERE asw.nis=$nis
-  AND ask.id_thajaran=$id_thajaran
-  ANd ask.id_semester=$semester"
-);
+$getsiswa = $conn->query("SELECT * FROM arf_siswa WHERE nis=$nis");
 $datasiswa = mysqli_fetch_assoc($getsiswa);
 ?>
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -115,8 +108,8 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
             <h3 class="card-title">
               Mata Pelajaran Kelas:
               <div class="fv-row" style="margin-left: 20px;">
-                <select name="pilih-kelas" id="pilih-kelas" aria-label="Pilih kelas" data-control="select2" data-placeholder="Pilih kelas..." class="form-select form-select-solid form-select-lg fw-bold">
-                  <option value="">Pilih kelas...</option>
+                <select name="pilih-kelas" id="pilih-kelas" aria-label="Pilih kelas" data-control="select2" data-placeholder="Pilih kelas...&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" class="form-select form-select-solid form-select-lg fw-bold">
+                  <option value=""></option>
                   <?php $gethistorisiswa = $conn->query("SELECT DISTINCT id_kelas_induk,id_kelas,id_thajaran,keterangan FROM arf_siswa_kelashistory WHERE nis=$nis AND status='aktif'");
                   while ($row = mysqli_fetch_assoc($gethistorisiswa)) :
                     $id_kelas_induk = $row['id_kelas_induk'];
@@ -129,16 +122,16 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
                     } elseif ($id_kelas_induk == 3) {
                       $grade = "XII";
                     }
-                    $select = ($id_thajaran == $id_thajaran) ? "selected" : "";
                     $getkelassiswa = $conn->query("SELECT * FROM arf_kelas WHERE id=$id_kelas");
                     $kelas = mysqli_fetch_assoc($getkelassiswa);
                     $kelas_deskripsi = $kelas['deskripsi'];
                     $nama_kelas = $kelas['nama_kelas'];
-                    $getthajaran = $conn->query("SELECT * FROM arf_thajaran WHERE id=$id_thajaran");
+                    $getthajaran = $conn->query("SELECT * FROM arf_thajaran WHERE id=$idthajaran");
                     $thajaran = mysqli_fetch_assoc($getthajaran);
                     $tahun_pelajaran = $thajaran['tahun_pelajaran'];
+                    $select = ($idthajaran == $_SESSION['id_thajaran']) ? "selected" : "";
                   ?>
-                    <option value="<?= $id_kelas_induk . '/' . $id_kelas . '/' . $idthajaran ?>" <?= $select ?>><?= $grade . " - " . $kelas_deskripsi . "(" . $nama_kelas . ")" ?></option>
+                    <option value="<?= $id_kelas_induk . '/' . $id_kelas . '/' . $idthajaran ?>" <?= $select ?>><?= $grade . " - " . $kelas_deskripsi . "(" . $nama_kelas . ") - " . str_replace("-", "/", $tahun_pelajaran) ?></option>
                   <?php endwhile; ?>
                 </select>
               </div>
@@ -160,6 +153,12 @@ $datasiswa = mysqli_fetch_assoc($getsiswa);
           </div>
           <div class="card-body">
             <div id="tampil-mapel">
+              <div class="d-flex flex-column flex-root">
+                <div class="d-flex flex-column flex-center flex-column-fluid p-10">
+                  <img src="assets/media/illustrations/sigma-1/18.png" alt="" class="mw-100 mb-10 h-lg-450px" />
+                  <h1 class="fw-bold mb-10" style="color: #A3A3C7">Tidak ada data Mata Pelajaran, silahkan pilih kelas dahulu.</h1>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -173,17 +172,19 @@ require('layouts/bodylayout.php');
 <script>
   function get_mapel() {
     var data_kelas = $("#pilih-kelas").val();
-    $.ajax({
-      url: 'backend/function.php?action=get_mapel',
-      type: 'post',
-      data: {
-        data_kelas: data_kelas
-      },
-      cache: false,
-      success: function(data) {
-        $("#tampil-mapel").html(data);
-      }
-    });
+    if (data_kelas) {
+      $.ajax({
+        url: 'backend/function.php?action=get_mapel',
+        type: 'post',
+        data: {
+          data_kelas: data_kelas
+        },
+        cache: false,
+        success: function(data) {
+          $("#tampil-mapel").html(data);
+        }
+      });
+    }
   }
 
   $(document).ready(function() {
