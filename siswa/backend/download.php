@@ -1,8 +1,6 @@
 <?php
 
 require '../../config/lms_connection.php';
-include '../helpers/helpers.php';
-include '../helpers/tanggal_helper.php';
 
 switch ($_GET['action']) {
   case 'download-materi':
